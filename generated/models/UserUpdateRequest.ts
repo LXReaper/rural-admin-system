@@ -4,8 +4,11 @@
 /* eslint-disable */
 export type UserUpdateRequest = {
   id?: number;
+  userAccount?: string;
+  userAddress?: string;
   userAvatar?: string;
   userName?: string;
+  userPhone?: string;
   userProfile?: string;
   userRole?: string;
 };

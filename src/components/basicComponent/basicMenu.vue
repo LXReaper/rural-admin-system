@@ -160,11 +160,10 @@ const props = withDefaults(defineProps<Props>(), {
 <style>
 .el-menu-vertical-demo {
   width: 200px;
-  min-height: 98vh;
 }
 
 #basicMenu {
-  min-height: 98vh;
-  height: 98vh;
+  min-height: 95vh;
+  height: 95vh;
 }
 </style>

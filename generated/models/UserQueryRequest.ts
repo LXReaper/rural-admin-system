@@ -3,10 +3,12 @@
 /* tslint:disable */
 /* eslint-disable */
 export type UserQueryRequest = {
+  address?: string;
   current?: number;
   introduction?: string;
   mpOpenId?: string;
   pageSize?: number;
+  phone_number?: string;
   sortField?: string;
   sortOrder?: string;
   unionId?: string;

@@ -3,12 +3,13 @@
 import { StoreOptions } from "vuex";
 import { UserControllerService } from "../../generated";
 import AuthorityCtrl from "../access/authorityCtrl";
+import { ElMessage } from "element-plus";
 
 export default {
   namespaced: true,
   state: () => ({
     loginUser: {
-      userName: "登录 注册",
+      villager_name: "登录 注册",
     },
   }),
   actions: {

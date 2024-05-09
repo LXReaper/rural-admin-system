@@ -61,8 +61,10 @@ import { UserControllerService, type UserLoginRequest } from "../../generated";
 import { ElMessage } from "element-plus";
 import { useRouter } from "vue-router";
 import AuthorityCtrl from "@/access/authorityCtrl";
+import { useStore } from "vuex";
 
 const router = useRouter();
+const store = useStore();
 const loading = ref(false);
 const userAccount = ref("");
 const userPassword = ref("");
@@ -79,6 +81,7 @@ const handleLogin = async () => {
       return;
     }
     ElMessage.success("登录成功");
+    await store.dispatch("user/getLoginUser");
     await router.push({
       path: "/home",
       replace: false,

@@ -1,6 +1,3 @@
-/* generated using openapi-typescript-codegen -- do not edit */
-/* istanbul ignore file */
-/* tslint:disable */
 /* eslint-disable */
 import type { BaseResponse_boolean_ } from "../models/BaseResponse_boolean_";
 import type { BaseResponse_LoginUserVO_ } from "../models/BaseResponse_LoginUserVO_";
@@ -56,6 +53,28 @@ export class UserControllerService {
     return __request(OpenAPI, {
       method: "POST",
       url: "/api/user/delete",
+      body: deleteRequest,
+      errors: {
+        401: `Unauthorized`,
+        403: `Forbidden`,
+        404: `Not Found`,
+      },
+    });
+  }
+
+  /**
+   * deleteMoreUser
+   * @param deleteRequest deleteRequest
+   * @returns BaseResponse_boolean_ OK
+   * @returns any Created
+   * @throws ApiError
+   */
+  public static deleteMoreUserUsingPost(
+    deleteRequest: Array<DeleteRequest>
+  ): CancelablePromise<BaseResponse_boolean_ | any> {
+    return __request(OpenAPI, {
+      method: "POST",
+      url: "/api/user/delete/more",
       body: deleteRequest,
       errors: {
         401: `Unauthorized`,

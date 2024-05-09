@@ -4,7 +4,10 @@
 /* eslint-disable */
 export type UserAddRequest = {
   account?: string;
+  address?: string;
   avatar?: string;
+  introduction?: string;
+  phone_number?: string;
   userRole?: string;
   villager_name?: string;
 };
