@@ -2,9 +2,12 @@
   <div id="basicLayout">
     <div style="max-height: 40px; height: 40px">
       <div>
-        <text style="font-weight: bolder; font-size: 20px"
-          >乡村积分治理后端管理系统
-        </text>
+        <el-space direction="horizontal">
+          <img src="../assets/logo.png" style="width: 40px; height: 40px" />
+          <text style="font-weight: bolder; font-size: 20px"
+            >乡村积分治理后端管理系统
+          </text>
+        </el-space>
       </div>
       <div style="text-align: right; margin-top: -25px">
         <el-space direction="horizontal" style="padding-left: 90%">

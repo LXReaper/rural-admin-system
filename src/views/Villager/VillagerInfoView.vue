@@ -211,7 +211,7 @@ const title = ref("");
 //是否显示数据弹出层
 const open = ref(false);
 
-//放入数据库中的form
+//添加和编辑对话框中编写的要放入数据库中的form数据
 const form = ref({
   account: "",
   userRole: "",
@@ -407,6 +407,7 @@ onMounted(async () => {
 });
 const handleSelectionChange = (selection: any) => {
   //拿到选中的行的传递的数组信息selection，将数组selection中的villager_id传给ids
+  ids.value = [];
   for (let i = 0; i < selection.length; ++i)
     ids.value.push({
       id: selection[i].villager_id,
