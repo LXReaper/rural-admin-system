@@ -3,32 +3,30 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { BaseResponse_boolean_ } from "../models/BaseResponse_boolean_";
+import type { BaseResponse_Coursesubmissions_ } from "../models/BaseResponse_Coursesubmissions_";
 import type { BaseResponse_long_ } from "../models/BaseResponse_long_";
-import type { BaseResponse_Page_Rules_ } from "../models/BaseResponse_Page_Rules_";
-import type { BaseResponse_Rules_ } from "../models/BaseResponse_Rules_";
+import type { CoursesubmissionsAddRequest } from "../models/CoursesubmissionsAddRequest";
+import type { CoursesubmissionsUpdateRequest } from "../models/CoursesubmissionsUpdateRequest";
 import type { DeleteRequest } from "../models/DeleteRequest";
-import type { RulesAddRequest } from "../models/RulesAddRequest";
-import type { RulesQueryRequest } from "../models/RulesQueryRequest";
-import type { RulesUpdateRequest } from "../models/RulesUpdateRequest";
 import type { CancelablePromise } from "../core/CancelablePromise";
 import { OpenAPI } from "../core/OpenAPI";
 import { request as __request } from "../core/request";
 
-export class RulesControllerService {
+export class CoursesubmissionsControllerService {
   /**
-   * rulesAdd
-   * @param rulesAddRequest rulesAddRequest
+   * addCoursesubmission
+   * @param coursesubmissionsAddRequest coursesubmissionsAddRequest
    * @returns BaseResponse_long_ OK
    * @returns any Created
    * @throws ApiError
    */
-  public static rulesAddUsingPost(
-    rulesAddRequest: RulesAddRequest
+  public static addCoursesubmissionUsingPost(
+    coursesubmissionsAddRequest: CoursesubmissionsAddRequest
   ): CancelablePromise<BaseResponse_long_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/rules/add",
-      body: rulesAddRequest,
+      url: "/api/coursesubmissions/add",
+      body: coursesubmissionsAddRequest,
       errors: {
         401: `Unauthorized`,
         403: `Forbidden`,
@@ -38,18 +36,18 @@ export class RulesControllerService {
   }
 
   /**
-   * deleteRules
+   * deleteCoursesubmission
    * @param deleteRequest deleteRequest
    * @returns BaseResponse_boolean_ OK
    * @returns any Created
    * @throws ApiError
    */
-  public static deleteRulesUsingPost(
+  public static deleteCoursesubmissionUsingPost(
     deleteRequest: DeleteRequest
   ): CancelablePromise<BaseResponse_boolean_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/rules/delete",
+      url: "/api/coursesubmissions/delete",
       body: deleteRequest,
       errors: {
         401: `Unauthorized`,
@@ -60,19 +58,19 @@ export class RulesControllerService {
   }
 
   /**
-   * getRulesById
-   * @param ruleId RuleId
-   * @returns BaseResponse_Rules_ OK
+   * getCoursesubmissionsById
+   * @param materialId material_id
+   * @returns BaseResponse_Coursesubmissions_ OK
    * @throws ApiError
    */
-  public static getRulesByIdUsingGet(
-    ruleId?: number
-  ): CancelablePromise<BaseResponse_Rules_> {
+  public static getCoursesubmissionsByIdUsingGet(
+    materialId?: number
+  ): CancelablePromise<BaseResponse_Coursesubmissions_> {
     return __request(OpenAPI, {
       method: "GET",
-      url: "/api/rules/get",
+      url: "/api/coursesubmissions/get",
       query: {
-        RuleId: ruleId,
+        material_id: materialId,
       },
       errors: {
         401: `Unauthorized`,
@@ -83,41 +81,19 @@ export class RulesControllerService {
   }
 
   /**
-   * listRulesByPage
-   * @param rulesQueryRequest rulesQueryRequest
-   * @returns BaseResponse_Page_Rules_ OK
-   * @returns any Created
-   * @throws ApiError
-   */
-  public static listRulesByPageUsingPost(
-    rulesQueryRequest: RulesQueryRequest
-  ): CancelablePromise<BaseResponse_Page_Rules_ | any> {
-    return __request(OpenAPI, {
-      method: "POST",
-      url: "/api/rules/list/page",
-      body: rulesQueryRequest,
-      errors: {
-        401: `Unauthorized`,
-        403: `Forbidden`,
-        404: `Not Found`,
-      },
-    });
-  }
-
-  /**
-   * updateRules
-   * @param rulesUpdateRequest rulesUpdateRequest
+   * updateCoursesubmission
+   * @param coursesubmissionsUpdateRequest coursesubmissionsUpdateRequest
    * @returns BaseResponse_boolean_ OK
    * @returns any Created
    * @throws ApiError
    */
-  public static updateRulesUsingPost(
-    rulesUpdateRequest: RulesUpdateRequest
+  public static updateCoursesubmissionUsingPost(
+    coursesubmissionsUpdateRequest: CoursesubmissionsUpdateRequest
   ): CancelablePromise<BaseResponse_boolean_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/rules/update",
-      body: rulesUpdateRequest,
+      url: "/api/coursesubmissions/update",
+      body: coursesubmissionsUpdateRequest,
       errors: {
         401: `Unauthorized`,
         403: `Forbidden`,

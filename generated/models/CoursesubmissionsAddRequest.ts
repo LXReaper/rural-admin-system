@@ -2,8 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type RulesAddRequest = {
-  publishUserId?: number;
-  ruleContent?: string;
-  rulePoints?: number;
+export type CoursesubmissionsAddRequest = {
+  material_id?: number;
+  user_id?: number;
 };

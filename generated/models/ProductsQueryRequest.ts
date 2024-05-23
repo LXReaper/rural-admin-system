@@ -10,6 +10,8 @@ export type ProductsQueryRequest = {
   productId?: number;
   productName?: string;
   productType?: string;
+  shelfTime?: string;
   sortField?: string;
   sortOrder?: string;
+  updateTime?: string;
 };

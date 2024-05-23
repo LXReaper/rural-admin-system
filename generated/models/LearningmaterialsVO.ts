@@ -2,8 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type RulesAddRequest = {
-  publishUserId?: number;
-  ruleContent?: string;
-  rulePoints?: number;
+export type LearningmaterialsVO = {
+  material_id?: number;
+  text_content?: string;
+  video_url?: string;
 };

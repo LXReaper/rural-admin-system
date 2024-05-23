@@ -2,15 +2,19 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type RulesQueryRequest = {
+export type TasksQueryRequest = {
   current?: number;
+  deadLine?: string;
+  materialId?: number;
   pageSize?: number;
+  pointsValue?: number;
   publishDate?: string;
-  publishUserId?: number;
-  ruleContent?: string;
   ruleId?: number;
   sortField?: string;
   sortOrder?: string;
+  taskContent?: string;
+  taskId?: number;
   updateDate?: string;
-  updateUserId?: number;
+  updatedUserId?: number;
+  userId?: number;
 };

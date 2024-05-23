@@ -2,8 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type RulesAddRequest = {
-  publishUserId?: number;
-  ruleContent?: string;
-  rulePoints?: number;
+export type CoursesubmissionsUpdateRequest = {
+  material_id?: number;
+  submission_id?: number;
+  user_id?: number;
 };

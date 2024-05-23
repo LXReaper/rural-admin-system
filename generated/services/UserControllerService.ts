@@ -1,3 +1,6 @@
+/* generated using openapi-typescript-codegen -- do not edit */
+/* istanbul ignore file */
+/* tslint:disable */
 /* eslint-disable */
 import type { BaseResponse_boolean_ } from "../models/BaseResponse_boolean_";
 import type { BaseResponse_LoginUserVO_ } from "../models/BaseResponse_LoginUserVO_";
@@ -11,6 +14,7 @@ import type { UserAddRequest } from "../models/UserAddRequest";
 import type { UserLoginRequest } from "../models/UserLoginRequest";
 import type { UserQueryRequest } from "../models/UserQueryRequest";
 import type { UserRegisterRequest } from "../models/UserRegisterRequest";
+import type { UserUpdateMiniOpenIdRequest } from "../models/UserUpdateMiniOpenIdRequest";
 import type { UserUpdateMyRequest } from "../models/UserUpdateMyRequest";
 import type { UserUpdateRequest } from "../models/UserUpdateRequest";
 import type { CancelablePromise } from "../core/CancelablePromise";
@@ -32,6 +36,28 @@ export class UserControllerService {
       method: "POST",
       url: "/api/user/add",
       body: userAddRequest,
+      errors: {
+        401: `Unauthorized`,
+        403: `Forbidden`,
+        404: `Not Found`,
+      },
+    });
+  }
+
+  /**
+   * userBindWeChatByWxMiniApp
+   * @param userUpdateMiniOpenIdRequest userUpdateMiniOpenIdRequest
+   * @returns BaseResponse_boolean_ OK
+   * @returns any Created
+   * @throws ApiError
+   */
+  public static userBindWeChatByWxMiniAppUsingPost(
+    userUpdateMiniOpenIdRequest: UserUpdateMiniOpenIdRequest
+  ): CancelablePromise<BaseResponse_boolean_ | any> {
+    return __request(OpenAPI, {
+      method: "POST",
+      url: "/api/user/bind/miniOpenId",
+      body: userUpdateMiniOpenIdRequest,
       errors: {
         401: `Unauthorized`,
         403: `Forbidden`,
@@ -214,6 +240,29 @@ export class UserControllerService {
   }
 
   /**
+   * userLoginByWxMiniApp
+   * @param code code
+   * @returns BaseResponse_LoginUserVO_ OK
+   * @throws ApiError
+   */
+  public static userLoginByWxMiniAppUsingGet(
+    code?: string
+  ): CancelablePromise<BaseResponse_LoginUserVO_> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/user/login/wx_miniApp",
+      query: {
+        code: code,
+      },
+      errors: {
+        401: `Unauthorized`,
+        403: `Forbidden`,
+        404: `Not Found`,
+      },
+    });
+  }
+
+  /**
    * userLoginByWxOpen
    * @param code code
    * @returns BaseResponse_LoginUserVO_ OK
@@ -270,6 +319,29 @@ export class UserControllerService {
       method: "POST",
       url: "/api/user/register",
       body: userRegisterRequest,
+      errors: {
+        401: `Unauthorized`,
+        403: `Forbidden`,
+        404: `Not Found`,
+      },
+    });
+  }
+
+  /**
+   * userUnBindWeChatByWxMiniApp
+   * @param userId userId
+   * @returns BaseResponse_boolean_ OK
+   * @throws ApiError
+   */
+  public static userUnBindWeChatByWxMiniAppUsingGet(
+    userId?: number
+  ): CancelablePromise<BaseResponse_boolean_> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/user/unBind/miniOpenId",
+      query: {
+        userId: userId,
+      },
       errors: {
         401: `Unauthorized`,
         403: `Forbidden`,

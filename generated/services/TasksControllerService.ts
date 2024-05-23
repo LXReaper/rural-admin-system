@@ -4,31 +4,31 @@
 /* eslint-disable */
 import type { BaseResponse_boolean_ } from "../models/BaseResponse_boolean_";
 import type { BaseResponse_long_ } from "../models/BaseResponse_long_";
-import type { BaseResponse_Page_Products_ } from "../models/BaseResponse_Page_Products_";
-import type { BaseResponse_Products_ } from "../models/BaseResponse_Products_";
+import type { BaseResponse_Page_Tasks_ } from "../models/BaseResponse_Page_Tasks_";
+import type { BaseResponse_Tasks_ } from "../models/BaseResponse_Tasks_";
 import type { DeleteRequest } from "../models/DeleteRequest";
-import type { ProductsAddRequest } from "../models/ProductsAddRequest";
-import type { ProductsQueryRequest } from "../models/ProductsQueryRequest";
-import type { ProductsUpdateRequest } from "../models/ProductsUpdateRequest";
+import type { TasksAddRequest } from "../models/TasksAddRequest";
+import type { TasksQueryRequest } from "../models/TasksQueryRequest";
+import type { TasksUpdateRequest } from "../models/TasksUpdateRequest";
 import type { CancelablePromise } from "../core/CancelablePromise";
 import { OpenAPI } from "../core/OpenAPI";
 import { request as __request } from "../core/request";
 
-export class ProductsControllerService {
+export class TasksControllerService {
   /**
-   * productsAdd
-   * @param productsAddRequest productsAddRequest
+   * tasksAdd
+   * @param tasksAddRequest tasksAddRequest
    * @returns BaseResponse_long_ OK
    * @returns any Created
    * @throws ApiError
    */
-  public static productsAddUsingPost(
-    productsAddRequest: ProductsAddRequest
+  public static tasksAddUsingPost(
+    tasksAddRequest: TasksAddRequest
   ): CancelablePromise<BaseResponse_long_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/products/add",
-      body: productsAddRequest,
+      url: "/api/tasks/add",
+      body: tasksAddRequest,
       errors: {
         401: `Unauthorized`,
         403: `Forbidden`,
@@ -38,18 +38,18 @@ export class ProductsControllerService {
   }
 
   /**
-   * deleteProducts
+   * deleteTasks
    * @param deleteRequest deleteRequest
    * @returns BaseResponse_boolean_ OK
    * @returns any Created
    * @throws ApiError
    */
-  public static deleteProductsUsingPost(
+  public static deleteTasksUsingPost(
     deleteRequest: DeleteRequest
   ): CancelablePromise<BaseResponse_boolean_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/products/delete",
+      url: "/api/tasks/delete",
       body: deleteRequest,
       errors: {
         401: `Unauthorized`,
@@ -60,19 +60,19 @@ export class ProductsControllerService {
   }
 
   /**
-   * getProductsById
-   * @param productId ProductId
-   * @returns BaseResponse_Products_ OK
+   * getTasksById
+   * @param taskId TaskId
+   * @returns BaseResponse_Tasks_ OK
    * @throws ApiError
    */
-  public static getProductsByIdUsingGet(
-    productId?: number
-  ): CancelablePromise<BaseResponse_Products_> {
+  public static getTasksByIdUsingGet(
+    taskId?: number
+  ): CancelablePromise<BaseResponse_Tasks_> {
     return __request(OpenAPI, {
       method: "GET",
-      url: "/api/products/get",
+      url: "/api/tasks/get",
       query: {
-        ProductId: productId,
+        TaskId: taskId,
       },
       errors: {
         401: `Unauthorized`,
@@ -83,19 +83,19 @@ export class ProductsControllerService {
   }
 
   /**
-   * listProductsByPage
-   * @param productsQueryRequest productsQueryRequest
-   * @returns BaseResponse_Page_Products_ OK
+   * listTasksByPage
+   * @param tasksQueryRequest tasksQueryRequest
+   * @returns BaseResponse_Page_Tasks_ OK
    * @returns any Created
    * @throws ApiError
    */
-  public static listProductsByPageUsingPost(
-    productsQueryRequest: ProductsQueryRequest
-  ): CancelablePromise<BaseResponse_Page_Products_ | any> {
+  public static listTasksByPageUsingPost(
+    tasksQueryRequest: TasksQueryRequest
+  ): CancelablePromise<BaseResponse_Page_Tasks_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/products/list/page",
-      body: productsQueryRequest,
+      url: "/api/tasks/list/page",
+      body: tasksQueryRequest,
       errors: {
         401: `Unauthorized`,
         403: `Forbidden`,
@@ -105,19 +105,19 @@ export class ProductsControllerService {
   }
 
   /**
-   * updateProducts
-   * @param productsUpdateRequest productsUpdateRequest
+   * updateTasks
+   * @param tasksUpdateRequest tasksUpdateRequest
    * @returns BaseResponse_boolean_ OK
    * @returns any Created
    * @throws ApiError
    */
-  public static updateProductsUsingPost(
-    productsUpdateRequest: ProductsUpdateRequest
+  public static updateTasksUsingPost(
+    tasksUpdateRequest: TasksUpdateRequest
   ): CancelablePromise<BaseResponse_boolean_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/products/update",
-      body: productsUpdateRequest,
+      url: "/api/tasks/update",
+      body: tasksUpdateRequest,
       errors: {
         401: `Unauthorized`,
         403: `Forbidden`,

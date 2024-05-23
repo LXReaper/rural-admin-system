@@ -2,8 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type RulesAddRequest = {
-  publishUserId?: number;
-  ruleContent?: string;
-  rulePoints?: number;
+export type BaseResponse_double_ = {
+  code?: number;
+  data?: number;
+  message?: string;
 };

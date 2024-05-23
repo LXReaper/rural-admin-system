@@ -2,15 +2,12 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type RulesQueryRequest = {
+export type LearningmaterialsQueryRequest = {
   current?: number;
+  material_id?: number;
   pageSize?: number;
-  publishDate?: string;
-  publishUserId?: number;
-  ruleContent?: string;
-  ruleId?: number;
   sortField?: string;
   sortOrder?: string;
-  updateDate?: string;
-  updateUserId?: number;
+  text_content?: string;
+  video_url?: string;
 };

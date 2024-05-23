@@ -2,15 +2,14 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type RulesQueryRequest = {
+export type AnnouncementsQueryRequest = {
+  announcement_id?: number;
+  announcement_type?: string;
+  content?: string;
   current?: number;
+  image_url?: string;
   pageSize?: number;
-  publishDate?: string;
-  publishUserId?: number;
-  ruleContent?: string;
-  ruleId?: number;
   sortField?: string;
   sortOrder?: string;
-  updateDate?: string;
-  updateUserId?: number;
+  title?: string;
 };

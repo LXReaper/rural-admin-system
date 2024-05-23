@@ -2,15 +2,12 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type RulesQueryRequest = {
+export type PointsQueryRequest = {
   current?: number;
   pageSize?: number;
-  publishDate?: string;
-  publishUserId?: number;
-  ruleContent?: string;
-  ruleId?: number;
+  remaining_points?: number;
   sortField?: string;
   sortOrder?: string;
-  updateDate?: string;
-  updateUserId?: number;
+  total_points?: number;
+  user_id?: number;
 };

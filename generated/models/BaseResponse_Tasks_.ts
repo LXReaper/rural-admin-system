@@ -2,8 +2,10 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type RulesAddRequest = {
-  publishUserId?: number;
-  ruleContent?: string;
-  rulePoints?: number;
+import type { Tasks } from "./Tasks";
+
+export type BaseResponse_Tasks_ = {
+  code?: number;
+  data?: Tasks;
+  message?: string;
 };

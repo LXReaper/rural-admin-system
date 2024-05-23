@@ -38,7 +38,7 @@
       <el-form-item style="width: 100%">
         <el-button
           :loading="loading"
-          size="medium"
+          size="default"
           type="primary"
           style="width: 100%"
           @click="handleLogin"
@@ -56,8 +56,8 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref } from "vue";
-import { UserControllerService, type UserLoginRequest } from "../../generated";
+import { onMounted, ref } from "vue";
+import { UserControllerService, UserLoginRequest } from "../../generated";
 import { ElMessage } from "element-plus";
 import { useRouter } from "vue-router";
 import AuthorityCtrl from "@/access/authorityCtrl";

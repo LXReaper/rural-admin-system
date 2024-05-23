@@ -2,15 +2,13 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type RulesQueryRequest = {
+export type TransactionsQueryRequest = {
   current?: number;
   pageSize?: number;
-  publishDate?: string;
-  publishUserId?: number;
-  ruleContent?: string;
-  ruleId?: number;
+  productId?: number;
   sortField?: string;
   sortOrder?: string;
-  updateDate?: string;
-  updateUserId?: number;
+  transactionTime?: string;
+  transactionsId?: number;
+  userId?: number;
 };
