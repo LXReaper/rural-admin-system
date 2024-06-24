@@ -6,6 +6,7 @@ export type Transactions = {
   is_deleted?: number;
   product_id?: number;
   transaction_quantity?: number;
+  transaction_status?: boolean;
   transaction_time?: string;
   transactions_Id?: number;
   user_id?: number;

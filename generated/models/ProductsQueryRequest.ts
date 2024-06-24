@@ -13,5 +13,6 @@ export type ProductsQueryRequest = {
   shelfTime?: string;
   sortField?: string;
   sortOrder?: string;
+  stock_quantity?: number;
   updateTime?: string;
 };

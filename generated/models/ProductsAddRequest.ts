@@ -5,6 +5,7 @@
 export type ProductsAddRequest = {
   price?: number;
   productDescription?: string;
+  productImage?: string;
   productName?: string;
   productType?: string;
   stockQuantity?: number;

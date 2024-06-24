@@ -5,6 +5,7 @@
 export type Products = {
   is_deleted?: number;
   price?: number;
+  product_Image?: string;
   product_description?: string;
   product_id?: number;
   product_name?: string;

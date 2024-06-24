@@ -1,6 +1,3 @@
-/* generated using openapi-typescript-codegen -- do not edit */
-/* istanbul ignore file */
-/* tslint:disable */
 /* eslint-disable */
 import type { BaseResponse_boolean_ } from "../models/BaseResponse_boolean_";
 import type { BaseResponse_long_ } from "../models/BaseResponse_long_";
@@ -50,6 +47,28 @@ export class ProductsControllerService {
     return __request(OpenAPI, {
       method: "POST",
       url: "/api/products/delete",
+      body: deleteRequest,
+      errors: {
+        401: `Unauthorized`,
+        403: `Forbidden`,
+        404: `Not Found`,
+      },
+    });
+  }
+
+  /**
+   * 删除多个商品
+   * @param deleteRequest deleteRequest
+   * @returns BaseResponse_boolean_ OK
+   * @returns any Created
+   * @throws ApiError
+   */
+  public static deleteProductsMoreUsingPost(
+    deleteRequest: Array<DeleteRequest>
+  ): CancelablePromise<BaseResponse_boolean_ | any> {
+    return __request(OpenAPI, {
+      method: "POST",
+      url: "/api/products/delete/more",
       body: deleteRequest,
       errors: {
         401: `Unauthorized`,

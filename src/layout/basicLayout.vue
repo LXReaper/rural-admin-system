@@ -11,7 +11,10 @@
       </div>
       <div style="text-align: right; margin-top: -25px">
         <el-space direction="horizontal" style="padding-left: 90%">
-          <el-avatar :src="loginUser.avatar" style="cursor: pointer" />
+          <el-avatar
+            :src="store.state.user.loginUser.avatar"
+            style="cursor: pointer"
+          />
           <span style="cursor: pointer; color: red" @click="logout"
             >退出登录
           </span>
@@ -43,14 +46,14 @@
         <el-main>
           <router-view />
         </el-main>
-        <el-footer>Footer</el-footer>
+        <el-footer>by JKTeam 2024</el-footer>
       </el-container>
     </el-container>
   </div>
 </template>
 <script setup lang="ts">
 import { ArrowLeft, ArrowRight } from "@element-plus/icons-vue";
-import { ref, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
 import BasicMenu from "@/components/basicComponent/basicMenu.vue";
 import store from "@/store";
 import router from "@/router";
@@ -72,14 +75,14 @@ const onCollapse = () => {
 };
 
 const logout = async () => {
-  await router.push({
-    path: "/user",
-  });
   const res = await UserControllerService.userLogoutUsingPost();
   if (res === 0) {
     await store.dispatch("user/getLoginUser");
     window.location.reload();
   }
+  await router.push({
+    path: "/user",
+  });
 };
 </script>
 

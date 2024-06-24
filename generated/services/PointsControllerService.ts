@@ -1,6 +1,3 @@
-/* generated using openapi-typescript-codegen -- do not edit */
-/* istanbul ignore file */
-/* tslint:disable */
 /* eslint-disable */
 import type { BaseResponse_double_ } from "../models/BaseResponse_double_";
 import type { BaseResponse_Page_Points_ } from "../models/BaseResponse_Page_Points_";

@@ -1,11 +1,10 @@
-/* generated using openapi-typescript-codegen -- do not edit */
-/* istanbul ignore file */
-/* tslint:disable */
 /* eslint-disable */
 import type { BaseResponse_boolean_ } from "../models/BaseResponse_boolean_";
 import type { BaseResponse_Coursesubmissions_ } from "../models/BaseResponse_Coursesubmissions_";
 import type { BaseResponse_long_ } from "../models/BaseResponse_long_";
+import type { BaseResponse_Page_Coursesubmissions_ } from "../models/BaseResponse_Page_Coursesubmissions_";
 import type { CoursesubmissionsAddRequest } from "../models/CoursesubmissionsAddRequest";
+import type { CoursesubmissionsQueryRequest } from "../models/CoursesubmissionsQueryRequest";
 import type { CoursesubmissionsUpdateRequest } from "../models/CoursesubmissionsUpdateRequest";
 import type { DeleteRequest } from "../models/DeleteRequest";
 import type { CancelablePromise } from "../core/CancelablePromise";
@@ -72,6 +71,28 @@ export class CoursesubmissionsControllerService {
       query: {
         material_id: materialId,
       },
+      errors: {
+        401: `Unauthorized`,
+        403: `Forbidden`,
+        404: `Not Found`,
+      },
+    });
+  }
+
+  /**
+   * listCoursesubmissionsByPage
+   * @param coursesubmissionsQueryRequest coursesubmissionsQueryRequest
+   * @returns BaseResponse_Page_Coursesubmissions_ OK
+   * @returns any Created
+   * @throws ApiError
+   */
+  public static listCoursesubmissionsByPageUsingPost(
+    coursesubmissionsQueryRequest: CoursesubmissionsQueryRequest
+  ): CancelablePromise<BaseResponse_Page_Coursesubmissions_ | any> {
+    return __request(OpenAPI, {
+      method: "POST",
+      url: "/api/coursesubmissions/list/page",
+      body: coursesubmissionsQueryRequest,
       errors: {
         401: `Unauthorized`,
         403: `Forbidden`,

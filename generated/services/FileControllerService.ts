@@ -1,5 +1,4 @@
 /* eslint-disable */
-import type { BaseResponse_boolean_ } from "../models/BaseResponse_boolean_";
 import type { BaseResponse_string_ } from "../models/BaseResponse_string_";
 import type { CancelablePromise } from "../core/CancelablePromise";
 import { OpenAPI } from "../core/OpenAPI";
@@ -8,24 +7,27 @@ import { request as __request } from "../core/request";
 export class FileControllerService {
   /**
    * filesUpload
-   * @param fileName fileName
-   * @param fileType fileType
-   * @returns BaseResponse_boolean_ OK
+   * @param file file
+   * @param filePrefix
+   * @param fileType
+   * @returns BaseResponse_string_ OK
    * @returns any Created
    * @throws ApiError
    */
   public static filesUploadUsingPost(
-    fileName: Blob,
+    file: Blob,
+    filePrefix?: string,
     fileType?: string
-  ): CancelablePromise<BaseResponse_boolean_ | any> {
+  ): CancelablePromise<BaseResponse_string_ | any> {
     return __request(OpenAPI, {
       method: "POST",
       url: "/api/file/fileUpload",
       query: {
+        filePrefix: filePrefix,
         fileType: fileType,
       },
       formData: {
-        fileName: fileName,
+        file: file,
       },
       errors: {
         401: `Unauthorized`,
