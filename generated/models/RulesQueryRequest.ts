@@ -9,6 +9,7 @@ export type RulesQueryRequest = {
   publishUserId?: number;
   ruleContent?: string;
   ruleId?: number;
+  rule_points?: number;
   sortField?: string;
   sortOrder?: string;
   updateDate?: string;

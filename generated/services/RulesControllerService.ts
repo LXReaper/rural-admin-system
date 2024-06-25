@@ -1,3 +1,6 @@
+/* generated using openapi-typescript-codegen -- do not edit */
+/* istanbul ignore file */
+/* tslint:disable */
 /* eslint-disable */
 import type { BaseResponse_boolean_ } from "../models/BaseResponse_boolean_";
 import type { BaseResponse_long_ } from "../models/BaseResponse_long_";
@@ -13,7 +16,7 @@ import { request as __request } from "../core/request";
 
 export class RulesControllerService {
   /**
-   * rulesAdd
+   * 添加规则
    * @param rulesAddRequest rulesAddRequest
    * @returns BaseResponse_long_ OK
    * @returns any Created
@@ -35,7 +38,7 @@ export class RulesControllerService {
   }
 
   /**
-   * deleteRules
+   * 删除规则
    * @param deleteRequest deleteRequest
    * @returns BaseResponse_boolean_ OK
    * @returns any Created
@@ -102,7 +105,7 @@ export class RulesControllerService {
   }
 
   /**
-   * updateRules
+   * 更新规则
    * @param rulesUpdateRequest rulesUpdateRequest
    * @returns BaseResponse_boolean_ OK
    * @returns any Created

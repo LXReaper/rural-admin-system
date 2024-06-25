@@ -1,3 +1,6 @@
+/* generated using openapi-typescript-codegen -- do not edit */
+/* istanbul ignore file */
+/* tslint:disable */
 /* eslint-disable */
 import type { BaseResponse_boolean_ } from "../models/BaseResponse_boolean_";
 import type { BaseResponse_long_ } from "../models/BaseResponse_long_";
@@ -13,7 +16,7 @@ import { request as __request } from "../core/request";
 
 export class ProductsControllerService {
   /**
-   * productsAdd
+   * 添加商品
    * @param productsAddRequest productsAddRequest
    * @returns BaseResponse_long_ OK
    * @returns any Created
@@ -35,7 +38,7 @@ export class ProductsControllerService {
   }
 
   /**
-   * deleteProducts
+   * 删除单个商品
    * @param deleteRequest deleteRequest
    * @returns BaseResponse_boolean_ OK
    * @returns any Created
@@ -79,7 +82,7 @@ export class ProductsControllerService {
   }
 
   /**
-   * getProductsById
+   * 根据id获取商品
    * @param productId ProductId
    * @returns BaseResponse_Products_ OK
    * @throws ApiError
@@ -102,7 +105,7 @@ export class ProductsControllerService {
   }
 
   /**
-   * listProductsByPage
+   * 分页获取商品列表
    * @param productsQueryRequest productsQueryRequest
    * @returns BaseResponse_Page_Products_ OK
    * @returns any Created
@@ -124,7 +127,7 @@ export class ProductsControllerService {
   }
 
   /**
-   * updateProducts
+   * 更新商品
    * @param productsUpdateRequest productsUpdateRequest
    * @returns BaseResponse_boolean_ OK
    * @returns any Created

@@ -3,7 +3,6 @@
 /* tslint:disable */
 /* eslint-disable */
 export type TransactionsAddRequest = {
-  productId?: number;
-  transactionQuantity?: number;
-  userId?: number;
+  productId?: Array<number>;
+  transactionQuantity?: Array<number>;
 };

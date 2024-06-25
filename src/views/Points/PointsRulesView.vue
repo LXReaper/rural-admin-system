@@ -73,58 +73,95 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" />
-      <el-table-column label="规则ID" align="center" prop="ruleId" />
-      <el-table-column label="规则内容" align="center" prop="ruleContent" />
-      <el-table-column label="规则积分" align="center" prop="rulePoints" />
-      <el-table-column label="发布用户ID" align="center" prop="publishUserId" />
+      <el-table-column label="规则ID" align="center" prop="rule_id" />
+      <el-table-column label="规则内容" align="center" prop="rule_content" />
+      <el-table-column label="规则积分" align="center" prop="rule_points" />
+      <el-table-column
+        label="发布用户ID"
+        align="center"
+        prop="publish_user_id"
+      />
       <el-table-column
         label="发布日期"
         align="center"
-        prop="publishDate"
+        prop="publish_date"
         width="180"
       >
         <template #default="scope">
-          <span>{{ scope.row }}</span>
+          <span>{{
+            moment(scope.row.publish_date).format("YYYY年MM月DD日 HH时mm分ss秒")
+          }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="更新用户ID" align="center" prop="updateUserId" />
+      <el-table-column
+        label="更新用户ID"
+        align="center"
+        prop="update_user_id"
+      />
       <el-table-column
         label="更新日期"
         align="center"
-        prop="updateDate"
+        prop="update_date"
         width="180"
       >
         <template #default="scope">
-          <span>{{ scope.row }}</span>
+          <span>{{
+            moment(scope.row.update_date).format("YYYY年MM月DD日 HH时mm分ss秒")
+          }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="是否删除" align="center" prop="isDeleted" />
     </el-table>
 
-    <!--    &lt;!&ndash;    分页&ndash;&gt;-->
-    <!--    <el-pagination-->
-    <!--      v-show="total > 0"-->
-    <!--      :total="total"-->
-    <!--      :page="queryParams.current"-->
-    <!--      :limit="queryParams.pageSize"-->
-    <!--    />-->
+    <!--        &lt;!&ndash;    分页&ndash;&gt;-->
+    <!--        <el-pagination-->
+    <!--          v-show="total > 0"-->
+    <!--          :total="total"-->
+    <!--          :page="queryParams.current"-->
+    <!--          :limit="queryParams.pageSize"-->
+    <!--        />-->
     <!-- 添加或修改用户配置对话框 -->
     <el-dialog :title="title" v-model="open" width="700px" append-to-body>
       <el-form :rules="rules" label-width="120px">
         <el-form-item label="规则内容：" prop="ruleContent">
-          <el-input placeholder="请输入规则内容"></el-input>
+          <el-input
+            type="textarea"
+            maxlength="2000"
+            show-word-limit
+            v-model="form.ruleContent"
+            placeholder="请输入规则内容"
+          ></el-input>
         </el-form-item>
-        <el-form-item label="规则积分：" prop="rulePoints">
-          <el-input placeholder="请输入规则积分"></el-input>
+        <el-form-item label="最大积分数：" prop="rulePoints">
+          <el-input
+            type="number"
+            v-model="form.rulePoints"
+            placeholder="请输入规则积分"
+          ></el-input>
         </el-form-item>
       </el-form>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button type="primary" @click="submitFormDebounce"
+            >确 定
+          </el-button>
+          <el-button @click="cancel">取 消</el-button>
+        </div>
+      </template>
     </el-dialog>
   </div>
 </template>
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { debounce } from "../../../utils/debounce_Throttle";
-import { DeleteRequest } from "../../../generated";
+import {
+  DeleteRequest,
+  Rules,
+  RulesControllerService,
+  RulesQueryRequest,
+} from "../../../generated";
+import { ElMessage, ElNotification } from "element-plus";
+import moment from "moment";
+import store from "@/store";
 
 //总数
 const total = ref(50);
@@ -139,7 +176,7 @@ const rulesList = ref([]);
 //选中数组
 const ids = ref<DeleteRequest[]>([]);
 // 弹出层标题
-const title = ref("");
+const title = ref("添加规则");
 //是否显示数据弹出层
 const open = ref(false);
 //查询内容
@@ -148,13 +185,25 @@ const queryParams = ref({
   current: 1,
   rule_id: "",
   rule_content: "",
+  rule_points: "" as any,
   publish_user_id: "",
   update_user_id: "",
 });
-
+//添加和编辑对话框中编写的要放入数据库中的form数据
+const form = ref({
+  ruleContent: "",
+  rulePoints: "",
+});
+//表单重置
+const reset = () => {
+  form.value = {
+    ruleContent: "",
+    rulePoints: "",
+  };
+};
 /** 新增按钮操作 */
 const handleAdd = () => {
-  // reset();
+  reset();
   open.value = true;
   title.value = "添加居民";
 };
@@ -162,11 +211,17 @@ const handleAdd = () => {
 const onDelete = () => {
   console.log();
 };
+
 //查询数据
-const handleQuery = () => {
+const handleQuery = async () => {
   loading.value = true;
-  console.log();
+  const res = await RulesControllerService.listRulesByPageUsingPost(
+    queryParams.value
+  );
   loading.value = false;
+  if (res.code === 0) {
+    rulesList.value = res.data.records;
+  } else ElMessage.error("规则积分查询失败，" + res.message);
 };
 const handleQueryDebounce = debounce(handleQuery, 500);
 onMounted(() => {
@@ -188,6 +243,25 @@ const rules = ref({
     { required: true, message: "规则积分不能为空", trigger: "blur" },
   ],
 });
+//提交
+const submitForm = async () => {
+  const res = await RulesControllerService.rulesAddUsingPost({
+    publishUserId: form.value.publishUserId as any,
+    ruleContent: form.value.ruleContent as any,
+    rulePoints: form.value.rulePoints as any,
+  });
+  if (res.code === 0) {
+    ElNotification.success("规则添加成功");
+    await handleQuery();
+  } else ElNotification.error("规则添加失败，" + res.message);
+  reset();
+};
+const submitFormDebounce = debounce(submitForm, 300); //防抖
+//取消
+const cancel = () => {
+  open.value = false;
+  reset();
+};
 const handleSelectionChange = (selection: any) => {
   //拿到选中的行的传递的数组信息selection，将数组selection中的villager_id传给ids
   ids.value = [];

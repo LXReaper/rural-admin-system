@@ -8,5 +8,4 @@ export type TasksAddRequest = {
   pointsValue?: number;
   ruleId?: number;
   taskContent?: string;
-  userId?: number;
 };

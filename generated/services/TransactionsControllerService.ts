@@ -1,3 +1,6 @@
+/* generated using openapi-typescript-codegen -- do not edit */
+/* istanbul ignore file */
+/* tslint:disable */
 /* eslint-disable */
 import type { BaseResponse_boolean_ } from "../models/BaseResponse_boolean_";
 import type { BaseResponse_long_ } from "../models/BaseResponse_long_";
@@ -12,7 +15,7 @@ import { request as __request } from "../core/request";
 
 export class TransactionsControllerService {
   /**
-   * transactionsAdd
+   * 生成订单
    * @param transactionsAddRequest transactionsAddRequest
    * @returns BaseResponse_long_ OK
    * @returns any Created
@@ -92,6 +95,30 @@ export class TransactionsControllerService {
       method: "POST",
       url: "/api/transactions/list/page",
       body: transactionsQueryRequest,
+      errors: {
+        401: `Unauthorized`,
+        403: `Forbidden`,
+        404: `Not Found`,
+      },
+    });
+  }
+
+  /**
+   * 处理交易订单
+   * @param transactionsId transactions_Id
+   * @returns BaseResponse_boolean_ OK
+   * @returns any Created
+   * @throws ApiError
+   */
+  public static transactionsHandleUsingPost(
+    transactionsId?: number
+  ): CancelablePromise<BaseResponse_boolean_ | any> {
+    return __request(OpenAPI, {
+      method: "POST",
+      url: "/api/transactions/transaction/handle",
+      query: {
+        transactions_Id: transactionsId,
+      },
       errors: {
         401: `Unauthorized`,
         403: `Forbidden`,
