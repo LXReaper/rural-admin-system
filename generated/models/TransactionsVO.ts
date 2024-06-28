@@ -2,12 +2,16 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type Transactions = {
-  is_deleted?: number;
-  product_id?: string;
-  transaction_quantity?: string;
+import type { Products } from "./Products";
+
+export type TransactionsVO = {
+  price?: Array<number>;
+  product_id?: Array<number>;
+  productsList?: Array<Products>;
+  transaction_quantity?: Array<number>;
   transaction_status?: boolean;
   transaction_time?: string;
   transactions_Id?: number;
   user_id?: number;
+  villager_name?: string;
 };

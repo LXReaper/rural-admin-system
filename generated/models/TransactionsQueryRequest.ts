@@ -5,11 +5,12 @@
 export type TransactionsQueryRequest = {
   current?: number;
   pageSize?: number;
-  productId?: number;
+  productId?: Array<number>;
   sortField?: string;
   sortOrder?: string;
   transactionTime?: string;
   transaction_status?: boolean;
+  transaction_quantity?: string;
   transactionsId?: number;
   userId?: number;
 };

@@ -55,6 +55,12 @@
           <span>任务中心</span>
         </template>
         <el-menu-item-group>
+          <el-menu-item index="/task/examine">
+            <el-icon>
+              <CircleCheck />
+            </el-icon>
+            任务审核
+          </el-menu-item>
           <el-menu-item index="/task/info">
             <el-icon>
               <List />
@@ -131,6 +137,7 @@
 <script setup lang="ts">
 import {
   Checked,
+  CircleCheck,
   CircleCheckFilled,
   Comment,
   DataBoard,

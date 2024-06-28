@@ -2,11 +2,10 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type TasksAddRequest = {
+export type TasksExamineAddRequest = {
   deadline?: string;
   materialId?: number;
   pointsValue?: number;
-  publish_date?: string;
   ruleId?: number;
   taskContent?: string;
   user_id?: number;

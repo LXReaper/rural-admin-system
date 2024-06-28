@@ -5,4 +5,5 @@
 export type TransactionsAddRequest = {
   productId?: Array<number>;
   transactionQuantity?: Array<number>;
+  user_id?: number;
 };

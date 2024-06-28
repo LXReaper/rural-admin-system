@@ -4,7 +4,7 @@
 /* eslint-disable */
 import type { BaseResponse_boolean_ } from "../models/BaseResponse_boolean_";
 import type { BaseResponse_long_ } from "../models/BaseResponse_long_";
-import type { BaseResponse_Page_Transactions_ } from "../models/BaseResponse_Page_Transactions_";
+import type { BaseResponse_Page_TransactionsVO_ } from "../models/BaseResponse_Page_TransactionsVO_";
 import type { BaseResponse_Transactions_ } from "../models/BaseResponse_Transactions_";
 import type { DeleteRequest } from "../models/DeleteRequest";
 import type { TransactionsAddRequest } from "../models/TransactionsAddRequest";
@@ -37,7 +37,7 @@ export class TransactionsControllerService {
   }
 
   /**
-   * deleteTransactions
+   * 删除订单
    * @param deleteRequest deleteRequest
    * @returns BaseResponse_boolean_ OK
    * @returns any Created
@@ -59,7 +59,7 @@ export class TransactionsControllerService {
   }
 
   /**
-   * getTransactionsById
+   * 根据id获取订单信息
    * @param transactionId TransactionId
    * @returns BaseResponse_Transactions_ OK
    * @throws ApiError
@@ -82,15 +82,15 @@ export class TransactionsControllerService {
   }
 
   /**
-   * listTransactionsByPage
+   * 分页获取所有交易信息列表
    * @param transactionsQueryRequest transactionsQueryRequest
-   * @returns BaseResponse_Page_Transactions_ OK
+   * @returns BaseResponse_Page_TransactionsVO_ OK
    * @returns any Created
    * @throws ApiError
    */
   public static listTransactionsByPageUsingPost(
     transactionsQueryRequest: TransactionsQueryRequest
-  ): CancelablePromise<BaseResponse_Page_Transactions_ | any> {
+  ): CancelablePromise<BaseResponse_Page_TransactionsVO_ | any> {
     return __request(OpenAPI, {
       method: "POST",
       url: "/api/transactions/list/page",
@@ -104,17 +104,38 @@ export class TransactionsControllerService {
   }
 
   /**
-   * 处理交易订单
-   * @param transactionsId transactions_Id
-   * @returns BaseResponse_boolean_ OK
+   * 分页获取自己的交易信息列表
+   * @param transactionsQueryRequest transactionsQueryRequest
+   * @returns BaseResponse_Page_TransactionsVO_ OK
    * @returns any Created
    * @throws ApiError
    */
-  public static transactionsHandleUsingPost(
-    transactionsId?: number
-  ): CancelablePromise<BaseResponse_boolean_ | any> {
+  public static listMyTransactionsByPageUsingPost(
+    transactionsQueryRequest: TransactionsQueryRequest
+  ): CancelablePromise<BaseResponse_Page_TransactionsVO_ | any> {
     return __request(OpenAPI, {
       method: "POST",
+      url: "/api/transactions/list/page/my",
+      body: transactionsQueryRequest,
+      errors: {
+        401: `Unauthorized`,
+        403: `Forbidden`,
+        404: `Not Found`,
+      },
+    });
+  }
+
+  /**
+   * 处理交易订单
+   * @param transactionsId transactions_Id
+   * @returns BaseResponse_boolean_ OK
+   * @throws ApiError
+   */
+  public static transactionsHandleUsingGet(
+    transactionsId?: number
+  ): CancelablePromise<BaseResponse_boolean_> {
+    return __request(OpenAPI, {
+      method: "GET",
       url: "/api/transactions/transaction/handle",
       query: {
         transactions_Id: transactionsId,

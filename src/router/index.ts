@@ -17,6 +17,7 @@ import { ElMessage } from "element-plus";
 import store from "@/store";
 import AuthorityCtrl from "@/access/authorityCtrl";
 import checkAuthority from "@/access/checkAuthority";
+import TaskExamineView from "@/views/Tasks/TaskExamineView.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -66,6 +67,11 @@ const routes: Array<RouteRecordRaw> = [
         path: "/task",
         name: "任务中心",
         children: [
+          {
+            path: "/task/examine",
+            name: "任务审核",
+            component: TaskExamineView,
+          },
           {
             path: "/task/info",
             name: "任务信息",

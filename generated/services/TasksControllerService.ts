@@ -1,3 +1,6 @@
+/* generated using openapi-typescript-codegen -- do not edit */
+/* istanbul ignore file */
+/* tslint:disable */
 /* eslint-disable */
 import type { BaseResponse_boolean_ } from "../models/BaseResponse_boolean_";
 import type { BaseResponse_long_ } from "../models/BaseResponse_long_";
@@ -13,7 +16,7 @@ import { request as __request } from "../core/request";
 
 export class TasksControllerService {
   /**
-   * tasksAdd
+   * 直接添加任务（仅限管理员）
    * @param tasksAddRequest tasksAddRequest
    * @returns BaseResponse_long_ OK
    * @returns any Created
@@ -35,7 +38,7 @@ export class TasksControllerService {
   }
 
   /**
-   * deleteTasks
+   * 删除任务
    * @param deleteRequest deleteRequest
    * @returns BaseResponse_boolean_ OK
    * @returns any Created
