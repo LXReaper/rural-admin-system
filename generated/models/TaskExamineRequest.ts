@@ -3,7 +3,6 @@
 /* tslint:disable */
 /* eslint-disable */
 export type TaskExamineRequest = {
-    id?: number;
-    is_accepted?: number;
+  id?: number;
+  is_accepted?: number;
 };
-

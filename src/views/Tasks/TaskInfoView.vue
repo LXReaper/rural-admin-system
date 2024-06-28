@@ -74,18 +74,30 @@
     <!--    表格-->
     <el-table v-loading="loading" :data="tasksList">
       <el-table-column label="任务ID" align="center" prop="task_id" />
-      <el-table-column label="任务内容" align="center" prop="task_content" />
+      <el-table-column
+        label="任务内容"
+        align="center"
+        prop="task_content"
+        show-overflow-tooltip
+      />
       <el-table-column label="资料ID" align="center" prop="material_id" />
-      <el-table-column label="规则ID" align="center" prop="rule_id" />
+      <el-table-column label="规则" align="center" prop="rule_id">
+        <template #default="scope">
+          <el-button type="text" @click="showRuleDetail(scope.row.rule_id)"
+            >显示规则
+          </el-button>
+        </template>
+      </el-table-column>
       <el-table-column label="发布用户ID" align="center" prop="user_id" />
       <el-table-column
         label="发布日期"
         align="center"
         prop="publish_date"
+        show-overflow-tooltip
         width="180"
       >
         <template #default="scope">
-          <span>{{
+          <span style="white-space: nowrap">{{
             moment(scope.row.publish_date).format("YYYY年MM月DD日HH时mm分ss秒")
           }}</span>
         </template>
@@ -99,10 +111,11 @@
         label="更新日期"
         align="center"
         prop="update_date"
+        show-overflow-tooltip
         width="180"
       >
         <template #default="scope">
-          <span>{{
+          <span style="white-space: nowrap">{{
             moment(scope.row.update_date).format("YYYY年MM月DD日HH时mm分ss秒")
           }}</span>
         </template>
@@ -111,15 +124,20 @@
         label="截止日期"
         align="center"
         prop="deadline"
+        show-overflow-tooltip
         width="180"
       >
         <template #default="scope">
-          <span>{{
+          <span style="white-space: nowrap">{{
             moment(scope.row.deadline).format("YYYY年MM月DD日HH时mm分ss秒")
           }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="积分数值" align="center" prop="points_value" />
+      <el-table-column label="积分数值" align="center" prop="points_value">
+        <template #default="scope">
+          <el-tag type="success">{{ scope.row.points_value }}</el-tag>
+        </template>
+      </el-table-column>
     </el-table>
 
     <!--    &lt;!&ndash;    分页&ndash;&gt;-->
@@ -129,12 +147,63 @@
     <!--      :page="queryParams.current"-->
     <!--      :limit="queryParams.pageSize"-->
     <!--    />-->
+
+    <!--    展示规则信息对话框-->
+    <el-dialog v-model="isOpenRuleDetail" draggable append-to-body>
+      <el-descriptions
+        :title="'规则详情'"
+        direction="vertical"
+        :column="4"
+        :size="'default'"
+        border
+      >
+        <el-descriptions-item label="规则编号"
+          >{{ ruleDetail.rule_id }}
+        </el-descriptions-item>
+        <el-descriptions-item label="规则限制点数">
+          <el-tag type="danger" round>{{ ruleDetail.rule_points }} </el-tag>
+        </el-descriptions-item>
+        <el-descriptions-item label="发布用户id">
+          <el-tag type="success" round
+            >{{ ruleDetail.publish_user_id }}
+          </el-tag>
+        </el-descriptions-item>
+        <el-descriptions-item label="更新用户id">
+          <el-tag type="success" round>{{ ruleDetail.update_user_id }}</el-tag>
+        </el-descriptions-item>
+        <el-descriptions-item label="规则内容" :span="4"
+          >{{ ruleDetail.rule_content }}
+        </el-descriptions-item>
+        <el-descriptions-item label="规则发布时间">
+          <el-tag type="primary" round
+            >{{
+              moment(ruleDetail.publish_date).format(
+                "YYYY年MM月DD日 HH时mm分ss秒"
+              )
+            }}
+          </el-tag>
+        </el-descriptions-item>
+        <el-descriptions-item label="规则更新时间">
+          <el-tag type="primary" round
+            >{{
+              moment(ruleDetail.update_date).format(
+                "YYYY年MM月DD日 HH时mm分ss秒"
+              )
+            }}
+          </el-tag>
+        </el-descriptions-item>
+      </el-descriptions>
+    </el-dialog>
   </div>
 </template>
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { debounce } from "../../../utils/debounce_Throttle";
-import { TasksControllerService } from "../../../generated";
+import {
+  Rules,
+  RulesControllerService,
+  TasksControllerService,
+} from "../../../generated";
 import moment from "moment";
 import { ElMessage } from "element-plus";
 
@@ -183,6 +252,34 @@ const resetQuery = () => {
   queryParams.value.userId = "";
   queryParams.value.updatedUserId = "";
   queryParams.value.pointsValue = "";
+};
+
+/**
+ * 展示规则信息
+ */
+//是否显示规则详情对话框
+const isOpenRuleDetail = ref(false);
+//规则信息
+const ruleDetail = ref({
+  publish_date: "",
+  publish_user_id: "",
+  rule_content: "",
+  rule_id: "",
+  rule_points: "",
+  update_date: "",
+  update_user_id: "",
+});
+//展示规则对话框
+const showRuleDetail = (id: number) => {
+  isOpenRuleDetail.value = true;
+  getRuleById(id);
+};
+//获取规则信息
+const getRuleById = async (id: number) => {
+  const res = await RulesControllerService.getRulesByIdUsingGet(id);
+  if (res.code === 0) {
+    ruleDetail.value = res.data as any;
+  } else ElMessage.error("查询规则信息失败，" + res.message);
 };
 </script>
 

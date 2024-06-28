@@ -43,8 +43,8 @@
         <el-date-picker
           clearable
           v-model="queryParams.shelfTime"
-          type="date"
-          value-format="yyyy-MM-dd"
+          value-format="YYYY-MM-DD HH:mm:ss"
+          type="datetime"
           placeholder="请选择上架时间"
         >
         </el-date-picker>
@@ -53,8 +53,8 @@
         <el-date-picker
           clearable
           v-model="queryParams.updateTime"
-          type="date"
-          value-format="yyyy-MM-dd"
+          value-format="YYYY-MM-DD HH:mm:ss"
+          type="datetime"
           placeholder="请选择更新时间"
         >
         </el-date-picker>
@@ -112,17 +112,30 @@
         align="center"
         prop="product_description"
       />
-      <el-table-column label="商品类型" align="center" prop="product_type" />
-      <el-table-column label="商品积分" align="center" prop="price" />
-      <el-table-column label="商品库存" align="center" prop="stock_quantity" />
+      <el-table-column label="商品类型" align="center" prop="product_type">
+        <template #default="scope">
+          <el-tag type="primary" round>{{ scope.row.product_type }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="商品积分" align="center" prop="price">
+        <template #default="scope">
+          <el-tag type="danger" round>{{ scope.row.price }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="商品库存" align="center" prop="stock_quantity">
+        <template #default="scope">
+          <el-tag type="success" round>{{ scope.row.stock_quantity }}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column
         label="上架时间"
         align="center"
         prop="shelf_time"
+        show-overflow-tooltip
         width="180"
       >
         <template #default="scope">
-          <span>{{
+          <span style="white-space: nowrap">{{
             `${moment(scope.row.shelf_time).format(
               "YYYY年MM月DD日 HH时mm分ss秒"
             )}`
@@ -133,10 +146,11 @@
         label="更新时间"
         align="center"
         prop="update_time"
+        show-overflow-tooltip
         width="180"
       >
         <template #default="scope">
-          <span>{{
+          <span style="white-space: nowrap">{{
             `${moment(scope.row.update_time).format(
               "YYYY年MM月DD日 HH时mm分ss秒"
             )}`

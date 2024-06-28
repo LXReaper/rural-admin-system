@@ -11,6 +11,7 @@ import type { TasksExamineQueryRequest } from "../models/TasksExamineQueryReques
 import type { CancelablePromise } from "../core/CancelablePromise";
 import { OpenAPI } from "../core/OpenAPI";
 import { request as __request } from "../core/request";
+import { DeleteRequest } from "../models/DeleteRequest";
 
 export class TasksExamineControllerService {
   /**
@@ -27,6 +28,28 @@ export class TasksExamineControllerService {
       method: "POST",
       url: "/api/tasksExamine/add",
       body: tasksExamineAddRequest,
+      errors: {
+        401: `Unauthorized`,
+        403: `Forbidden`,
+        404: `Not Found`,
+      },
+    });
+  }
+
+  /**
+   * 删除审核任务记录
+   * @param deleteRequest deleteRequest
+   * @returns BaseResponse_boolean_ OK
+   * @returns any Created
+   * @throws ApiError
+   */
+  public static deleteTaskExamineUsingPost(
+    deleteRequest: DeleteRequest
+  ): CancelablePromise<BaseResponse_boolean_ | any> {
+    return __request(OpenAPI, {
+      method: "POST",
+      url: "/api/tasksExamine/delete",
+      body: deleteRequest,
       errors: {
         401: `Unauthorized`,
         403: `Forbidden`,

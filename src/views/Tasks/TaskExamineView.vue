@@ -66,12 +66,12 @@
     <!--    增删改操作-->
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <el-button type="primary" plain size="default" @click="handleAdd"
-          >新增
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button type="danger" plain size="default" :disabled="multiple"
+        <el-button
+          type="danger"
+          plain
+          size="default"
+          @click="handleDelete"
+          :disabled="multiple"
           >删除
         </el-button>
       </el-col>
@@ -86,7 +86,13 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="id" align="center" prop="id" />
       <el-table-column label="资料id" align="center" prop="material_id" />
-      <el-table-column label="规则id" align="center" prop="rule_id" />
+      <el-table-column label="规则" align="center" prop="rule_id">
+        <template #default="scope">
+          <el-button type="text" @click="showRuleDetail(scope.row.rule_id)"
+            >显示规则
+          </el-button>
+        </template>
+      </el-table-column>
       <el-table-column
         label="任务内容"
         align="center"
@@ -104,7 +110,17 @@
         align="center"
         prop="points_value"
       />
-      <el-table-column label="审核状态" align="center" prop="is_accepted" />
+      <el-table-column label="审核状态" align="center" prop="is_accepted">
+        <template #default="scope">
+          <el-tag type="warning" v-if="!scope.row.is_accepted">未审核</el-tag>
+          <el-tag type="success" v-else-if="scope.row.is_accepted === 1"
+            >审核通过
+          </el-tag>
+          <el-tag type="danger" v-else-if="scope.row.is_accepted === 2"
+            >审核打回
+          </el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="发布用户id" align="center" prop="user_id" />
       <el-table-column
         label="发布日期"
@@ -166,7 +182,11 @@
         class-name="small-padding fixed-width"
       >
         <template #default="scope">
-          <el-button size="small" @click="handleEdit(scope.$index, scope.row)">
+          <el-button
+            v-if="!scope.row.is_accepted"
+            size="small"
+            @click="handleEdit(scope.$index, scope.row)"
+          >
             审核
           </el-button>
           <el-popconfirm
@@ -195,7 +215,7 @@
 
     <!-- 审核任务对话框 -->
     <el-dialog :title="title" v-model="open" width="600px" append-to-body>
-      <el-form :model="form" :rules="rules" label-width="80px">
+      <el-form :model="curState" :rules="rules" label-width="80px">
         <el-form-item label="审核状态" prop="video_url">
           <el-select
             v-model="curState.is_accepted"
@@ -226,13 +246,63 @@
         </div>
       </template>
     </el-dialog>
+    <!--    展示规则信息对话框-->
+    <el-dialog v-model="isOpenRuleDetail" draggable append-to-body>
+      <el-descriptions
+        :title="'规则详情'"
+        direction="vertical"
+        :column="4"
+        :size="'default'"
+        border
+      >
+        <el-descriptions-item label="规则编号"
+          >{{ ruleDetail.rule_id }}
+        </el-descriptions-item>
+        <el-descriptions-item label="规则限制点数">
+          <el-tag type="danger" round>{{ ruleDetail.rule_points }}</el-tag>
+        </el-descriptions-item>
+        <el-descriptions-item label="发布用户id">
+          <el-tag type="success" round
+            >{{ ruleDetail.publish_user_id }}
+          </el-tag>
+        </el-descriptions-item>
+        <el-descriptions-item label="更新用户id">
+          <el-tag type="success" round>{{ ruleDetail.update_user_id }}</el-tag>
+        </el-descriptions-item>
+        <el-descriptions-item label="规则内容" :span="4"
+          >{{ ruleDetail.rule_content }}
+        </el-descriptions-item>
+        <el-descriptions-item label="规则发布时间">
+          <el-tag type="primary" round
+            >{{
+              moment(ruleDetail.publish_date).format(
+                "YYYY年MM月DD日 HH时mm分ss秒"
+              )
+            }}
+          </el-tag>
+        </el-descriptions-item>
+        <el-descriptions-item label="规则更新时间">
+          <el-tag type="primary" round
+            >{{
+              moment(ruleDetail.update_date).format(
+                "YYYY年MM月DD日 HH时mm分ss秒"
+              )
+            }}
+          </el-tag>
+        </el-descriptions-item>
+      </el-descriptions>
+    </el-dialog>
   </div>
 </template>
 <script setup lang="ts">
 import { onMounted, ref, watch } from "vue";
 import { debounce } from "../../../utils/debounce_Throttle";
 import { InfoFilled } from "@element-plus/icons-vue";
-import { UserControllerService } from "../../../generated";
+import {
+  DeleteRequest,
+  RulesControllerService,
+  UserControllerService,
+} from "../../../generated";
 import { ElMessage, ElNotification } from "element-plus";
 import { TasksExamineControllerService } from "../../../generated/services/TasksExamineControllerService";
 import moment from "moment/moment";
@@ -264,22 +334,17 @@ const queryParams = ref({
 const taskExamineList = ref([]);
 
 //选中数组
-const ids = ref<[]>([]);
+const ids = ref<DeleteRequest[]>([]);
 // 弹出层标题
 const title = ref("");
 //是否显示数据弹出层
 const open = ref(false);
-//添加和编辑对话框中编写的要放入数据库中的form数据
-const form = ref({
-  video_url: "",
-  text_content: "",
-});
 
 //表单重置
 const reset = () => {
-  form.value = {
-    video_url: "",
-    text_content: "",
+  curState.value = {
+    id: 0,
+    is_accepted: 0,
   };
 };
 
@@ -292,7 +357,7 @@ const rules = ref({
     { required: true, message: "学习内容不能为空", trigger: "blur" },
   ],
 });
-//提交
+//审核处理任务
 const submitForm = async () => {
   const res = await TasksExamineControllerService.taskHandleUsingPost({
     id: curState.value.id,
@@ -342,17 +407,21 @@ onMounted(() => {
 });
 //重置
 const resetQuery = () => {
-  console.log();
-};
-
-/**
- * 增删改操作
- */
-//增加
-const handleAdd = () => {
-  reset();
-  open.value = true;
-  title.value = "添加审核任务";
+  queryParams.value = {
+    pageSize: 50,
+    current: 1,
+    task_content: "",
+    user_id: "",
+    examine_user_id: "",
+    is_accepted: "",
+    material_id: "",
+    points_value: "",
+    deadline: "",
+    publish_date: "",
+    rule_id: "",
+    update_date: "",
+  };
+  handleQuery();
 };
 
 /**
@@ -370,17 +439,17 @@ const handleEdit = (index: number, row: any) => {
   title.value = "审核";
 };
 //删除
-const onDelete = async (index: number, row: any) => {
-  // const res = await UserControllerService.deleteUserUsingPost({
-  //   id: learningMaterialsList.value[index].villager_id,
-  // });
-  // if (res.code === 0) {
-  //   ElMessage.success("成功删除");
-  //   await handleQuery();
-  // } else ElMessage.error("删除失败，" + res.message);
+const onDelete = async (index: number) => {
+  const res = await TasksExamineControllerService.deleteTaskExamineUsingPost({
+    id: index,
+  });
+  if (res.code === 0) {
+    ElNotification.success("删除成功");
+    await handleQuery();
+  } else ElNotification.error("删除失败，" + res.message);
 };
 const confirmEvent = (index: number, row: any) => {
-  onDelete(index, row);
+  onDelete(row.id);
 };
 watch(
   () => ids.value.length,
@@ -393,10 +462,50 @@ watch(
 const handleSelectionChange = (selection: any) => {
   //拿到选中的行的传递的数组信息selection，将数组selection中的material_id传给ids
   ids.value = [];
-  // for (let i = 0; i < selection.length; ++i)
-  //   ids.value.push({
-  //     id: selection[i].material_id,
-  //   });
+  for (let i = 0; i < selection.length; ++i)
+    ids.value.push({
+      id: selection[i].id,
+    });
+};
+//删除多条记录
+const handleDelete = async () => {
+  for (let i = 0; i < ids.value.length; ++i) {
+    const res = await TasksExamineControllerService.deleteTaskExamineUsingPost({
+      id: ids.value[i].id,
+    });
+    if (res.code === 0) {
+      ElNotification.success("删除成功");
+    } else ElNotification.error("删除失败，" + res.message);
+  }
+  await handleQuery();
+};
+
+/**
+ * 展示规则信息
+ */
+//是否显示规则详情对话框
+const isOpenRuleDetail = ref(false);
+//规则信息
+const ruleDetail = ref({
+  publish_date: "",
+  publish_user_id: "",
+  rule_content: "",
+  rule_id: "",
+  rule_points: "",
+  update_date: "",
+  update_user_id: "",
+});
+//展示规则对话框
+const showRuleDetail = (id: number) => {
+  isOpenRuleDetail.value = true;
+  getRuleById(id);
+};
+//获取规则信息
+const getRuleById = async (id: number) => {
+  const res = await RulesControllerService.getRulesByIdUsingGet(id);
+  if (res.code === 0) {
+    ruleDetail.value = res.data as any;
+  } else ElMessage.error("查询规则信息失败，" + res.message);
 };
 </script>
 

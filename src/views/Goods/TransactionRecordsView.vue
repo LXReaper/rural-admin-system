@@ -270,6 +270,7 @@ const resetQuery = () => {
  */
 //打开商品的详情信息
 const openProductDetail = (transactionsVO: any, i: number) => {
+  cancelProductDetail(); //先重置信息
   console.log(transactionsVO);
   const product = transactionsVO?.productsList[i];
   const transaction_quantity = transactionsVO?.transaction_quantity[i];
