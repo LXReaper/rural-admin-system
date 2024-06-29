@@ -88,7 +88,10 @@
       <el-table-column label="资料id" align="center" prop="material_id" />
       <el-table-column label="规则" align="center" prop="rule_id">
         <template #default="scope">
-          <el-button type="text" @click="showRuleDetail(scope.row.rule_id)"
+          <el-button
+            v-if="scope.row.rule_id"
+            type="text"
+            @click="showRuleDetail(scope.row.rule_id)"
             >显示规则
           </el-button>
         </template>

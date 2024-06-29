@@ -80,7 +80,15 @@
         prop="task_content"
         show-overflow-tooltip
       />
-      <el-table-column label="资料ID" align="center" prop="material_id" />
+      <el-table-column label="资料ID" align="center" prop="material_id">
+        <template #default="scope">
+          <el-button
+            type="text"
+            @click="showLearningMaterialDetail(scope.row.material_id)"
+            >显示资料
+          </el-button>
+        </template>
+      </el-table-column>
       <el-table-column label="规则" align="center" prop="rule_id">
         <template #default="scope">
           <el-button type="text" @click="showRuleDetail(scope.row.rule_id)"
@@ -161,7 +169,7 @@
           >{{ ruleDetail.rule_id }}
         </el-descriptions-item>
         <el-descriptions-item label="规则限制点数">
-          <el-tag type="danger" round>{{ ruleDetail.rule_points }} </el-tag>
+          <el-tag type="danger" round>{{ ruleDetail.rule_points }}</el-tag>
         </el-descriptions-item>
         <el-descriptions-item label="发布用户id">
           <el-tag type="success" round
@@ -194,12 +202,61 @@
         </el-descriptions-item>
       </el-descriptions>
     </el-dialog>
+    <!--    展示学习资料信息对话框-->
+    <el-dialog v-model="isOpenLearningMaterialDetail" draggable append-to-body>
+      <el-descriptions
+        :title="'学习资料详情'"
+        direction="vertical"
+        :column="4"
+        :size="'default'"
+        border
+      >
+        <el-descriptions-item label="学习资料编号"
+          >{{ learningMaterialDetail.material_id }}
+        </el-descriptions-item>
+        <el-descriptions-item label="发布用户id">
+          <el-tag type="success" round
+            >{{ learningMaterialDetail.user_id }}
+          </el-tag>
+        </el-descriptions-item>
+        <el-descriptions-item label="更新用户id">
+          <el-tag type="success" round>{{
+            learningMaterialDetail.updated_user_id
+          }}</el-tag>
+        </el-descriptions-item>
+        <el-descriptions-item label="规则内容" :span="2"
+          >{{ learningMaterialDetail.text_content }}
+        </el-descriptions-item>
+        <el-descriptions-item label="学习视频" :span="1"
+          >{{ learningMaterialDetail.video_url }}
+        </el-descriptions-item>
+        <el-descriptions-item label="学习资料发布时间">
+          <el-tag type="primary" round
+            >{{
+              moment(learningMaterialDetail.publish_date).format(
+                "YYYY年MM月DD日 HH时mm分ss秒"
+              )
+            }}
+          </el-tag>
+        </el-descriptions-item>
+        <el-descriptions-item label="学习资料更新时间">
+          <el-tag type="primary" round
+            >{{
+              moment(learningMaterialDetail.update_date).format(
+                "YYYY年MM月DD日 HH时mm分ss秒"
+              )
+            }}
+          </el-tag>
+        </el-descriptions-item>
+      </el-descriptions>
+    </el-dialog>
   </div>
 </template>
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { debounce } from "../../../utils/debounce_Throttle";
 import {
+  LearningMaterialsControllerService,
   Rules,
   RulesControllerService,
   TasksControllerService,
@@ -280,6 +337,36 @@ const getRuleById = async (id: number) => {
   if (res.code === 0) {
     ruleDetail.value = res.data as any;
   } else ElMessage.error("查询规则信息失败，" + res.message);
+};
+
+/**
+ * 展示学习资料信息
+ */
+//是否显示学习资料详情对话框
+const isOpenLearningMaterialDetail = ref(false);
+//学习资料信息
+const learningMaterialDetail = ref({
+  material_id: "",
+  publish_date: "",
+  text_content: "",
+  update_date: "",
+  updated_user_id: "",
+  user_id: "",
+  video_url: "",
+});
+const showLearningMaterialDetail = (id: number) => {
+  isOpenLearningMaterialDetail.value = true;
+  getLearningMaterialById(id);
+};
+//获取规则信息
+const getLearningMaterialById = async (id: number) => {
+  const res =
+    await LearningMaterialsControllerService.getLearningMaterialsByIdUsingGet(
+      id
+    );
+  if (res.code === 0) {
+    learningMaterialDetail.value = res.data as any;
+  } else ElMessage.error("查询学习资料信息失败，" + res.message);
 };
 </script>
 
