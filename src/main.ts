@@ -5,6 +5,7 @@ import store from "./store";
 import ElementPlus from "element-plus";
 import "element-plus/dist/index.css";
 import * as ElementPlusIconsVue from "@element-plus/icons-vue";
+import "element-plus/theme-chalk/src/index.scss";
 
 createApp(App).use(ElementPlus).use(store).use(router).mount("#app");
 const app = createApp(App);

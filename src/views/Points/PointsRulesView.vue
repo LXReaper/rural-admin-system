@@ -70,11 +70,22 @@
     <el-table
       v-loading="loading"
       :data="rulesList"
+      stripe
+      border
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" />
       <el-table-column label="规则ID" align="center" prop="rule_id" />
-      <el-table-column label="规则内容" align="center" prop="rule_content" />
+      <el-table-column
+        label="规则内容"
+        align="center"
+        prop="rule_content"
+        show-overflow-tooltip
+      >
+        <template #default="scope">
+          <span style="white-space: nowrap">{{ scope.row.rule_content }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="规则积分" align="center" prop="rule_points" />
       <el-table-column
         label="发布用户ID"
@@ -112,16 +123,18 @@
       </el-table-column>
     </el-table>
 
-    <!--        &lt;!&ndash;    分页&ndash;&gt;-->
-    <!--        <el-pagination-->
-    <!--          v-show="total > 0"-->
-    <!--          :total="total"-->
-    <!--          :page="queryParams.current"-->
-    <!--          :limit="queryParams.pageSize"-->
-    <!--        />-->
+    <!--    分页-->
+    <!--    <el-pagination-->
+    <!--      v-show="total > 0"-->
+    <!--      :total="total"-->
+    <!--      :current-page="queryParams.current"-->
+    <!--      :limit="queryParams.pageSize"-->
+    <!--      layout="prev, pager, next"-->
+    <!--      class="pagination"-->
+    <!--    />-->
     <!-- 添加或修改用户配置对话框 -->
     <el-dialog :title="title" v-model="open" width="700px" append-to-body>
-      <el-form :rules="rules" label-width="120px">
+      <el-form :model="form" :rules="rules" label-width="120px">
         <el-form-item label="规则内容：" prop="ruleContent">
           <el-input
             type="textarea"
@@ -132,11 +145,12 @@
           ></el-input>
         </el-form-item>
         <el-form-item label="最大积分数：" prop="rulePoints">
-          <el-input
-            type="number"
+          <el-input-number
+            max="100"
+            min="0"
             v-model="form.rulePoints"
             placeholder="请输入规则积分"
-          ></el-input>
+          ></el-input-number>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -205,7 +219,7 @@ const reset = () => {
 const handleAdd = () => {
   reset();
   open.value = true;
-  title.value = "添加居民";
+  title.value = "添加规则";
 };
 /** 允许多行删除按钮操作 */
 const onDelete = () => {
@@ -221,6 +235,7 @@ const handleQuery = async () => {
   loading.value = false;
   if (res.code === 0) {
     rulesList.value = res.data.records;
+    total.value = res.data.total;
   } else ElMessage.error("规则积分查询失败，" + res.message);
 };
 const handleQueryDebounce = debounce(handleQuery, 500);
@@ -246,7 +261,6 @@ const rules = ref({
 //提交
 const submitForm = async () => {
   const res = await RulesControllerService.rulesAddUsingPost({
-    publishUserId: form.value.publishUserId as any,
     ruleContent: form.value.ruleContent as any,
     rulePoints: form.value.rulePoints as any,
   });
@@ -255,6 +269,7 @@ const submitForm = async () => {
     await handleQuery();
   } else ElNotification.error("规则添加失败，" + res.message);
   reset();
+  open.value = false;
 };
 const submitFormDebounce = debounce(submitForm, 300); //防抖
 //取消

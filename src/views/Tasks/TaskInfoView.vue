@@ -84,6 +84,7 @@
         <template #default="scope">
           <el-button
             type="text"
+            v-if="scope.row.material_id"
             @click="showLearningMaterialDetail(scope.row.material_id)"
             >显示资料
           </el-button>
@@ -91,7 +92,10 @@
       </el-table-column>
       <el-table-column label="规则" align="center" prop="rule_id">
         <template #default="scope">
-          <el-button type="text" @click="showRuleDetail(scope.row.rule_id)"
+          <el-button
+            type="text"
+            v-if="scope.row.rule_id"
+            @click="showRuleDetail(scope.row.rule_id)"
             >显示规则
           </el-button>
         </template>
@@ -207,8 +211,8 @@
       <el-descriptions
         :title="'学习资料详情'"
         direction="vertical"
-        :column="4"
-        :size="'default'"
+        :column="3"
+        :size="'small'"
         border
       >
         <el-descriptions-item label="学习资料编号"
@@ -220,14 +224,14 @@
           </el-tag>
         </el-descriptions-item>
         <el-descriptions-item label="更新用户id">
-          <el-tag type="success" round>{{
-            learningMaterialDetail.updated_user_id
-          }}</el-tag>
+          <el-tag type="success" round
+            >{{ learningMaterialDetail.updated_user_id }}
+          </el-tag>
         </el-descriptions-item>
-        <el-descriptions-item label="规则内容" :span="2"
+        <el-descriptions-item label="学习内容"
           >{{ learningMaterialDetail.text_content }}
         </el-descriptions-item>
-        <el-descriptions-item label="学习视频" :span="1"
+        <el-descriptions-item label="学习视频" :span="2"
           >{{ learningMaterialDetail.video_url }}
         </el-descriptions-item>
         <el-descriptions-item label="学习资料发布时间">
@@ -358,7 +362,7 @@ const showLearningMaterialDetail = (id: number) => {
   isOpenLearningMaterialDetail.value = true;
   getLearningMaterialById(id);
 };
-//获取规则信息
+//获取学习资料信息
 const getLearningMaterialById = async (id: number) => {
   const res =
     await LearningMaterialsControllerService.getLearningMaterialsByIdUsingGet(
