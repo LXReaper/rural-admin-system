@@ -2,7 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type Tasks = {
+export type TasksVO = {
   all_Num?: number;
   deadline?: string;
   is_deleted?: number;
@@ -14,6 +14,6 @@ export type Tasks = {
   task_content?: string;
   task_id?: number;
   update_date?: string;
-  updated_user_id?: number;
-  user_id?: number;
+  updated_user_name?: string;
+  user_name?: string;
 };

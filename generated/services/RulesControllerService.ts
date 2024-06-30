@@ -13,6 +13,8 @@ import type { RulesUpdateRequest } from "../models/RulesUpdateRequest";
 import type { CancelablePromise } from "../core/CancelablePromise";
 import { OpenAPI } from "../core/OpenAPI";
 import { request as __request } from "../core/request";
+import { BaseResponse_Page_RulesVO_ } from "../models/BaseResponse_Page_RulesVO_";
+import { BaseResponse_RulesVO_ } from "../models/BaseResponse_RulesVO_";
 
 export class RulesControllerService {
   /**
@@ -60,6 +62,28 @@ export class RulesControllerService {
   }
 
   /**
+   * 删除多条规则
+   * @param deleteRequest deleteRequest
+   * @returns BaseResponse_boolean_ OK
+   * @returns any Created
+   * @throws ApiError
+   */
+  public static deleteRulesMoreUsingPost(
+    deleteRequest: Array<DeleteRequest>
+  ): CancelablePromise<BaseResponse_boolean_ | any> {
+    return __request(OpenAPI, {
+      method: "POST",
+      url: "/api/rules/delete/more",
+      body: deleteRequest,
+      errors: {
+        401: `Unauthorized`,
+        403: `Forbidden`,
+        404: `Not Found`,
+      },
+    });
+  }
+
+  /**
    * getRulesById
    * @param ruleId RuleId
    * @returns BaseResponse_Rules_ OK
@@ -71,6 +95,29 @@ export class RulesControllerService {
     return __request(OpenAPI, {
       method: "GET",
       url: "/api/rules/get",
+      query: {
+        RuleId: ruleId,
+      },
+      errors: {
+        401: `Unauthorized`,
+        403: `Forbidden`,
+        404: `Not Found`,
+      },
+    });
+  }
+
+  /**
+   * 根据id获取规则VO信息
+   * @param ruleId RuleId
+   * @returns BaseResponse_RulesVO_ OK
+   * @throws ApiError
+   */
+  public static getRulesVoByIdUsingGet(
+    ruleId?: number
+  ): CancelablePromise<BaseResponse_RulesVO_> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/rules/get/vo",
       query: {
         RuleId: ruleId,
       },
@@ -95,6 +142,28 @@ export class RulesControllerService {
     return __request(OpenAPI, {
       method: "POST",
       url: "/api/rules/list/page",
+      body: rulesQueryRequest,
+      errors: {
+        401: `Unauthorized`,
+        403: `Forbidden`,
+        404: `Not Found`,
+      },
+    });
+  }
+
+  /**
+   * 分页获取规则信息封装列表
+   * @param rulesQueryRequest rulesQueryRequest
+   * @returns BaseResponse_Page_RulesVO_ OK
+   * @returns any Created
+   * @throws ApiError
+   */
+  public static listRulesVoByPageUsingPost(
+    rulesQueryRequest: RulesQueryRequest
+  ): CancelablePromise<BaseResponse_Page_RulesVO_ | any> {
+    return __request(OpenAPI, {
+      method: "POST",
+      url: "/api/rules/list/page/vo",
       body: rulesQueryRequest,
       errors: {
         401: `Unauthorized`,

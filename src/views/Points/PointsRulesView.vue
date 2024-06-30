@@ -88,9 +88,9 @@
       </el-table-column>
       <el-table-column label="规则积分" align="center" prop="rule_points" />
       <el-table-column
-        label="发布用户ID"
+        label="发布用户"
         align="center"
-        prop="publish_user_id"
+        prop="publish_user_name"
       />
       <el-table-column
         label="发布日期"
@@ -105,9 +105,9 @@
         </template>
       </el-table-column>
       <el-table-column
-        label="更新用户ID"
+        label="更新用户"
         align="center"
-        prop="update_user_id"
+        prop="update_user_name"
       />
       <el-table-column
         label="更新日期"
@@ -124,14 +124,19 @@
     </el-table>
 
     <!--    分页-->
-    <!--    <el-pagination-->
-    <!--      v-show="total > 0"-->
-    <!--      :total="total"-->
-    <!--      :current-page="queryParams.current"-->
-    <!--      :limit="queryParams.pageSize"-->
-    <!--      layout="prev, pager, next"-->
-    <!--      class="pagination"-->
-    <!--    />-->
+    <div class="pagination" v-if="total > 0">
+      <el-pagination
+        background
+        v-model:current-page="queryParams.current"
+        v-model:page-size="queryParams.pageSize"
+        :total="total"
+        prev-text="上一页"
+        next-text="下一页"
+        layout="total, prev, pager, next, jumper"
+        @current-change="pageHandleChange"
+        class="mt-4"
+      />
+    </div>
     <!-- 添加或修改用户配置对话框 -->
     <el-dialog :title="title" v-model="open" width="700px" append-to-body>
       <el-form :model="form" :rules="rules" label-width="120px">
@@ -165,7 +170,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { debounce } from "../../../utils/debounce_Throttle";
 import {
   DeleteRequest,
@@ -173,6 +178,7 @@ import {
   RulesControllerService,
   RulesQueryRequest,
 } from "../../../generated";
+import { ElPagination } from "element-plus";
 import { ElMessage, ElNotification } from "element-plus";
 import moment from "moment";
 import store from "@/store";
@@ -222,14 +228,26 @@ const handleAdd = () => {
   title.value = "添加规则";
 };
 /** 允许多行删除按钮操作 */
-const onDelete = () => {
-  console.log();
+const onDelete = async () => {
+  const res = await RulesControllerService.deleteRulesMoreUsingPost(ids.value);
+  if (res.code === 0) {
+    ElMessage.success("删除成功");
+    await handleQuery();
+  } else ElMessage.error("删除失败，" + res.message);
+  ids.value = [];
 };
+watch(
+  () => ids.value.length,
+  () => {
+    if (ids.value.length) multiple.value = false;
+    else multiple.value = true; //是否显示使用多行删除按钮
+  }
+);
 
 //查询数据
 const handleQuery = async () => {
   loading.value = true;
-  const res = await RulesControllerService.listRulesByPageUsingPost(
+  const res = await RulesControllerService.listRulesVoByPageUsingPost(
     queryParams.value
   );
   loading.value = false;
@@ -277,13 +295,19 @@ const cancel = () => {
   open.value = false;
   reset();
 };
+//选择表格某行触发事件
 const handleSelectionChange = (selection: any) => {
   //拿到选中的行的传递的数组信息selection，将数组selection中的villager_id传给ids
   ids.value = [];
   for (let i = 0; i < selection.length; ++i)
     ids.value.push({
-      id: selection[i].villager_id,
+      id: selection[i].rule_id,
     });
+};
+//分页触发事件
+const pageHandleChange = (value: number) => {
+  queryParams.value.current = value;
+  handleQuery();
 };
 </script>
 

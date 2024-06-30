@@ -32,17 +32,10 @@
         />
       </el-form-item>
       <el-form-item label="交易状态" prop="transaction_status">
-        <!--        <el-input-number-->
-        <!--          v-model="queryParams.transaction_status"-->
-        <!--          placeholder="请输入交易状态"-->
-        <!--          min="0"-->
-        <!--          max="1"-->
-        <!--          clearable-->
-        <!--          @keyup.enter="handleQueryDebounce"-->
-        <!--        />-->
         <el-select
           v-model="queryParams.transaction_status"
           placeholder="请选择订单的状态"
+          @change="handleQuery"
           size="large"
           style="width: 240px"
         >
@@ -67,21 +60,28 @@
     </el-form>
 
     <!--    表格-->
-    <el-table v-loading="loading" :data="transactionsList">
+    <el-table v-loading="loading" stripe border :data="transactionsList">
       <el-table-column label="订单ID" align="center" prop="transactions_Id" />
       <el-table-column label="交易用户" align="center" prop="villager_name" />
-      <el-table-column label="商品ID" align="center" prop="product_id">
+      <el-table-column label="商品" align="center" prop="product_id">
         <template #default="scope">
-          <span v-for="(item, i) in scope.row.product_id" :key="i">
-            <el-tag
-              type="primary"
-              :hit="true"
-              style="cursor: pointer"
-              round
-              @click="openProductDetail(scope.row, i as number)"
-              >{{ item }}
-            </el-tag>
-          </span>
+          <el-button
+            type="text"
+            v-if="scope.row.product_id"
+            style="text-decoration: underline"
+            @click="openProductIdDetail(scope.row)"
+            >显示商品
+          </el-button>
+          <!--          <span v-for="(item, i) in scope.row.product_id" :key="i">-->
+          <!--            <el-tag-->
+          <!--              type="primary"-->
+          <!--              :hit="true"-->
+          <!--              style="cursor: pointer"-->
+          <!--              round-->
+          <!--              @click="openProductDetail(scope.row, i as number)"-->
+          <!--              >{{ item }}-->
+          <!--            </el-tag>-->
+          <!--          </span>-->
         </template>
       </el-table-column>
       <el-table-column
@@ -122,6 +122,31 @@
     <!--      :limit="queryParams.pageSize"-->
     <!--    />-->
 
+    <!--    展示商品id详情的对话框-->
+    <el-dialog v-model="isOpenProductIdDetail" draggable append-to-body>
+      <el-descriptions
+        :title="'商品编号详情'"
+        :extra="'点击编号可以展示商品详细信息'"
+        direction="vertical"
+        :column="4"
+        :size="'default'"
+        border
+      >
+        <el-descriptions-item label="商品编号">
+          <span v-for="(item, i) in curTransactionsVO.product_id" :key="i">
+            <el-tag
+              type="primary"
+              style="cursor: pointer"
+              @click="openProductDetail(curTransactionsVO, i as number)"
+              round
+              effect="plain"
+              :hit="true"
+              ><text style="text-decoration: underline">{{ item }}</text>
+            </el-tag>
+          </span>
+        </el-descriptions-item>
+      </el-descriptions>
+    </el-dialog>
     <!--    展示商品详情的对话框-->
     <el-dialog v-model="isOpenProductDetail" draggable append-to-body>
       <el-descriptions
@@ -268,7 +293,14 @@ const resetQuery = () => {
 /**
  * 打开表格中标签内容的详情信息
  */
-//打开商品的详情信息
+const curTransactionsVO = ref();
+const isOpenProductIdDetail = ref(false);
+//打开商品id详情
+const openProductIdDetail = (transactionsVO: any) => {
+  isOpenProductIdDetail.value = true;
+  curTransactionsVO.value = transactionsVO;
+};
+//打开商品的具体详情信息
 const openProductDetail = (transactionsVO: any, i: number) => {
   cancelProductDetail(); //先重置信息
   console.log(transactionsVO);

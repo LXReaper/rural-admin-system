@@ -8,11 +8,13 @@ import type { BaseResponse_Page_Tasks_ } from "../models/BaseResponse_Page_Tasks
 import type { BaseResponse_Tasks_ } from "../models/BaseResponse_Tasks_";
 import type { DeleteRequest } from "../models/DeleteRequest";
 import type { TasksAddRequest } from "../models/TasksAddRequest";
+import type { TasksConfirmRequest } from "../models/TasksConfirmRequest";
 import type { TasksQueryRequest } from "../models/TasksQueryRequest";
 import type { TasksUpdateRequest } from "../models/TasksUpdateRequest";
 import type { CancelablePromise } from "../core/CancelablePromise";
 import { OpenAPI } from "../core/OpenAPI";
 import { request as __request } from "../core/request";
+import { BaseResponse_Page_TasksVO_ } from "../models/BaseResponse_Page_TasksVO_";
 
 export class TasksControllerService {
   /**
@@ -29,6 +31,27 @@ export class TasksControllerService {
       method: "POST",
       url: "/api/tasks/add",
       body: tasksAddRequest,
+      errors: {
+        401: `Unauthorized`,
+        403: `Forbidden`,
+        404: `Not Found`,
+      },
+    });
+  }
+
+  /**
+   * 确认完成任务（任务发布者操作）
+   * @param tasksConfirmRequest tasksConfirmRequest
+   * @returns BaseResponse_boolean_ OK
+   * @throws ApiError
+   */
+  public static confirmCompleteTaskUsingGet(
+    tasksConfirmRequest: TasksConfirmRequest
+  ): CancelablePromise<BaseResponse_boolean_> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/tasks/confirm/complete/task",
+      body: tasksConfirmRequest,
       errors: {
         401: `Unauthorized`,
         403: `Forbidden`,
@@ -60,7 +83,7 @@ export class TasksControllerService {
   }
 
   /**
-   * getTasksById
+   * 根据id获取任务
    * @param taskId TaskId
    * @returns BaseResponse_Tasks_ OK
    * @throws ApiError
@@ -83,7 +106,7 @@ export class TasksControllerService {
   }
 
   /**
-   * listTasksByPage
+   * 分页获取任务列表
    * @param tasksQueryRequest tasksQueryRequest
    * @returns BaseResponse_Page_Tasks_ OK
    * @returns any Created
@@ -95,6 +118,28 @@ export class TasksControllerService {
     return __request(OpenAPI, {
       method: "POST",
       url: "/api/tasks/list/page",
+      body: tasksQueryRequest,
+      errors: {
+        401: `Unauthorized`,
+        403: `Forbidden`,
+        404: `Not Found`,
+      },
+    });
+  }
+
+  /**
+   * 分页获取任务信息封装列表
+   * @param tasksQueryRequest tasksQueryRequest
+   * @returns BaseResponse_Page_TasksVO_ OK
+   * @returns any Created
+   * @throws ApiError
+   */
+  public static listTasksVoByPageUsingPost(
+    tasksQueryRequest: TasksQueryRequest
+  ): CancelablePromise<BaseResponse_Page_TasksVO_ | any> {
+    return __request(OpenAPI, {
+      method: "POST",
+      url: "/api/tasks/list/page/vo",
       body: tasksQueryRequest,
       errors: {
         401: `Unauthorized`,

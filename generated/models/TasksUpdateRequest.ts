@@ -3,10 +3,11 @@
 /* tslint:disable */
 /* eslint-disable */
 export type TasksUpdateRequest = {
+  all_Num?: number;
   deadline?: string;
   materialId?: number;
   pointsValue?: number;
   ruleId?: number;
   taskContent?: string;
-  updatedUserId?: number;
+  taskId?: number;
 };

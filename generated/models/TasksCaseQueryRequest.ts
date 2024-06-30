@@ -2,18 +2,17 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type Tasks = {
-  all_Num?: number;
-  deadline?: string;
-  is_deleted?: number;
-  join_Num?: number;
-  material_id?: number;
-  points_value?: number;
+export type TasksCaseQueryRequest = {
+  current?: number;
+  id?: number;
+  is_accepted?: number;
+  pageSize?: number;
   publish_date?: string;
-  rule_id?: number;
+  sortField?: string;
+  sortOrder?: string;
   task_content?: string;
   task_id?: number;
+  task_video_url?: string;
   update_date?: string;
-  updated_user_id?: number;
   user_id?: number;
 };

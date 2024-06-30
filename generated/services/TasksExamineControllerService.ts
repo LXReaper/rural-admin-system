@@ -5,13 +5,14 @@
 import type { BaseResponse_boolean_ } from "../models/BaseResponse_boolean_";
 import type { BaseResponse_long_ } from "../models/BaseResponse_long_";
 import type { BaseResponse_Page_TasksExamine_ } from "../models/BaseResponse_Page_TasksExamine_";
+import type { DeleteRequest } from "../models/DeleteRequest";
 import type { TaskExamineRequest } from "../models/TaskExamineRequest";
 import type { TasksExamineAddRequest } from "../models/TasksExamineAddRequest";
 import type { TasksExamineQueryRequest } from "../models/TasksExamineQueryRequest";
 import type { CancelablePromise } from "../core/CancelablePromise";
 import { OpenAPI } from "../core/OpenAPI";
 import { request as __request } from "../core/request";
-import { DeleteRequest } from "../models/DeleteRequest";
+import { BaseResponse_Page_TasksExamineVO_ } from "../models/BaseResponse_Page_TasksExamineVO_";
 
 export class TasksExamineControllerService {
   /**
@@ -93,6 +94,28 @@ export class TasksExamineControllerService {
     return __request(OpenAPI, {
       method: "POST",
       url: "/api/tasksExamine/list/page",
+      body: tasksExamineQueryRequest,
+      errors: {
+        401: `Unauthorized`,
+        403: `Forbidden`,
+        404: `Not Found`,
+      },
+    });
+  }
+
+  /**
+   * 分页获取审核信息封装列表
+   * @param tasksExamineQueryRequest tasksExamineQueryRequest
+   * @returns BaseResponse_Page_TasksExamineVO_ OK
+   * @returns any Created
+   * @throws ApiError
+   */
+  public static listTasksExamineVoByPageUsingPost(
+    tasksExamineQueryRequest: TasksExamineQueryRequest
+  ): CancelablePromise<BaseResponse_Page_TasksExamineVO_ | any> {
+    return __request(OpenAPI, {
+      method: "POST",
+      url: "/api/tasksExamine/list/page/vo",
       body: tasksExamineQueryRequest,
       errors: {
         401: `Unauthorized`,

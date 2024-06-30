@@ -2,18 +2,18 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type Tasks = {
+export type TasksExamineVO = {
   all_Num?: number;
   deadline?: string;
-  is_deleted?: number;
+  examine_user_name?: string;
+  id?: number;
+  is_accepted?: number;
   join_Num?: number;
   material_id?: number;
   points_value?: number;
   publish_date?: string;
   rule_id?: number;
   task_content?: string;
-  task_id?: number;
   update_date?: string;
-  updated_user_id?: number;
-  user_id?: number;
+  villager_name?: string;
 };

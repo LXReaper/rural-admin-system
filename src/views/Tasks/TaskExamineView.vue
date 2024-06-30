@@ -55,6 +55,14 @@
           @keyup.enter="handleQueryDebounce"
         />
       </el-form-item>
+      <el-form-item label="接取人数" prop="all_Num">
+        <el-input
+          v-model="queryParams.all_Num"
+          placeholder="请输入接取人数"
+          clearable
+          @keyup.enter="handleQueryDebounce"
+        />
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" size="default" @click="handleQueryDebounce"
           >搜索
@@ -92,6 +100,7 @@
           <el-button
             type="text"
             v-if="scope.row.material_id"
+            style="text-decoration: underline"
             @click="showLearningMaterialDetail(scope.row.material_id)"
             >显示资料
           </el-button>
@@ -102,6 +111,7 @@
           <el-button
             v-if="scope.row.rule_id"
             type="text"
+            style="text-decoration: underline"
             @click="showRuleDetail(scope.row.rule_id)"
             >显示规则
           </el-button>
@@ -124,6 +134,11 @@
         align="center"
         prop="points_value"
       />
+      <el-table-column label="任务可接取总人数" align="center" prop="all_Num">
+        <template #default="scope">
+          <el-tag type="danger">{{ scope.row.all_Num }}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="审核状态" align="center" prop="is_accepted">
         <template #default="scope">
           <el-tag type="warning" v-if="!scope.row.is_accepted">未审核</el-tag>
@@ -135,7 +150,7 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="发布用户id" align="center" prop="user_id" />
+      <el-table-column label="发布用户" align="center" prop="villager_name" />
       <el-table-column
         label="发布日期"
         align="center"
@@ -154,9 +169,9 @@
         </template>
       </el-table-column>
       <el-table-column
-        label="审核用户ID"
+        label="审核用户"
         align="center"
-        prop="examine_user_id"
+        prop="examine_user_name"
       />
       <el-table-column
         label="审核日期"
@@ -276,13 +291,11 @@
         <el-descriptions-item label="规则限制点数">
           <el-tag type="danger" round>{{ ruleDetail.rule_points }}</el-tag>
         </el-descriptions-item>
-        <el-descriptions-item label="发布用户id">
-          <el-tag type="success" round
-            >{{ ruleDetail.publish_user_id }}
-          </el-tag>
+        <el-descriptions-item label="发布用户">
+          {{ ruleDetail.publish_user_name }}
         </el-descriptions-item>
-        <el-descriptions-item label="更新用户id">
-          <el-tag type="success" round>{{ ruleDetail.update_user_id }}</el-tag>
+        <el-descriptions-item label="更新用户">
+          {{ ruleDetail.update_user_name }}
         </el-descriptions-item>
         <el-descriptions-item label="规则内容" :span="4"
           >{{ ruleDetail.rule_content }}
@@ -393,6 +406,7 @@ const queryParams = ref({
   publish_date: "",
   rule_id: "",
   update_date: "",
+  all_Num: "",
 });
 //查询后得到的数据
 const taskExamineList = ref([]);
@@ -445,7 +459,7 @@ const cancel = () => {
 const handleQuery = async () => {
   loading.value = true;
   const res =
-    await TasksExamineControllerService.listTasksExamineByPageUsingPost({
+    await TasksExamineControllerService.listTasksExamineVoByPageUsingPost({
       pageSize: queryParams.value.pageSize,
       current: queryParams.value.current,
       task_content: queryParams.value.task_content,
@@ -458,11 +472,13 @@ const handleQuery = async () => {
       publish_date: queryParams.value.publish_date,
       rule_id: queryParams.value.rule_id as any,
       update_date: queryParams.value.update_date,
+      all_Num: queryParams.value.all_Num as any,
     });
   loading.value = false;
 
   if (res.code === 0) {
     taskExamineList.value = res.data.records;
+    total.value = res.data.total;
   } else ElMessage.error("查询失败，" + res.message);
 };
 const handleQueryDebounce = debounce(handleQuery, 500);
@@ -484,6 +500,7 @@ const resetQuery = () => {
     publish_date: "",
     rule_id: "",
     update_date: "",
+    all_Num: "",
   };
   handleQuery();
 };
@@ -552,12 +569,12 @@ const isOpenRuleDetail = ref(false);
 //规则信息
 const ruleDetail = ref({
   publish_date: "",
-  publish_user_id: "",
+  publish_user_name: "",
   rule_content: "",
   rule_id: "",
   rule_points: "",
   update_date: "",
-  update_user_id: "",
+  update_user_name: "",
 });
 //展示规则对话框
 const showRuleDetail = (id: number) => {
@@ -566,7 +583,7 @@ const showRuleDetail = (id: number) => {
 };
 //获取规则信息
 const getRuleById = async (id: number) => {
-  const res = await RulesControllerService.getRulesByIdUsingGet(id);
+  const res = await RulesControllerService.getRulesVoByIdUsingGet(id);
   if (res.code === 0) {
     ruleDetail.value = res.data as any;
   } else ElMessage.error("查询规则信息失败，" + res.message);

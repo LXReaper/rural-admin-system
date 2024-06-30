@@ -72,7 +72,7 @@
     </el-form>
 
     <!--    表格-->
-    <el-table v-loading="loading" :data="tasksList">
+    <el-table v-loading="loading" stripe border :data="tasksList">
       <el-table-column label="任务ID" align="center" prop="task_id" />
       <el-table-column
         label="任务内容"
@@ -85,6 +85,7 @@
           <el-button
             type="text"
             v-if="scope.row.material_id"
+            style="text-decoration: underline"
             @click="showLearningMaterialDetail(scope.row.material_id)"
             >显示资料
           </el-button>
@@ -95,12 +96,13 @@
           <el-button
             type="text"
             v-if="scope.row.rule_id"
+            style="text-decoration: underline"
             @click="showRuleDetail(scope.row.rule_id)"
             >显示规则
           </el-button>
         </template>
       </el-table-column>
-      <el-table-column label="发布用户ID" align="center" prop="user_id" />
+      <el-table-column label="发布用户" align="center" prop="user_name" />
       <el-table-column
         label="发布日期"
         align="center"
@@ -115,9 +117,9 @@
         </template>
       </el-table-column>
       <el-table-column
-        label="更新用户ID"
+        label="更新用户"
         align="center"
-        prop="updated_user_id"
+        prop="updated_user_name"
       />
       <el-table-column
         label="更新日期"
@@ -150,6 +152,16 @@
           <el-tag type="success">{{ scope.row.points_value }}</el-tag>
         </template>
       </el-table-column>
+      <el-table-column label="最大可接取人数" align="center" prop="all_Num">
+        <template #default="scope">
+          <el-tag type="danger">{{ scope.row.all_Num }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="当前接取人数" align="center" prop="join_Num">
+        <template #default="scope">
+          <el-tag type="primary">{{ scope.row.join_Num }}</el-tag>
+        </template>
+      </el-table-column>
     </el-table>
 
     <!--    &lt;!&ndash;    分页&ndash;&gt;-->
@@ -175,13 +187,11 @@
         <el-descriptions-item label="规则限制点数">
           <el-tag type="danger" round>{{ ruleDetail.rule_points }}</el-tag>
         </el-descriptions-item>
-        <el-descriptions-item label="发布用户id">
-          <el-tag type="success" round
-            >{{ ruleDetail.publish_user_id }}
-          </el-tag>
+        <el-descriptions-item label="发布用户">
+          {{ ruleDetail.publish_user_name }}
         </el-descriptions-item>
-        <el-descriptions-item label="更新用户id">
-          <el-tag type="success" round>{{ ruleDetail.update_user_id }}</el-tag>
+        <el-descriptions-item label="更新用户">
+          {{ ruleDetail.update_user_name }}
         </el-descriptions-item>
         <el-descriptions-item label="规则内容" :span="4"
           >{{ ruleDetail.rule_content }}
@@ -285,6 +295,8 @@ const queryParams = ref({
   userId: "" as any,
   updatedUserId: "" as any,
   pointsValue: "" as any,
+  all_Num: "" as any,
+  join_Num: "" as any,
 });
 //所有查询到的数据
 const tasksList = ref([]);
@@ -292,12 +304,13 @@ const tasksList = ref([]);
 //查询数据
 const handleQuery = async () => {
   loading.value = true;
-  const res = await TasksControllerService.listTasksByPageUsingPost(
+  const res = await TasksControllerService.listTasksVoByPageUsingPost(
     queryParams.value
   );
   loading.value = false;
   if (res.code === 0) {
     tasksList.value = res.data.records;
+    total.value = res.data.total;
   } else ElMessage.error("查询失败，" + res.message);
 };
 const handleQueryDebounce = debounce(handleQuery, 500);
@@ -313,6 +326,8 @@ const resetQuery = () => {
   queryParams.value.userId = "";
   queryParams.value.updatedUserId = "";
   queryParams.value.pointsValue = "";
+  queryParams.value.all_Num = "";
+  queryParams.value.join_Num = "";
 };
 
 /**
@@ -323,12 +338,12 @@ const isOpenRuleDetail = ref(false);
 //规则信息
 const ruleDetail = ref({
   publish_date: "",
-  publish_user_id: "",
+  publish_user_name: "",
   rule_content: "",
   rule_id: "",
   rule_points: "",
   update_date: "",
-  update_user_id: "",
+  update_user_name: "",
 });
 //展示规则对话框
 const showRuleDetail = (id: number) => {
@@ -337,7 +352,7 @@ const showRuleDetail = (id: number) => {
 };
 //获取规则信息
 const getRuleById = async (id: number) => {
-  const res = await RulesControllerService.getRulesByIdUsingGet(id);
+  const res = await RulesControllerService.getRulesVoByIdUsingGet(id);
   if (res.code === 0) {
     ruleDetail.value = res.data as any;
   } else ElMessage.error("查询规则信息失败，" + res.message);
@@ -359,8 +374,8 @@ const learningMaterialDetail = ref({
   video_url: "",
 });
 const showLearningMaterialDetail = (id: number) => {
-  isOpenLearningMaterialDetail.value = true;
   getLearningMaterialById(id);
+  isOpenLearningMaterialDetail.value = true;
 };
 //获取学习资料信息
 const getLearningMaterialById = async (id: number) => {

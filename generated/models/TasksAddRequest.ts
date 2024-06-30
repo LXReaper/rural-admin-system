@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export type TasksAddRequest = {
+  all_Num?: number;
   deadline?: string;
   materialId?: number;
   pointsValue?: number;

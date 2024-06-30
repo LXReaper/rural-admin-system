@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export type TasksExamineQueryRequest = {
+  all_Num?: number;
   current?: number;
   deadline?: string;
   examine_user_id?: number;

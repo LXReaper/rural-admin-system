@@ -54,6 +54,8 @@
     <!--      表格-->
     <el-table
       :data="tableData"
+      stripe
+      border
       @selection-change="handleSelectionChange"
       v-loading="loading"
     >
@@ -66,8 +68,20 @@
         </template>
       </el-table-column>
       <el-table-column label="账号" prop="account" />
-      <el-table-column label="简介" prop="introduction" />
-      <el-table-column label="住址" prop="address" />
+      <el-table-column label="简介" prop="introduction" show-overflow-tooltip>
+        <template #default="scope">
+          <span style="white-space: nowrap">
+            {{ scope.row.introduction }}
+          </span>
+        </template>
+      </el-table-column>
+      <el-table-column label="住址" prop="address" show-overflow-tooltip>
+        <template #default="scope">
+          <span style="white-space: nowrap">
+            {{ scope.row.address }}
+          </span>
+        </template>
+      </el-table-column>
       <el-table-column label="手机号码" prop="phone_number" />
       <el-table-column
         label="身份"
