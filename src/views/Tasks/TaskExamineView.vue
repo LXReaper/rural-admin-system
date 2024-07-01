@@ -94,8 +94,8 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="id" align="center" prop="id" />
-      <el-table-column label="资料id" align="center" prop="material_id">
+      <el-table-column label="编号" align="center" prop="id" />
+      <el-table-column label="资料" align="center" prop="material_id">
         <template #default="scope">
           <el-button
             type="text"
@@ -332,14 +332,14 @@
         <el-descriptions-item label="学习资料编号"
           >{{ learningMaterialDetail.material_id }}
         </el-descriptions-item>
-        <el-descriptions-item label="发布用户id">
+        <el-descriptions-item label="发布用户">
           <el-tag type="success" round
-            >{{ learningMaterialDetail.user_id }}
+            >{{ learningMaterialDetail.user_name }}
           </el-tag>
         </el-descriptions-item>
-        <el-descriptions-item label="更新用户id">
+        <el-descriptions-item label="更新用户">
           <el-tag type="success" round
-            >{{ learningMaterialDetail.updated_user_id }}
+            >{{ learningMaterialDetail.updated_user_name }}
           </el-tag>
         </el-descriptions-item>
         <el-descriptions-item label="学习内容"
@@ -599,8 +599,8 @@ const learningMaterialDetail = ref({
   publish_date: "",
   text_content: "",
   update_date: "",
-  updated_user_id: "",
-  user_id: "",
+  updated_user_name: "",
+  user_name: "",
   video_url: "",
 });
 const showLearningMaterialDetail = (id: number) => {
@@ -610,9 +610,7 @@ const showLearningMaterialDetail = (id: number) => {
 //获取学习资料信息
 const getLearningMaterialById = async (id: number) => {
   const res =
-    await LearningMaterialsControllerService.getLearningMaterialsByIdUsingGet(
-      id
-    );
+    await LearningMaterialsControllerService.getLearningMaterialsVoUsingGet(id);
   if (res.code === 0) {
     learningMaterialDetail.value = res.data as any;
   } else ElMessage.error("查询学习资料信息失败，" + res.message);

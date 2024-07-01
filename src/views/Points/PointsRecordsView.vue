@@ -34,7 +34,7 @@
           @keyup.enter="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="结算日期" prop="settlement_date">
+      <el-form-item label="开始日期" prop="settlement_date">
         <el-date-picker
           clearable
           v-model="queryParams.settlement_date"
@@ -54,18 +54,24 @@
     </el-form>
     <!--    表格-->
     <el-table v-loading="loading" :data="pointsList">
-      <el-table-column label="ID" align="center" prop="pointId" />
-      <el-table-column label="用户ID" align="center" prop="userId" />
-      <el-table-column label="总积分" align="center" prop="totalPoints" />
-      <el-table-column label="剩余积分" align="center" prop="remainingPoints" />
+      <el-table-column label="ID" align="center" prop="point_id" />
+      <el-table-column label="用户" align="center" prop="user_name" />
+      <el-table-column label="总积分" align="center" prop="total_points" />
       <el-table-column
-        label="结算日期"
+        label="剩余积分"
         align="center"
-        prop="settlementDate"
+        prop="remaining_points"
+      />
+      <el-table-column
+        label="开始日期"
+        align="center"
+        prop="start_date"
         width="180"
       >
         <template #default="scope">
-          <span>{{ scope.row }}</span>
+          <span>{{
+            moment(scope.row.start_date).format("YYYY年MM月DD日 HH时mm分ss秒")
+          }}</span>
         </template>
       </el-table-column>
     </el-table>
@@ -82,6 +88,9 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { debounce } from "../../../utils/debounce_Throttle";
+import { PointsControllerService } from "../../../generated";
+import { ElMessage } from "element-plus";
+import moment from "moment";
 
 //总数
 const total = ref(50);
@@ -104,11 +113,20 @@ const pointsList = ref([]);
  * 表单操作
  */
 //查询
-const handleQuery = () => {
+const handleQuery = async () => {
   loading.value = true;
-  const res = null;
+  const res = await PointsControllerService.listPointsVoByPageUsingPost({
+    current: queryParams.value.current,
+    pageSize: queryParams.value.pageSize,
+    remaining_points: queryParams.value.remaining_points as any,
+    total_points: queryParams.value.total_points as any,
+    user_id: queryParams.value.user_id as any,
+  });
   loading.value = false;
-  console.log();
+  if (res.code === 0) {
+    pointsList.value = res.data.records;
+    total.value = res.data.total;
+  } else ElMessage.error("积分信息加载失败");
 };
 const handleQueryDebounce = debounce(handleQuery, 500);
 onMounted(() => {

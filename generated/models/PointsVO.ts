@@ -2,11 +2,10 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type Points = {
-  is_deleted?: number;
+export type PointsVO = {
   point_id?: number;
   remaining_points?: number;
   start_date?: string;
   total_points?: number;
-  user_id?: number;
+  user_name?: string;
 };

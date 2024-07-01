@@ -2,12 +2,13 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type LearningMaterialsVO = {
-  material_id?: number;
+export type NoticesVO = {
+  content?: string;
+  id?: number;
+  image_url?: string;
   publish_date?: string;
-  text_content?: string;
+  title?: string;
   update_date?: string;
-  updated_user_name?: string;
+  user?: string;
   user_name?: string;
-  video_url?: string;
 };

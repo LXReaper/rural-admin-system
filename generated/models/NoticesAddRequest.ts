@@ -2,11 +2,10 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type Points = {
-  is_deleted?: number;
-  point_id?: number;
-  remaining_points?: number;
-  start_date?: string;
-  total_points?: number;
+export type NoticesAddRequest = {
+  content?: string;
+  image_url?: string;
+  title?: string;
+  user?: string;
   user_id?: number;
 };

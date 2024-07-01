@@ -73,14 +73,14 @@
 
     <!--    表格-->
     <el-table v-loading="loading" stripe border :data="tasksList">
-      <el-table-column label="任务ID" align="center" prop="task_id" />
+      <el-table-column label="任务编号" align="center" prop="task_id" />
       <el-table-column
         label="任务内容"
         align="center"
         prop="task_content"
         show-overflow-tooltip
       />
-      <el-table-column label="资料ID" align="center" prop="material_id">
+      <el-table-column label="资料" align="center" prop="material_id">
         <template #default="scope">
           <el-button
             type="text"
