@@ -50,6 +50,20 @@
           >删除
         </el-button>
       </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="warning"
+          plain
+          size="default"
+          :disabled="multiple"
+          @click="openNotice = true"
+        >
+          <el-icon>
+            <Bell />
+          </el-icon>
+          &nbsp;发送通知
+        </el-button>
+      </el-col>
     </el-row>
     <!--      表格-->
     <el-table
@@ -194,6 +208,44 @@
         </div>
       </template>
     </el-dialog>
+    <!-- 通知用户对话框 -->
+    <el-dialog
+      :title="'发送通知'"
+      v-model="openNotice"
+      width="600px"
+      append-to-body
+    >
+      <el-form :model="noticeForm" :rules="rulesByNotice" label-width="80px">
+        <el-form-item label="通知标题" prop="title">
+          <el-input
+            v-model="noticeForm.title"
+            placeholder="请输入通知标题"
+            maxlength="100"
+          />
+        </el-form-item>
+        <el-form-item label="通知内容" prop="content">
+          <el-input
+            v-model="noticeForm.content"
+            placeholder="请输入通知内容"
+            maxlength="2000"
+          />
+        </el-form-item>
+        <el-form-item label="通知图片" prop="image_url">
+          <el-input
+            v-model="noticeForm.image_url"
+            placeholder="请输入通知图片"
+          />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button type="primary" @click="publishNotification"
+            >确 定
+          </el-button>
+          <el-button @click="cancelNotice">取 消</el-button>
+        </div>
+      </template>
+    </el-dialog>
   </div>
 </template>
 <script setup lang="ts">
@@ -204,10 +256,12 @@ import {
   UserControllerService,
   UserQueryRequest,
 } from "../../../generated";
-import { ElMessage } from "element-plus";
-import { InfoFilled } from "@element-plus/icons-vue";
+import { ElMessage, ElNotification } from "element-plus";
+import { Bell, InfoFilled } from "@element-plus/icons-vue";
 import { debounce } from "../../../utils/debounce_Throttle";
 import moment from "moment";
+import { NoticesControllerService } from "../../../generated/services/NoticesControllerService";
+import store from "@/store";
 
 //总数
 const total = ref(50);
@@ -223,7 +277,8 @@ const ids = ref<DeleteRequest[]>([]);
 // 弹出层标题
 const title = ref("");
 //是否显示数据弹出层
-const open = ref(false);
+const open = ref(false); //添加修改用户信息
+const openNotice = ref(false); //发送通知
 
 //添加和编辑对话框中编写的要放入数据库中的form数据
 const form = ref({
@@ -413,6 +468,48 @@ watch(
     else multiple.value = true;
   }
 );
+/**
+ * 通知
+ */
+//规则
+const rulesByNotice = ref({
+  title: [{ required: true, message: "标题不能为空", trigger: "blur" }],
+  content: [{ required: true, message: "内容不能为空", trigger: "blur" }],
+});
+//通知表单
+const noticeForm = ref({
+  content: "",
+  image_url: "",
+  title: "",
+  user: "",
+  user_id: [],
+});
+const resetNotice = () => {
+  noticeForm.value = {
+    content: "",
+    image_url: "",
+    title: "",
+    user: "",
+    user_id: [],
+  };
+};
+const cancelNotice = () => {
+  openNotice.value = false;
+  resetNotice();
+};
+//发送通知
+const publishNotification = async () => {
+  noticeForm.value.user = store.state.user.loginUser.villager_name;
+  noticeForm.value.user_id = ids.value.map((item) => item.id || 0) as any;
+  const res = await NoticesControllerService.publishNotificationsUsingPost(
+    noticeForm.value
+  );
+  if (res.code === 0) {
+    ElNotification.success("通知发送成功");
+  } else ElNotification.error("通知发送失败，" + res.message);
+  openNotice.value = false;
+  resetNotice();
+};
 /**
  * 初始化表单
  */

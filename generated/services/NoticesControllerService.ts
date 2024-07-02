@@ -13,6 +13,7 @@ import { OpenAPI } from "../core/OpenAPI";
 import { request as __request } from "../core/request";
 import { BaseResponse_boolean_ } from "../models/BaseResponse_boolean_";
 import { DeleteRequest } from "../models/DeleteRequest";
+import { NoticesPublishRequest } from "../models/NoticesPublishRequest";
 
 export class NoticesControllerService {
   /**
@@ -118,6 +119,28 @@ export class NoticesControllerService {
       method: "POST",
       url: "/api/notices/list/page/vo",
       body: noticesQueryRequest,
+      errors: {
+        401: `Unauthorized`,
+        403: `Forbidden`,
+        404: `Not Found`,
+      },
+    });
+  }
+
+  /**
+   * 给用户发送消息
+   * @param noticesPublishRequest noticesPublishRequest
+   * @returns BaseResponse_boolean_ OK
+   * @returns any Created
+   * @throws ApiError
+   */
+  public static publishNotificationsUsingPost(
+    noticesPublishRequest: NoticesPublishRequest
+  ): CancelablePromise<BaseResponse_boolean_ | any> {
+    return __request(OpenAPI, {
+      method: "POST",
+      url: "/api/notices/publish",
+      body: noticesPublishRequest,
       errors: {
         401: `Unauthorized`,
         403: `Forbidden`,

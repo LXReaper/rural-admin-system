@@ -10,7 +10,70 @@
         </el-space>
       </div>
       <div style="text-align: right; margin-top: -25px">
-        <el-space direction="horizontal" style="padding-left: 90%">
+        <el-space direction="horizontal" style="padding-left: 85%">
+          <div
+            style="margin-right: 4vw"
+            v-if="store.state.user.loginUser.villager_id"
+          >
+            <el-popover :width="418" trigger="click">
+              <el-space direction="horizontal" style="height: 5vh">
+                <span style="font-size: 15px">站内信息</span>
+                <div style="margin-left: 13vw" v-if="noticesSize">
+                  <el-tag type="success" round
+                    ><span style="font-size: 15px">
+                      {{ noticesSize }}条未读
+                    </span>
+                  </el-tag>
+                </div>
+              </el-space>
+              <!--              <el-collapse v-for="(item, i) in noticesList" :key="i">-->
+              <!--                <el-collapse-item>-->
+              <!--                  <template #title>-->
+              <!--                    <el-icon>-->
+              <!--                      <ChatDotRound />-->
+              <!--                    </el-icon>-->
+              <!--                    {{ item.title }}-->
+              <!--                  </template>-->
+              <!--                  {{ item.content }}-->
+              <!--                </el-collapse-item>-->
+              <!--              </el-collapse>-->
+              <div v-for="(item, i) in noticesList" :key="i">
+                <!--                v-if="i < 2"-->
+                <div style="cursor: pointer">
+                  <div style="height: 10px; border-bottom: 1px solid black" />
+                  <el-space direction="horizontal" style="height: 66px">
+                    <el-avatar style="background-color: #ffc107">
+                      <el-icon>
+                        <ChatDotRound />
+                      </el-icon>
+                    </el-avatar>
+                    <el-space direction="vertical">
+                      <el-space direction="horizontal">
+                        <el-tag round color="#00cfe8" style="color: white"
+                          >{{ item.user }}
+                        </el-tag>
+                        <span>{{ item.title }}</span>
+                      </el-space>
+                      <span>{{ item.content }}</span>
+                    </el-space>
+                  </el-space>
+                </div>
+              </div>
+              <div style="height: 10px; border-bottom: 1px solid black" />
+              <div>查看更多</div>
+              <template #reference>
+                <el-badge
+                  :value="noticesSize"
+                  class="item"
+                  :hidden="!noticesSize"
+                >
+                  <el-icon style="cursor: pointer" size="25">
+                    <Message />
+                  </el-icon>
+                </el-badge>
+              </template>
+            </el-popover>
+          </div>
           <el-avatar
             :src="store.state.user.loginUser.avatar"
             style="cursor: pointer"
@@ -52,14 +115,44 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ArrowLeft, ArrowRight } from "@element-plus/icons-vue";
+import {
+  ArrowLeft,
+  ArrowRight,
+  Bell,
+  ChatDotRound,
+  Message,
+} from "@element-plus/icons-vue";
 import { onMounted, ref, watch } from "vue";
 import BasicMenu from "@/components/basicComponent/basicMenu.vue";
 import store from "@/store";
 import router from "@/router";
-import { UserControllerService } from "../../generated";
-import { ElMessage } from "element-plus";
+import { OpenAPI, UserControllerService } from "../../generated";
+import { ElMessage, ElNotification } from "element-plus";
+import { NoticesControllerService } from "../../generated/services/NoticesControllerService";
 
+/**
+ * 连接websocket
+ */
+let wxSocket = new WebSocket(
+  `ws://${OpenAPI.BASE.substring(7)}/api/sendNotices`
+);
+//webSocket连接成功
+wxSocket.onopen = function () {
+  console.log("WebSocket 连接成功");
+};
+//webSocket连接失败
+wxSocket.onerror = function (ev) {
+  console.log("WebSocket 连接失败," + ev);
+};
+wxSocket.onclose = function (ev) {
+  console.log("WebSocket 连接关闭，" + ev);
+};
+wxSocket.onmessage = function (message) {
+  const meg = message.data;
+  console.log(meg);
+  ElNotification.info("收到一份通知");
+  loadMessageData();
+};
 const loginUser = ref(store.state.user.loginUser);
 const userName = ref(store.state.user.loginUser.villager_name);
 const isCollapse = ref(false); //是否收起侧边栏
@@ -84,6 +177,39 @@ const logout = async () => {
     path: "/user",
   });
 };
+
+/**
+ * 未读通知信息
+ */
+//通知请求
+const queryNotification = ref({
+  current: 1,
+  pageSize: 50,
+  is_read: 0,
+  user_id: -1,
+});
+//请求之后得到的信息
+const noticesList = ref([]);
+//查询到返回的总数
+const noticesSize = ref(0);
+//获取当前登录用户的消息
+const loadMessageData = async () => {
+  const res = await NoticesControllerService.listNoticesVoByPageUsingPost({
+    current: queryNotification.value.current,
+    pageSize: queryNotification.value.pageSize,
+    is_read: queryNotification.value.is_read,
+    user_id: store.state.user.loginUser.villager_id,
+  });
+  if (res.code === 0) {
+    noticesList.value = res.data.records;
+    noticesSize.value = res.data.records.length;
+  } else console.log("用户通知信息获取失败，" + res.message);
+};
+onMounted(() => {
+  store.dispatch("user/getLoginUser").then((res) => {
+    loadMessageData();
+  });
+});
 </script>
 
 <style>

@@ -7,6 +7,7 @@ export type NoticesQueryRequest = {
   current?: number;
   id?: number;
   image_url?: string;
+  is_read?: number;
   pageSize?: number;
   publish_date?: string;
   sortField?: string;

@@ -6,6 +6,7 @@ export type NoticesVO = {
   content?: string;
   id?: number;
   image_url?: string;
+  is_read?: number;
   publish_date?: string;
   title?: string;
   update_date?: string;
