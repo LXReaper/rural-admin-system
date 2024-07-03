@@ -40,7 +40,7 @@
                   :class="{ noticeHoverBg: highlightedIndex == i }"
                   @mouseover="highlightedIndex = i"
                   @mouseout="highlightedIndex = -1"
-                  @dblclick="openCurNotice(item)"
+                  @click="openCurNotice(item)"
                 >
                   <el-space direction="horizontal" style="height: 66px">
                     <el-avatar style="background-color: #ffc107">
@@ -174,7 +174,7 @@
       <template #title>
         <text style="color: #37b571">所有消息</text>
       </template>
-      <div style="height: 40vh; overflow: auto">
+      <div style="height: 37.5vh; overflow: auto">
         <div v-for="(item, i) in allNotificationsList" :key="i">
           <div
             :style="{
@@ -185,7 +185,7 @@
             :class="{ moreNoticeHoverBg: highlightedIndexNotice == i }"
             @mouseover="highlightedIndexNotice = i"
             @mouseout="highlightedIndexNotice = -1"
-            @dblclick="openCurNotice(item)"
+            @click="openCurNotice(item)"
           >
             <el-space direction="horizontal" style="height: 66px">
               <el-avatar style="background-color: #ffc107">
@@ -248,7 +248,7 @@
           @click="gainMoreNotifications"
           v-if="allNotificationsList.length < totalNotification"
         >
-          显示更多
+          点击显示更多
         </div>
       </div>
       <template #footer>

@@ -335,7 +335,9 @@ const submitForm = async () => {
     !form.value.userRole ||
     form.value.account.length < 4
   ) {
-    ElMessage.error("用户信息没填完整");
+    ElMessage.error(
+      form.value.account.length < 4 ? "账号长度不能小于4" : "用户信息没填完整"
+    );
     return;
   }
   //执行添加用户或者修改用户的操作
