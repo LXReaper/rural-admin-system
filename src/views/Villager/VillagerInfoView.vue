@@ -220,11 +220,12 @@
           <el-input
             v-model="noticeForm.title"
             placeholder="请输入通知标题"
-            maxlength="100"
+            maxlength="30"
           />
         </el-form-item>
         <el-form-item label="通知内容" prop="content">
           <el-input
+            type="textarea"
             v-model="noticeForm.content"
             placeholder="请输入通知内容"
             maxlength="2000"
@@ -505,7 +506,12 @@ const publishNotification = async () => {
     noticeForm.value
   );
   if (res.code === 0) {
-    ElNotification.success("通知发送成功");
+    ElNotification({
+      message: "通知发送成功",
+      type: "success",
+      duration: 1000,
+      showClose: false,
+    });
   } else ElNotification.error("通知发送失败，" + res.message);
   openNotice.value = false;
   resetNotice();
