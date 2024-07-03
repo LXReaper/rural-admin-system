@@ -37,30 +37,55 @@
               <!--                  {{ item.content }}-->
               <!--                </el-collapse-item>-->
               <!--              </el-collapse>-->
+              <el-empty v-if="!noticesList.length">
+                <template #description>没有消息</template>
+              </el-empty>
               <div v-for="(item, i) in noticesList" :key="i">
-                <!--                v-if="i < 2"-->
-                <div style="cursor: pointer">
-                  <div style="height: 10px; border-bottom: 1px solid black" />
+                <div
+                  v-if="i < 3"
+                  :style="{
+                    cursor: 'pointer',
+                    borderBottom: '1px solid #d5d5d5',
+                    borderTop: '1px solid #d5d5d5',
+                  }"
+                  :class="{ noticeHoverBg: highlightedIndex == i }"
+                  @mouseover="highlightedIndex = i"
+                  @mouseout="highlightedIndex = -1"
+                  @dblclick="openCurNotice(item)"
+                >
                   <el-space direction="horizontal" style="height: 66px">
                     <el-avatar style="background-color: #ffc107">
                       <el-icon>
                         <ChatDotRound />
                       </el-icon>
                     </el-avatar>
-                    <el-space direction="vertical">
+                    <div>
                       <el-space direction="horizontal">
+                        <!--                        发送人名字-->
                         <el-tag round color="#00cfe8" style="color: white"
                           >{{ item.user }}
                         </el-tag>
+                        <!--                        标题-->
                         <span>{{ item.title }}</span>
                       </el-space>
-                      <span>{{ item.content }}</span>
-                    </el-space>
+                      <!--                      内容-->
+                      <div>
+                        {{
+                          item.content.length > 20
+                            ? item.content.substring(0, 20) + "..."
+                            : item.content
+                        }}
+                      </div>
+                    </div>
                   </el-space>
                 </div>
               </div>
-              <div style="height: 10px; border-bottom: 1px solid black" />
-              <div>查看更多</div>
+              <div
+                style="text-align: right; margin-top: 1vh"
+                v-if="noticesSize > 3"
+              >
+                <text class="showMore">查看更多</text>
+              </div>
               <template #reference>
                 <el-badge
                   :value="noticesSize"
@@ -112,6 +137,41 @@
         <el-footer>by JKTeam 2024</el-footer>
       </el-container>
     </el-container>
+
+    <el-dialog v-model="openNotice" width="600px" append-to-body>
+      <template #title>
+        <text style="color: #37b571">站内信息</text>
+      </template>
+      <div style="border-top: 1px solid #1e1e1e">
+        <h1>
+          {{ curShowNotice?.title }}
+        </h1>
+        <el-space direction="horizontal">
+          <text>发布人：{{ curShowNotice?.user }}</text>
+          <text>&nbsp;&nbsp;{{ curShowNotice?.publish_date }}</text>
+        </el-space>
+        <div
+          style="
+            font-size: 17px;
+            margin-top: 2vh;
+            border-bottom: 1px solid #f6f6f6;
+          "
+        >
+          {{ curShowNotice?.content }}
+        </div>
+      </div>
+      <template #footer>
+        <div class="dialog-footer">
+          <button
+            type="primary"
+            class="noticeIsRead"
+            @click="setIsRead(curShowNotice.id)"
+          >
+            确认已读
+          </button>
+        </div>
+      </template>
+    </el-dialog>
   </div>
 </template>
 <script setup lang="ts">
@@ -120,6 +180,7 @@ import {
   ArrowRight,
   Bell,
   ChatDotRound,
+  Discount,
   Message,
 } from "@element-plus/icons-vue";
 import { onMounted, ref, watch } from "vue";
@@ -150,7 +211,17 @@ wxSocket.onclose = function (ev) {
 wxSocket.onmessage = function (message) {
   const meg = message.data;
   console.log(meg);
-  ElNotification.info("收到一份通知");
+  ElNotification({
+    title: (meg.includes("系统") ? "系统" : "") + "通知",
+    message:
+      meg.includes("[内容]:确认已读") &&
+      meg.split("[内容]:确认已读").length == 2
+        ? "消息已读"
+        : "收到一份通知",
+    type: "info",
+    duration: 1000,
+    showClose: false,
+  });
   loadMessageData();
 };
 const loginUser = ref(store.state.user.loginUser);
@@ -184,7 +255,7 @@ const logout = async () => {
 //通知请求
 const queryNotification = ref({
   current: 1,
-  pageSize: 50,
+  pageSize: 100,
   is_read: 0,
   user_id: -1,
 });
@@ -210,6 +281,27 @@ onMounted(() => {
     loadMessageData();
   });
 });
+/**
+ * 消息面板
+ */
+const highlightedIndex = ref(-1); //需要高亮的消息div下标
+/**
+ * 消息对话框
+ */
+const openNotice = ref(false);
+const curShowNotice = ref();
+
+//打开消息对话框
+const openCurNotice = (item: any) => {
+  curShowNotice.value = item;
+  openNotice.value = true;
+};
+//标记通知已读
+const setIsRead = async (id: number) => {
+  const res = await NoticesControllerService.setReadNotificationsUsingPost(id);
+  if (res.code !== 0) ElMessage.error("通知信息已读失败，" + res.message);
+  openNotice.value = false;
+};
 </script>
 
 <style>
@@ -222,5 +314,35 @@ onMounted(() => {
   min-height: 98vh;
   height: 98vh;
   max-height: 98vh;
+}
+
+/*通知栏展示更多的样式*/
+.showMore {
+  cursor: pointer;
+  color: #111111;
+}
+
+.showMore:hover {
+  color: #ab2a1a;
+}
+
+/*通知hover的交互背景色*/
+.noticeHoverBg {
+  background: #f8f8f8;
+}
+
+/*通知信息对话框中确认已读按钮交互样式*/
+.noticeIsRead {
+  cursor: pointer;
+  border-radius: 5px;
+  background-color: #37b5c1;
+  border-color: #37b5c1;
+  color: white;
+  width: 100px;
+  height: 38px;
+}
+
+.noticeIsRead:hover {
+  box-shadow: 0 4px 5px rgba(37, 181, 193, 5);
 }
 </style>

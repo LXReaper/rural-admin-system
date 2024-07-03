@@ -84,6 +84,30 @@ export class NoticesControllerService {
   }
 
   /**
+   * 设置通知已读
+   * @param id id
+   * @returns BaseResponse_boolean_ OK
+   * @returns any Created
+   * @throws ApiError
+   */
+  public static setReadNotificationsUsingPost(
+    id?: number
+  ): CancelablePromise<BaseResponse_boolean_ | any> {
+    return __request(OpenAPI, {
+      method: "POST",
+      url: "/api/notices/isRead/set",
+      query: {
+        id: id,
+      },
+      errors: {
+        401: `Unauthorized`,
+        403: `Forbidden`,
+        404: `Not Found`,
+      },
+    });
+  }
+
+  /**
    * 分页展示通知信息
    * @param noticesQueryRequest noticesQueryRequest
    * @returns BaseResponse_Page_Notices_ OK
