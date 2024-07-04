@@ -185,7 +185,7 @@
             :class="{ moreNoticeHoverBg: highlightedIndexNotice == i }"
             @mouseover="highlightedIndexNotice = i"
             @mouseout="highlightedIndexNotice = -1"
-            @click="openCurNotice(item)"
+            @dblclick="openCurNotice(item)"
           >
             <el-space direction="horizontal" style="height: 66px">
               <el-avatar style="background-color: #ffc107">
@@ -303,20 +303,14 @@ wxSocket.onclose = function (ev) {
 };
 wxSocket.onmessage = function (message) {
   const meg = message.data;
-  console.log(meg);
+  // console.log(meg);
+  const notice = JSON.parse(meg);
+  // console.log(notice);
   ElNotification({
-    title: (meg.includes("系统") ? "系统" : "") + "通知",
-    message:
-      meg.includes("[内容]:确认已读") &&
-      meg.split("[内容]:确认已读").length == 2
-        ? "消息已读"
-        : "收到一份通知",
-    type:
-      meg.includes("[内容]:确认已读") &&
-      meg.split("[内容]:确认已读").length == 2
-        ? "success"
-        : "info",
-    duration: 1000,
+    title: notice.user + "： " + notice.title,
+    message: notice.content,
+    type: notice.image_url,
+    duration: 2000,
     showClose: false,
   });
   loadMessageData();
@@ -449,6 +443,7 @@ const deleteNotification = async (i: number) => {
   if (res.code === 0) {
     ElMessage.success("通知删除成功");
     await listAllNotifications();
+    await loadMessageData();
   } else ElMessage.error("通知删除失败，" + res.message);
 };
 </script>
