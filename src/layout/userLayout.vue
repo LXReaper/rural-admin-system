@@ -1,13 +1,13 @@
 <template>
   <div id="userLayout">
-    <el-form ref="loginForm" class="login-form">
+    <el-form ref="loginForm" class="login-form" :rules="rules">
       <h3 class="title">乡村积分治理后台管理系统</h3>
       <el-form-item prop="userAccount">
         <el-input
           v-model="userAccount"
           type="text"
           placeholder="请输入管理员账号"
-          @keyup.enter="handleLogin"
+          @keydown.enter="handleLogin"
         />
       </el-form-item>
       <el-form-item prop="userPassword">
@@ -15,7 +15,7 @@
           v-model="userPassword"
           type="password"
           placeholder="请输入管理员密码"
-          @keyup.enter="handleLogin"
+          @keydown.enter="handleLogin"
         />
       </el-form-item>
       <!--      <el-form-item prop="code" v-if="captchaEnabled">-->
@@ -69,6 +69,13 @@ const loading = ref(false);
 const userAccount = ref("");
 const userPassword = ref("");
 const rememberMe = ref(false);
+//规则
+const rules = ref({
+  userAccount: [{ required: true, message: "输入管理员账号", trigger: "blur" }],
+  userPassword: [
+    { required: true, message: "输入管理员密码", trigger: "blur" },
+  ],
+});
 const handleLogin = async () => {
   const res = await UserControllerService.userLoginUsingPost({
     userAccount: userAccount.value,
