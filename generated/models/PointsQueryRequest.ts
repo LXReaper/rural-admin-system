@@ -4,6 +4,7 @@
 /* eslint-disable */
 export type PointsQueryRequest = {
   current?: number;
+  is_Settled?: number;
   pageSize?: number;
   remaining_points?: number;
   sortField?: string;

@@ -11,6 +11,7 @@ import type { PointsQueryRequest } from "../models/PointsQueryRequest";
 import type { CancelablePromise } from "../core/CancelablePromise";
 import { OpenAPI } from "../core/OpenAPI";
 import { request as __request } from "../core/request";
+import { BaseResponse_boolean_ } from "../models/BaseResponse_boolean_";
 
 export class PointsControllerService {
   /**
@@ -135,6 +136,23 @@ export class PointsControllerService {
       method: "POST",
       url: "/api/points/list/page/vo",
       body: pointsQueryRequest,
+      errors: {
+        401: `Unauthorized`,
+        403: `Forbidden`,
+        404: `Not Found`,
+      },
+    });
+  }
+
+  /**
+   * 结算积分
+   * @returns BaseResponse_boolean_ OK
+   * @throws ApiError
+   */
+  public static settlePointsUsingGet(): CancelablePromise<BaseResponse_boolean_> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/points/settle",
       errors: {
         401: `Unauthorized`,
         403: `Forbidden`,

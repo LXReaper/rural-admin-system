@@ -13,7 +13,7 @@
           placeholder="请输入用户ID"
           size="default"
           clearable
-          @keyup.enter="handleQuery"
+          @keydown.enter="handleQueryDebounce"
         />
       </el-form-item>
       <el-form-item label="总积分" prop="total_points">
@@ -22,7 +22,7 @@
           placeholder="请输入总积分"
           size="default"
           clearable
-          @keyup.enter="handleQuery"
+          @keydown.enter="handleQueryDebounce"
         />
       </el-form-item>
       <el-form-item label="剩余积分" prop="remaining_points">
@@ -31,10 +31,30 @@
           placeholder="请输入剩余积分"
           size="default"
           clearable
-          @keyup.enter="handleQuery"
+          @keydown.enter="handleQueryDebounce"
         />
       </el-form-item>
-      <el-form-item label="开始日期" prop="settlement_date">
+      <el-form-item label="是否结算" prop="is_Settled">
+        <el-select
+          v-model="queryParams.is_Settled"
+          placeholder="请选择结算状态"
+          @change="handleQueryDebounce"
+          size="large"
+          style="width: 240px"
+        >
+          <el-option
+            v-for="item in [
+              { value: '', label: '所有' },
+              { value: 0, label: '未结算' },
+              { value: 1, label: '已结算' },
+            ]"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="结算日期" prop="settlement_date">
         <el-date-picker
           clearable
           v-model="queryParams.settlement_date"
@@ -46,7 +66,7 @@
         </el-date-picker>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" size="default" @click="handleQuery"
+        <el-button type="primary" size="default" @click="handleQueryDebounce"
           >搜索
         </el-button>
         <el-button size="default" @click="resetQuery">重置</el-button>
@@ -56,12 +76,30 @@
     <el-table v-loading="loading" :data="pointsList">
       <el-table-column label="ID" align="center" prop="point_id" />
       <el-table-column label="用户" align="center" prop="user_name" />
-      <el-table-column label="总积分" align="center" prop="total_points" />
-      <el-table-column
-        label="剩余积分"
-        align="center"
-        prop="remaining_points"
-      />
+      <el-table-column label="总积分" align="center" prop="total_points">
+        <template #default="scope">
+          <el-tag>{{ scope.row.total_points }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="剩余积分" align="center" prop="remaining_points">
+        <template #default="scope">
+          <el-tag
+            :type="`${
+              scope.row.remaining_points / scope.row.total_points >= 0.2
+                ? 'success'
+                : 'danger'
+            }`"
+          >
+            {{ scope.row.remaining_points }}
+          </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="是否结算" align="center" prop="is_Settled">
+        <template #default="scope">
+          <el-tag type="success" v-if="scope.row.is_Settled">已结算</el-tag>
+          <el-tag type="warning" v-else>未结算</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column
         label="开始日期"
         align="center"
@@ -71,6 +109,20 @@
         <template #default="scope">
           <span>{{
             moment(scope.row.start_date).format("YYYY年MM月DD日 HH时mm分ss秒")
+          }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="结算日期"
+        align="center"
+        prop="settlement_date"
+        width="180"
+      >
+        <template #default="scope">
+          <span v-if="scope.row.settlement_date">{{
+            moment(scope.row.settlement_date).format(
+              "YYYY年MM月DD日 HH时mm分ss秒"
+            )
           }}</span>
         </template>
       </el-table-column>
@@ -106,6 +158,7 @@ const queryParams = ref({
   total_points: "",
   remaining_points: "",
   settlement_date: "",
+  is_Settled: "",
 });
 //后端获取的表格数据
 const pointsList = ref([]);
@@ -121,6 +174,7 @@ const handleQuery = async () => {
     remaining_points: queryParams.value.remaining_points as any,
     total_points: queryParams.value.total_points as any,
     user_id: queryParams.value.user_id as any,
+    is_Settled: queryParams.value.is_Settled as any,
   });
   loading.value = false;
   if (res.code === 0) {
@@ -141,6 +195,7 @@ const resetQuery = () => {
     total_points: "",
     remaining_points: "",
     settlement_date: "",
+    is_Settled: "",
   };
   handleQueryDebounce();
 };
