@@ -12,13 +12,14 @@
       <div style="text-align: right; margin-top: -25px">
         <el-space direction="horizontal" style="padding-left: 80%">
           <div
-            style="margin-right: 4vw"
+            style="margin-right: 5vw"
             v-if="store.state.user.loginUser.villager_id"
           >
+            <!--            发布任务-->
             <publish-task-view />
           </div>
           <div
-            style="margin-right: 4vw"
+            style="margin-right: 5vw"
             v-if="store.state.user.loginUser.villager_id"
           >
             <!--            通知-->

@@ -12,23 +12,23 @@
           v-model="queryParams.task_content"
           placeholder="请输入任务内容"
           clearable
-          @keyup.enter="handleQueryDebounce"
+          @keydown.enter="handleQueryDebounce"
         />
       </el-form-item>
-      <el-form-item label="发布用户" prop="user_id">
+      <el-form-item label="发布用户" prop="user_name">
         <el-input
-          v-model="queryParams.user_id"
-          placeholder="请输入发布用户ID"
+          v-model="queryParams.user_name"
+          placeholder="请输入发布用户"
           clearable
-          @keyup.enter="handleQueryDebounce"
+          @keydown.enter="handleQueryDebounce"
         />
       </el-form-item>
-      <el-form-item label="审核用户" prop="examine_user_id">
+      <el-form-item label="审核用户" prop="examine_user_name">
         <el-input
-          v-model="queryParams.examine_user_id"
-          placeholder="请输入审核用户ID"
+          v-model="queryParams.examine_user_name"
+          placeholder="请输入审核用户"
           clearable
-          @keyup.enter="handleQueryDebounce"
+          @keydown.enter="handleQueryDebounce"
         />
       </el-form-item>
       <el-form-item label="任务积分" prop="points_value">
@@ -36,23 +36,23 @@
           v-model="queryParams.points_value"
           placeholder="请输入任务积分"
           clearable
-          @keyup.enter="handleQueryDebounce"
+          @keydown.enter="handleQueryDebounce"
         />
       </el-form-item>
       <el-form-item label="规则" prop="rule_id">
         <el-input
           v-model="queryParams.rule_id"
-          placeholder="请输入规则id"
+          placeholder="请输入规则编号"
           clearable
-          @keyup.enter="handleQueryDebounce"
+          @keydown.enter="handleQueryDebounce"
         />
       </el-form-item>
       <el-form-item label="资料" prop="material_id">
         <el-input
           v-model="queryParams.material_id"
-          placeholder="请输入资料id"
+          placeholder="请输入资料编号"
           clearable
-          @keyup.enter="handleQueryDebounce"
+          @keydown.enter="handleQueryDebounce"
         />
       </el-form-item>
       <el-form-item label="接取人数" prop="all_Num">
@@ -60,7 +60,7 @@
           v-model="queryParams.all_Num"
           placeholder="请输入接取人数"
           clearable
-          @keyup.enter="handleQueryDebounce"
+          @keydown.enter="handleQueryDebounce"
         />
       </el-form-item>
       <el-form-item>
@@ -99,9 +99,9 @@
         <template #default="scope">
           <el-button
             type="text"
-            v-if="scope.row.material_id"
+            v-if="scope.row.material_id && scope.row.material_id.length"
             style="text-decoration: underline"
-            @click="showLearningMaterialDetail(scope.row.material_id)"
+            @click="openDetailIdDialog('资料详情', scope.row.material_id)"
             >显示资料
           </el-button>
         </template>
@@ -109,10 +109,10 @@
       <el-table-column label="规则" align="center" prop="rule_id">
         <template #default="scope">
           <el-button
-            v-if="scope.row.rule_id"
+            v-if="scope.row.rule_id && scope.row.rule_id.length"
             type="text"
             style="text-decoration: underline"
-            @click="showRuleDetail(scope.row.rule_id)"
+            @click="openDetailIdDialog('规则详情', scope.row.rule_id)"
             >显示规则
           </el-button>
         </template>
@@ -368,6 +368,31 @@
         </el-descriptions-item>
       </el-descriptions>
     </el-dialog>
+    <!--    展示规则和资料id详情的对话框-->
+    <el-dialog v-model="isOpenIdDetail" draggable append-to-body>
+      <el-descriptions
+        :title="detailTitle"
+        :extra="`点击编号可以展示${detailTitle}信息`"
+        direction="vertical"
+        :column="4"
+        :size="'default'"
+        border
+      >
+        <el-descriptions-item :label="`${detailTitle}编号`">
+          <span v-for="(item, i) in curDetailIdList" :key="i">
+            <el-tag
+              type="primary"
+              style="cursor: pointer"
+              @click="openDetailInfo(i)"
+              round
+              effect="plain"
+              :hit="true"
+              ><text style="text-decoration: underline">{{ item }}</text>
+            </el-tag>
+          </span>
+        </el-descriptions-item>
+      </el-descriptions>
+    </el-dialog>
   </div>
 </template>
 <script setup lang="ts">
@@ -397,8 +422,8 @@ const queryParams = ref({
   pageSize: 50,
   current: 1,
   task_content: "",
-  user_id: "",
-  examine_user_id: "",
+  user_name: "",
+  examine_user_name: "",
   is_accepted: "",
   material_id: "",
   points_value: "",
@@ -463,8 +488,8 @@ const handleQuery = async () => {
       pageSize: queryParams.value.pageSize,
       current: queryParams.value.current,
       task_content: queryParams.value.task_content,
-      user_id: queryParams.value.user_id as any,
-      examine_user_id: queryParams.value.examine_user_id as any,
+      user_name: queryParams.value.user_name,
+      examine_user_name: queryParams.value.examine_user_name,
       is_accepted: queryParams.value.is_accepted as any,
       material_id: queryParams.value.material_id as any,
       points_value: queryParams.value.points_value as any,
@@ -491,8 +516,8 @@ const resetQuery = () => {
     pageSize: 50,
     current: 1,
     task_content: "",
-    user_id: "",
-    examine_user_id: "",
+    user_name: "",
+    examine_user_name: "",
     is_accepted: "",
     material_id: "",
     points_value: "",
@@ -502,7 +527,7 @@ const resetQuery = () => {
     update_date: "",
     all_Num: "",
   };
-  handleQuery();
+  handleQueryDebounce();
 };
 
 /**
@@ -559,6 +584,25 @@ const handleDelete = async () => {
     } else ElNotification.error("删除失败，" + res.message);
   }
   await handleQuery();
+};
+
+/**
+ * 展示规则和学习资料id详情
+ */
+const detailTitle = ref("");
+const isOpenIdDetail = ref(false); //是否打开id详情对话框
+const curDetailIdList = ref([]);
+//打开详情id对话框
+const openDetailIdDialog = (name: string, list: []) => {
+  detailTitle.value = name;
+  curDetailIdList.value = list;
+  isOpenIdDetail.value = true;
+};
+//打开详情信息对话框
+const openDetailInfo = (i: number) => {
+  if (detailTitle.value === "规则详情") {
+    showRuleDetail(curDetailIdList.value[i]);
+  } else showLearningMaterialDetail(curDetailIdList.value[i]);
 };
 
 /**

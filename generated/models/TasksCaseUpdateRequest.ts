@@ -5,6 +5,6 @@
 export type TasksCaseUpdateRequest = {
   id?: number;
   task_content?: string;
-  task_video_url?: string;
+  task_video_url?: Array<string>;
   user_id?: number;
 };

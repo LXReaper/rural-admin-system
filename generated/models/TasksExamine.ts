@@ -10,10 +10,10 @@ export type TasksExamine = {
   is_accepted?: number;
   is_deleted?: number;
   join_Num?: number;
-  material_id?: number;
+  material_id?: string;
   points_value?: number;
   publish_date?: string;
-  rule_id?: number;
+  rule_id?: string;
   task_content?: string;
   update_date?: string;
   user_id?: number;

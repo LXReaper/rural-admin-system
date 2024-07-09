@@ -7,12 +7,12 @@
       v-show="showSearch"
       label-width="68px"
     >
-      <el-form-item label="规则ID" prop="rule_id">
+      <el-form-item label="规则编号" prop="rule_id">
         <el-input
           v-model="queryParams.rule_id"
-          placeholder="请输入规则ID"
+          placeholder="请输入规则编号"
           clearable
-          @keyup.enter="handleQueryDebounce"
+          @keydown.enter="handleQueryDebounce"
         />
       </el-form-item>
       <el-form-item label="规则内容" prop="rule_content">
@@ -20,23 +20,23 @@
           v-model="queryParams.rule_content"
           placeholder="请输入规则内容"
           clearable
-          @keyup.enter="handleQueryDebounce"
+          @keydown.enter="handleQueryDebounce"
         />
       </el-form-item>
-      <el-form-item label="发布用户" prop="publish_user_id">
+      <el-form-item label="发布用户" prop="publishUserName">
         <el-input
-          v-model="queryParams.publish_user_id"
-          placeholder="请输入发布用户ID"
+          v-model="queryParams.publishUserName"
+          placeholder="请输入发布用户"
           clearable
-          @keyup.enter="handleQueryDebounce"
+          @keydown.enter="handleQueryDebounce"
         />
       </el-form-item>
-      <el-form-item label="更新用户" prop="update_user_id">
+      <el-form-item label="更新用户" prop="updateUserName">
         <el-input
-          v-model="queryParams.update_user_id"
-          placeholder="请输入更新用户ID"
+          v-model="queryParams.updateUserName"
+          placeholder="请输入更新用户"
           clearable
-          @keyup.enter="handleQueryDebounce"
+          @keydown.enter="handleQueryDebounce"
         />
       </el-form-item>
       <el-form-item>
@@ -75,7 +75,7 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" />
-      <el-table-column label="规则ID" align="center" prop="rule_id" />
+      <el-table-column label="规则编号" align="center" prop="rule_id" />
       <el-table-column
         label="规则内容"
         align="center"
@@ -121,6 +121,25 @@
           }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="操作" align="center">
+        <template #default="scope">
+          <el-button size="small" @click="handleEdit(scope.$index, scope.row)">
+            编辑
+          </el-button>
+          <el-popconfirm
+            confirm-button-text="确定"
+            cancel-button-text="取消"
+            :icon="InfoFilled"
+            icon-color="#626AEF"
+            title="确定删除这个规则"
+            @confirm="confirmEvent(scope.$index, scope.row)"
+          >
+            <template #reference>
+              <el-button size="small" type="danger">删除</el-button>
+            </template>
+          </el-popconfirm>
+        </template>
+      </el-table-column>
     </el-table>
 
     <!--    分页-->
@@ -137,7 +156,7 @@
         class="mt-4"
       />
     </div>
-    <!-- 添加或修改用户配置对话框 -->
+    <!-- 添加或修改规则配置对话框 -->
     <el-dialog :title="title" v-model="open" width="700px" append-to-body>
       <el-form :model="form" :rules="rules" label-width="120px">
         <el-form-item label="规则内容：" prop="ruleContent">
@@ -153,6 +172,8 @@
           <el-input-number
             max="100"
             min="0"
+            :step="0.1"
+            style="width: 10vw"
             v-model="form.rulePoints"
             placeholder="请输入规则积分"
           ></el-input-number>
@@ -177,11 +198,13 @@ import {
   Rules,
   RulesControllerService,
   RulesQueryRequest,
+  UserControllerService,
 } from "../../../generated";
 import { ElPagination } from "element-plus";
 import { ElMessage, ElNotification } from "element-plus";
 import moment from "moment";
 import store from "@/store";
+import { InfoFilled } from "@element-plus/icons-vue";
 
 //总数
 const total = ref(50);
@@ -206,19 +229,21 @@ const queryParams = ref({
   rule_id: "",
   rule_content: "",
   rule_points: "" as any,
-  publish_user_id: "",
-  update_user_id: "",
+  publishUserName: "",
+  updateUserName: "",
 });
 //添加和编辑对话框中编写的要放入数据库中的form数据
 const form = ref({
   ruleContent: "",
   rulePoints: "",
+  ruleId: "",
 });
 //表单重置
 const reset = () => {
   form.value = {
     ruleContent: "",
     rulePoints: "",
+    ruleId: "",
   };
 };
 /** 新增按钮操作 */
@@ -248,7 +273,7 @@ watch(
 const handleQuery = async () => {
   loading.value = true;
   const res = await RulesControllerService.listRulesVoByPageUsingPost(
-    queryParams.value
+    queryParams.value as any
   );
   loading.value = false;
   if (res.code === 0) {
@@ -262,7 +287,16 @@ onMounted(() => {
 });
 //重置
 const resetQuery = () => {
-  console.log();
+  queryParams.value = {
+    pageSize: 50,
+    current: 1,
+    rule_id: "",
+    rule_content: "",
+    rule_points: "" as any,
+    publishUserName: "",
+    updateUserName: "",
+  };
+  handleQueryDebounce();
 };
 /**
  * 对话框
@@ -278,14 +312,27 @@ const rules = ref({
 });
 //提交
 const submitForm = async () => {
-  const res = await RulesControllerService.rulesAddUsingPost({
-    ruleContent: form.value.ruleContent as any,
-    rulePoints: form.value.rulePoints as any,
-  });
-  if (res.code === 0) {
-    ElNotification.success("规则添加成功");
-    await handleQuery();
-  } else ElNotification.error("规则添加失败，" + res.message);
+  let res = null;
+  if (title.value.includes("添加规则")) {
+    res = await RulesControllerService.rulesAddUsingPost({
+      ruleContent: form.value.ruleContent as any,
+      rulePoints: form.value.rulePoints as any,
+    });
+    if (res.code === 0) {
+      ElNotification.success("规则添加成功");
+      await handleQuery();
+    } else ElNotification.error("规则添加失败，" + res.message);
+  } else {
+    res = await RulesControllerService.updateRulesUsingPost({
+      ruleId: form.value.ruleId as any,
+      ruleContent: form.value.ruleContent,
+      rulePoints: form.value.rulePoints as any,
+    });
+    if (res.code === 0) {
+      ElNotification.success("规则修改成功");
+      await handleQuery();
+    } else ElNotification.error("规则修改失败，" + res.message);
+  }
   reset();
   open.value = false;
 };
@@ -294,6 +341,34 @@ const submitFormDebounce = debounce(submitForm, 300); //防抖
 const cancel = () => {
   open.value = false;
   reset();
+};
+/**
+ * 表内的编辑和删除操作
+ * @param index
+ * @param row
+ */
+//编辑规则信息
+const handleEdit = (index: number, row: any) => {
+  form.value = {
+    ruleContent: row.rule_content,
+    rulePoints: row.rule_points,
+    ruleId: row.rule_id,
+  };
+  open.value = true;
+  title.value = `修改规则信息`;
+};
+//删除规则信息
+const handleDelete = async (index: number, row: any) => {
+  const res = await RulesControllerService.deleteRulesUsingPost({
+    id: row.rule_id,
+  });
+  if (res.code === 0) {
+    ElMessage.success("成功删除规则");
+    await handleQuery();
+  } else ElMessage.error("规则删除失败，" + res.message);
+};
+const confirmEvent = (index: number, row: any) => {
+  handleDelete(index, row);
 };
 //选择表格某行触发事件
 const handleSelectionChange = (selection: any) => {

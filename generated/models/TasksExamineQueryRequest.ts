@@ -6,7 +6,7 @@ export type TasksExamineQueryRequest = {
   all_Num?: number;
   current?: number;
   deadline?: string;
-  examine_user_id?: number;
+  examine_user_name?: string;
   id?: number;
   is_accepted?: number;
   material_id?: number;
@@ -18,5 +18,5 @@ export type TasksExamineQueryRequest = {
   sortOrder?: string;
   task_content?: string;
   update_date?: string;
-  user_id?: number;
+  user_name?: string;
 };

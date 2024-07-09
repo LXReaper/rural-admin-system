@@ -7,12 +7,12 @@
       v-show="showSearch"
       label-width="68px"
     >
-      <el-form-item label="任务ID" prop="task_id">
+      <el-form-item label="任务编号" prop="task_id">
         <el-input
           v-model="queryParams.taskId"
-          placeholder="请输入任务ID"
+          placeholder="请输入任务编号"
           clearable
-          @keyup.enter="handleQueryDebounce"
+          @keydown.enter="handleQueryDebounce"
         />
       </el-form-item>
       <el-form-item label="任务内容" prop="task_content">
@@ -20,39 +20,39 @@
           v-model="queryParams.taskContent"
           placeholder="请输入任务内容"
           clearable
-          @keyup.enter="handleQueryDebounce"
+          @keydown.enter="handleQueryDebounce"
         />
       </el-form-item>
-      <el-form-item label="资料ID" prop="material_id">
+      <el-form-item label="资料" prop="material_id">
         <el-input
           v-model="queryParams.materialId"
-          placeholder="请输入资料ID"
+          placeholder="请输入资料编号"
           clearable
-          @keyup.enter="handleQueryDebounce"
+          @keydown.enter="handleQueryDebounce"
         />
       </el-form-item>
-      <el-form-item label="规则ID" prop="rule_id">
+      <el-form-item label="规则" prop="rule_id">
         <el-input
           v-model="queryParams.ruleId"
-          placeholder="请输入规则ID"
+          placeholder="请输入规则编号"
           clearable
-          @keyup.enter="handleQueryDebounce"
+          @keydown.enter="handleQueryDebounce"
         />
       </el-form-item>
-      <el-form-item label="发布用户" prop="user_id">
+      <el-form-item label="发布用户" prop="userName">
         <el-input
-          v-model="queryParams.userId"
-          placeholder="请输入发布用户ID"
+          v-model="queryParams.userName"
+          placeholder="请输入发布用户"
           clearable
-          @keyup.enter="handleQueryDebounce"
+          @keydown.enter="handleQueryDebounce"
         />
       </el-form-item>
-      <el-form-item label="更新用户" prop="updated_user_id">
+      <el-form-item label="更新用户" prop="updateUserName">
         <el-input
-          v-model="queryParams.updatedUserId"
-          placeholder="请输入更新用户ID"
+          v-model="queryParams.updateUserName"
+          placeholder="请输入更新用户"
           clearable
-          @keyup.enter="handleQueryDebounce"
+          @keydown.enter="handleQueryDebounce"
         />
       </el-form-item>
       <el-form-item label="积分数值" prop="points_value">
@@ -60,7 +60,31 @@
           v-model="queryParams.pointsValue"
           placeholder="请输入积分数值"
           clearable
-          @keyup.enter="handleQueryDebounce"
+          @keydown.enter="handleQueryDebounce"
+        />
+      </el-form-item>
+      <el-form-item
+        style="white-space: nowrap; margin-left: 3vw"
+        label="最大任务接取人数"
+        prop="all_Num"
+      >
+        <el-input
+          v-model="queryParams.all_Num"
+          placeholder="请输入最大任务接取人数"
+          clearable
+          @keydown.enter="handleQueryDebounce"
+        />
+      </el-form-item>
+      <el-form-item
+        style="white-space: nowrap; margin-left: 3vw"
+        label="当前接取任务人数"
+        prop="join_Num"
+      >
+        <el-input
+          v-model="queryParams.join_Num"
+          placeholder="请输入当前接取任务人数"
+          clearable
+          @keydown.enter="handleQueryDebounce"
         />
       </el-form-item>
       <el-form-item>
@@ -84,9 +108,9 @@
         <template #default="scope">
           <el-button
             type="text"
-            v-if="scope.row.material_id"
+            v-if="scope.row.material_id && scope.row.material_id.length"
             style="text-decoration: underline"
-            @click="showLearningMaterialDetail(scope.row.material_id)"
+            @click="openDetailIdDialog('资料详情', scope.row.material_id)"
             >显示资料
           </el-button>
         </template>
@@ -95,9 +119,9 @@
         <template #default="scope">
           <el-button
             type="text"
-            v-if="scope.row.rule_id"
+            v-if="scope.row.rule_id && scope.row.rule_id.length"
             style="text-decoration: underline"
-            @click="showRuleDetail(scope.row.rule_id)"
+            @click="openDetailIdDialog('规则详情', scope.row.rule_id)"
             >显示规则
           </el-button>
         </template>
@@ -264,6 +288,31 @@
         </el-descriptions-item>
       </el-descriptions>
     </el-dialog>
+    <!--    展示规则和资料id详情的对话框-->
+    <el-dialog v-model="isOpenIdDetail" draggable append-to-body>
+      <el-descriptions
+        :title="detailTitle"
+        :extra="`点击编号可以展示${detailTitle}信息`"
+        direction="vertical"
+        :column="4"
+        :size="'default'"
+        border
+      >
+        <el-descriptions-item :label="`${detailTitle}编号`">
+          <span v-for="(item, i) in curDetailIdList" :key="i">
+            <el-tag
+              type="primary"
+              style="cursor: pointer"
+              @click="openDetailInfo(i)"
+              round
+              effect="plain"
+              :hit="true"
+              ><text style="text-decoration: underline">{{ item }}</text>
+            </el-tag>
+          </span>
+        </el-descriptions-item>
+      </el-descriptions>
+    </el-dialog>
   </div>
 </template>
 <script setup lang="ts">
@@ -292,8 +341,8 @@ const queryParams = ref({
   taskContent: "",
   materialId: "" as any,
   ruleId: "" as any,
-  userId: "" as any,
-  updatedUserId: "" as any,
+  userName: "",
+  updateUserName: "",
   pointsValue: "" as any,
   all_Num: "" as any,
   join_Num: "" as any,
@@ -305,7 +354,7 @@ const tasksList = ref([]);
 const handleQuery = async () => {
   loading.value = true;
   const res = await TasksControllerService.listTasksVoByPageUsingPost(
-    queryParams.value
+    queryParams.value as any
   );
   loading.value = false;
   if (res.code === 0) {
@@ -323,11 +372,31 @@ const resetQuery = () => {
   queryParams.value.taskContent = "";
   queryParams.value.materialId = "";
   queryParams.value.ruleId = "";
-  queryParams.value.userId = "";
-  queryParams.value.updatedUserId = "";
+  queryParams.value.userName = "";
+  queryParams.value.updateUserName = "";
   queryParams.value.pointsValue = "";
   queryParams.value.all_Num = "";
   queryParams.value.join_Num = "";
+  handleQueryDebounce();
+};
+
+/**
+ * 展示规则和学习资料id详情
+ */
+const detailTitle = ref("");
+const isOpenIdDetail = ref(false); //是否打开id详情对话框
+const curDetailIdList = ref([]);
+//打开详情id对话框
+const openDetailIdDialog = (name: string, list: []) => {
+  detailTitle.value = name;
+  curDetailIdList.value = list;
+  isOpenIdDetail.value = true;
+};
+//打开详情信息对话框
+const openDetailInfo = (i: number) => {
+  if (detailTitle.value === "规则详情") {
+    showRuleDetail(curDetailIdList.value[i]);
+  } else showLearningMaterialDetail(curDetailIdList.value[i]);
 };
 
 /**

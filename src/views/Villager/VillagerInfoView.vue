@@ -457,9 +457,9 @@ const handleDelete = async (index: number, row: any) => {
     id: tableData.value[index].villager_id,
   });
   if (res.code === 0) {
-    ElMessage.success("成功删除");
+    ElMessage.success("成功删除村民");
     await handleQuery();
-  } else ElMessage.error("删除失败，" + res.message);
+  } else ElMessage.error("村民删除失败，" + res.message);
 };
 const confirmEvent = (index: number, row: any) => {
   handleDelete(index, row);

@@ -5,10 +5,10 @@
 export type TasksAddRequest = {
   all_Num?: number;
   deadline?: string;
-  materialId?: number;
+  materialId?: Array<number>;
   pointsValue?: number;
   publish_date?: string;
-  ruleId?: number;
+  ruleId?: Array<number>;
   taskContent?: string;
   user_id?: number;
 };

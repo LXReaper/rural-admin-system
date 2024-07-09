@@ -9,10 +9,10 @@ export type TasksExamineVO = {
   id?: number;
   is_accepted?: number;
   join_Num?: number;
-  material_id?: number;
+  material_id?: Array<number>;
   points_value?: number;
   publish_date?: string;
-  rule_id?: number;
+  rule_id?: Array<number>;
   task_content?: string;
   update_date?: string;
   villager_name?: string;

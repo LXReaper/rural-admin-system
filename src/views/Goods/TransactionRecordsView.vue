@@ -12,7 +12,7 @@
           v-model="queryParams.userId"
           placeholder="请输入用户ID"
           clearable
-          @keyup.enter="handleQueryDebounce"
+          @keydown.enter="handleQueryDebounce"
         />
       </el-form-item>
       <el-form-item label="订单ID" prop="transactionsId">
@@ -20,7 +20,7 @@
           v-model="queryParams.transactionsId"
           placeholder="请输入订单ID"
           clearable
-          @keyup.enter="handleQueryDebounce"
+          @keydown.enter="handleQueryDebounce"
         />
       </el-form-item>
       <el-form-item label="商品ID" prop="productId">
@@ -28,7 +28,7 @@
           v-model="queryParams.productId"
           placeholder="请输入商品ID"
           clearable
-          @keyup.enter="handleQueryDebounce"
+          @keydown.enter="handleQueryDebounce"
         />
       </el-form-item>
       <el-form-item label="交易状态" prop="transaction_status">
@@ -178,7 +178,10 @@
           </el-tag>
         </el-descriptions-item>
         <el-descriptions-item label="商品价格">
-          <el-tag type="danger" round>{{ productDetail.price }}</el-tag>
+          <el-space direction="horizontal">
+            <el-tag type="danger" round>{{ productDetail.price }}</el-tag>
+            <text>分</text>
+          </el-space>
         </el-descriptions-item>
         <el-descriptions-item label="商品图片">
           <el-image

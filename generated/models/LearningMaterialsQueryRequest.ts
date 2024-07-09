@@ -9,5 +9,7 @@ export type LearningMaterialsQueryRequest = {
   sortField?: string;
   sortOrder?: string;
   text_content?: string;
+  updated_user_name?: string;
+  user_name?: string;
   video_url?: string;
 };

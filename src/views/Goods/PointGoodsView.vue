@@ -26,7 +26,7 @@
       <el-form-item label="商品积分" prop="price">
         <el-input
           v-model="queryParams.price"
-          placeholder="请输入商品积分"
+          placeholder="请输入商品积分数"
           clearable
           @keyup.enter="handleQueryDebounce"
         />
@@ -34,7 +34,7 @@
       <el-form-item label="商品库存" prop="stock_quantity">
         <el-input
           v-model="queryParams.stock_quantity"
-          placeholder="请输入商品库存"
+          placeholder="请输入商品库存数"
           clearable
           @keyup.enter="handleQueryDebounce"
         />
@@ -120,6 +120,7 @@
       <el-table-column label="商品积分" align="center" prop="price">
         <template #default="scope">
           <el-tag type="danger" round>{{ scope.row.price }}</el-tag>
+          分
         </template>
       </el-table-column>
       <el-table-column label="商品库存" align="center" prop="stock_quantity">
@@ -247,11 +248,17 @@
           </el-upload>
         </el-form-item>
         <el-form-item label="商品积分" prop="price">
-          <el-input-number v-model="form.price" size="large" maxlength="30" />
+          <el-input-number
+            v-model="form.price"
+            :step="0.1"
+            size="large"
+            maxlength="30"
+          />
         </el-form-item>
         <el-form-item label="商品库存" prop="stockQuantity">
           <el-input-number
             v-model="form.stockQuantity"
+            :step="0.1"
             size="large"
             maxlength="30"
           />

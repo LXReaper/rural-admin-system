@@ -5,9 +5,9 @@
 export type TasksUpdateRequest = {
   all_Num?: number;
   deadline?: string;
-  materialId?: number;
+  materialId?: Array<number>;
   pointsValue?: number;
-  ruleId?: number;
+  ruleId?: Array<number>;
   taskContent?: string;
   taskId?: number;
 };

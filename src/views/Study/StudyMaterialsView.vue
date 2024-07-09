@@ -7,28 +7,28 @@
       v-show="showSearch"
       label-width="68px"
     >
-      <el-form-item label="资料内容" prop="text_content">
+      <el-form-item label="资料编号" prop="text_content">
         <el-input
           v-model="queryParams.text_content"
-          placeholder="请输入资料ID"
+          placeholder="请输入资料编号"
           clearable
-          @keyup.enter="handleQueryDebounce"
+          @keydown.enter="handleQueryDebounce"
         />
       </el-form-item>
-      <el-form-item label="发布用户" prop="user_id">
+      <el-form-item label="发布用户" prop="user_name">
         <el-input
-          v-model="queryParams.user_id"
-          placeholder="请输入发布用户ID"
+          v-model="queryParams.user_name"
+          placeholder="请输入发布用户"
           clearable
-          @keyup.enter="handleQueryDebounce"
+          @keydown.enter="handleQueryDebounce"
         />
       </el-form-item>
-      <el-form-item label="更新用户" prop="updated_user_id">
+      <el-form-item label="更新用户" prop="updated_user_name">
         <el-input
-          v-model="queryParams.updated_user_id"
-          placeholder="请输入更新用户ID"
+          v-model="queryParams.updated_user_name"
+          placeholder="请输入更新用户"
           clearable
-          @keyup.enter="handleQueryDebounce"
+          @keydown.enter="handleQueryDebounce"
         />
       </el-form-item>
       <el-form-item>
@@ -60,29 +60,37 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="资料ID" align="center" prop="materialId" />
-      <el-table-column label="视频" align="center" prop="videoUrl" />
-      <el-table-column label="文字内容" align="center" prop="textContent" />
-      <el-table-column label="发布用户ID" align="center" prop="userId" />
+      <el-table-column label="资料编号" align="center" prop="material_id" />
+      <el-table-column label="文字内容" align="center" prop="text_content" />
+      <el-table-column label="视频" align="center" prop="video_url" />
+      <el-table-column label="发布用户" align="center" prop="user_name" />
       <el-table-column
         label="发布日期"
         align="center"
-        prop="publishDate"
+        prop="publish_date"
         width="180"
       >
         <template #default="scope">
-          <span>{{ scope.row }}</span>
+          <span>{{
+            moment(scope.row.publish_date).format("YYYY年MM月DD日 HH时mm分ss秒")
+          }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="更新用户ID" align="center" prop="updatedUserId" />
+      <el-table-column
+        label="更新用户"
+        align="center"
+        prop="updated_user_name"
+      />
       <el-table-column
         label="更新日期"
         align="center"
-        prop="updateDate"
+        prop="update_date"
         width="180"
       >
         <template #default="scope">
-          <span>{{ scope.row }}</span>
+          <span>{{
+            moment(scope.row.update_date).format("YYYY年MM月DD日 HH时mm分ss秒")
+          }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -123,6 +131,7 @@
       <el-form :model="form" :rules="rules" label-width="80px">
         <el-form-item label="学习内容" prop="text_content">
           <el-input
+            type="textarea"
             v-model="form.text_content"
             placeholder="请输入学习内容"
             maxlength="30"
@@ -151,8 +160,12 @@
 import { onMounted, ref, watch } from "vue";
 import { debounce } from "../../../utils/debounce_Throttle";
 import { InfoFilled } from "@element-plus/icons-vue";
-import { UserControllerService } from "../../../generated";
+import {
+  LearningMaterialsControllerService,
+  UserControllerService,
+} from "../../../generated";
 import { ElMessage } from "element-plus";
+import moment from "moment";
 
 //总数
 const total = ref(50);
@@ -167,8 +180,8 @@ const queryParams = ref({
   pageSize: 50,
   current: 1,
   text_content: "",
-  user_id: "",
-  updated_user_id: "",
+  user_name: "",
+  updated_user_name: "",
 });
 //查询后得到的数据
 const learningMaterialsList = ref([]);
@@ -181,6 +194,7 @@ const title = ref("");
 const open = ref(false);
 //添加和编辑对话框中编写的要放入数据库中的form数据
 const form = ref({
+  material_id: "",
   video_url: "",
   text_content: "",
 });
@@ -188,6 +202,7 @@ const form = ref({
 //表单重置
 const reset = () => {
   form.value = {
+    material_id: "",
     video_url: "",
     text_content: "",
   };
@@ -209,30 +224,30 @@ const submitForm = async () => {
     return;
   }
   //执行添加学习资料或者修改学习资料的操作
-  // if (title.value.includes("添加学习资料")) {
-  //   const res = await UserControllerService.addUserUsingPost({
-  //     video_url: form.value.video_url,
-  //     text_content: form.value.text_content,
-  //   });
-  //   if (res.code === 0) {
-  //     ElMessage.success("添加成功");
-  //     handleQuery();
-  //   } else ElMessage.error("添加失败，" + res.message);
-  // } else {
-  //   const updateRes = await UserControllerService.updateUserUsingPost({
-  //     id: learningMaterialsList.value[curEdit.value].villager_id,
-  //     userAccount: form.value.account,
-  //     userAddress: form.value.address,
-  //     userName: form.value.villager_name,
-  //     userPhone: form.value.phone_number,
-  //     userProfile: form.value.introduction,
-  //     userRole: form.value.userRole,
-  //   });
-  //   if (updateRes.code === 0) {
-  //     ElMessage.success("修改成功");
-  //     handleQuery();
-  //   } else ElMessage.error("删除失败，" + updateRes.message);
-  // }
+  if (title.value.includes("添加学习资料")) {
+    const res =
+      await LearningMaterialsControllerService.addLearningMaterialsUsingPost({
+        video_url: form.value.video_url,
+        text_content: form.value.text_content,
+      });
+    if (res.code === 0) {
+      ElMessage.success("学习资料添加成功");
+      await handleQuery();
+    } else ElMessage.error("学习资料添加失败，" + res.message);
+  } else {
+    const updateRes =
+      await LearningMaterialsControllerService.updateLearningMaterialsUsingPost(
+        {
+          material_id: form.value.material_id as any,
+          video_url: form.value.video_url,
+          text_content: form.value.text_content,
+        }
+      );
+    if (updateRes.code === 0) {
+      ElMessage.success("学习资料修改成功");
+      await handleQuery();
+    } else ElMessage.error("学习资料修改失败，" + updateRes.message);
+  }
   open.value = false;
   reset();
 };
@@ -244,10 +259,17 @@ const cancel = () => {
 };
 
 //查询数据
-const handleQuery = () => {
+const handleQuery = async () => {
   loading.value = true;
-  console.log();
+  const res =
+    await LearningMaterialsControllerService.listLearningMaterialsVoByPageUsingPost(
+      queryParams.value
+    );
   loading.value = false;
+  if (res.code === 0) {
+    learningMaterialsList.value = res.data.records;
+    total.value = res.data.total;
+  } else ElMessage.error("学习资料加载失败，" + res.message);
 };
 const handleQueryDebounce = debounce(handleQuery, 500);
 onMounted(() => {
@@ -255,7 +277,14 @@ onMounted(() => {
 });
 //重置
 const resetQuery = () => {
-  console.log();
+  queryParams.value = {
+    pageSize: 50,
+    current: 1,
+    text_content: "",
+    user_name: "",
+    updated_user_name: "",
+  };
+  handleQueryDebounce();
 };
 
 /**

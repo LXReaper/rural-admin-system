@@ -17,6 +17,6 @@ export type TasksQueryRequest = {
   taskContent?: string;
   taskId?: number;
   updateDate?: string;
-  updatedUserId?: number;
-  userId?: number;
+  updateUserName?: string;
+  userName?: string;
 };

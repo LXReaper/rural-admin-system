@@ -6,12 +6,12 @@ export type RulesQueryRequest = {
   current?: number;
   pageSize?: number;
   publishDate?: string;
-  publishUserId?: number;
+  publishUserName?: number;
   ruleContent?: string;
   ruleId?: number;
   rule_points?: number;
   sortField?: string;
   sortOrder?: string;
   updateDate?: string;
-  updateUserId?: number;
+  updateUserName?: number;
 };

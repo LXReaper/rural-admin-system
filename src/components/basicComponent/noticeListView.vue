@@ -2,15 +2,18 @@
   <!--  通知组件-->
   <div id="noticeListView">
     <el-popover :width="418" trigger="click">
-      <el-space direction="horizontal" style="height: 5vh">
+      <el-space direction="horizontal" style="height: 5vh; white-space: nowrap">
+        <el-icon size="20">
+          <Message />
+        </el-icon>
         <span style="font-size: 15px">站内信息</span>
-        <div style="margin-left: 13vw" v-if="noticesSize">
+        <div style="margin-left: 12vw" v-if="noticesSize">
           <el-tag type="success" round
             ><span style="font-size: 15px"> {{ noticesSize }}条未读 </span>
           </el-tag>
         </div>
       </el-space>
-      <el-empty v-if="!noticesList.length">
+      <el-empty v-if="!noticesList.length" style="width: 418px">
         <template #description>没有消息</template>
       </el-empty>
       <div v-for="(item, i) in noticesList" :key="i">

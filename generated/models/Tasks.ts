@@ -7,10 +7,10 @@ export type Tasks = {
   deadline?: string;
   is_deleted?: number;
   join_Num?: number;
-  material_id?: number;
+  material_id?: string;
   points_value?: number;
   publish_date?: string;
-  rule_id?: number;
+  rule_id?: string;
   task_content?: string;
   task_id?: number;
   update_date?: string;
