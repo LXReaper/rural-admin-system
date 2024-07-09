@@ -8,6 +8,7 @@
   <!--  任务新建对话框-->
   <el-dialog
     v-model="openAddTaskDialog"
+    :before-close="closeTaskAddDialog"
     width="600px"
     append-to-body
     destroy-on-close
@@ -401,6 +402,20 @@ const reset = () => {
     taskContent: "",
   };
 };
+//关闭发布任务对话框
+const closeTaskAddDialog = () => {
+  //关闭对话框
+  openAddTaskDialog.value = false;
+  //规则选中的参数
+  rulesMap = {};
+  isClickRule.value = [];
+  //资料选中的参数
+  materialMap = {};
+  isClickMaterial.value = [];
+  //重置任务添加请求数据
+  reset();
+};
+//发布任务
 const publishTask = () => {
   reset();
   openAddTaskDialog.value = true;
