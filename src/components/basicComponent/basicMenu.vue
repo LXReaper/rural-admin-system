@@ -19,6 +19,12 @@
         </el-icon>
         <template #title>居民信息</template>
       </el-menu-item>
+      <el-menu-item index="/Info/onlineUser">
+        <el-icon>
+          <Monitor />
+        </el-icon>
+        <template #title>在线用户</template>
+      </el-menu-item>
       <el-sub-menu index="3">
         <template #title>
           <el-icon>
@@ -145,6 +151,7 @@ import {
   GoodsFilled,
   House,
   List,
+  Monitor,
   Notebook,
   Reading,
   ShoppingCart,

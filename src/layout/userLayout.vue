@@ -1,10 +1,15 @@
 <template>
   <div id="userLayout">
-    <el-form ref="loginForm" class="login-form" :rules="rules">
+    <el-form
+      ref="loginForm"
+      v-model="loginForm"
+      class="login-form"
+      :rules="rules"
+    >
       <h3 class="title">乡村积分治理后台管理系统</h3>
       <el-form-item prop="userAccount">
         <el-input
-          v-model="userAccount"
+          v-model="loginForm.userAccount"
           type="text"
           placeholder="请输入管理员账号"
           @keydown.enter="handleLogin"
@@ -12,7 +17,7 @@
       </el-form-item>
       <el-form-item prop="userPassword">
         <el-input
-          v-model="userPassword"
+          v-model="loginForm.userPassword"
           type="password"
           placeholder="请输入管理员密码"
           @keydown.enter="handleLogin"
@@ -66,8 +71,10 @@ import { useStore } from "vuex";
 const router = useRouter();
 const store = useStore();
 const loading = ref(false);
-const userAccount = ref("");
-const userPassword = ref("");
+const loginForm = ref({
+  userAccount: "",
+  userPassword: "",
+});
 const rememberMe = ref(false);
 //规则
 const rules = ref({
@@ -78,8 +85,8 @@ const rules = ref({
 });
 const handleLogin = async () => {
   const res = await UserControllerService.userLoginUsingPost({
-    userAccount: userAccount.value,
-    userPassword: userPassword.value,
+    userAccount: loginForm.value.userAccount,
+    userPassword: loginForm.value.userPassword,
   } as UserLoginRequest);
   if (res.code === 0) {
     if (res.data.userRole !== AuthorityCtrl.ADMIN) {

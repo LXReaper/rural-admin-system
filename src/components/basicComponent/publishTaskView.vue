@@ -46,7 +46,10 @@
         </el-button>
         <div v-else-if="(task.ruleId as []).length">
           <text>选择了</text>
-          <el-tag>
+          <el-tag
+            style="text-decoration: underline; cursor: pointer"
+            @click="drawer = true"
+          >
             {{ (task.ruleId as []).length }}
           </el-tag>
           <text>个</text>
@@ -72,7 +75,10 @@
         </el-button>
         <div v-else-if="(task.materialId as []).length">
           <text>选择了</text>
-          <el-tag>
+          <el-tag
+            style="text-decoration: underline; cursor: pointer"
+            @click="openMaterialDrawer = true"
+          >
             {{ (task.materialId as []).length }}
           </el-tag>
           <text>个</text>

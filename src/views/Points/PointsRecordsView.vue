@@ -7,10 +7,10 @@
       v-show="showSearch"
       label-width="68px"
     >
-      <el-form-item label="居民ID" prop="user_id">
+      <el-form-item label="居民" prop="user_id">
         <el-input
-          v-model="queryParams.user_id"
-          placeholder="请输入用户ID"
+          v-model="queryParams.user_name"
+          placeholder="请输入用户名"
           size="default"
           clearable
           @keydown.enter="handleQueryDebounce"
@@ -74,7 +74,7 @@
     </el-form>
     <!--    表格-->
     <el-table v-loading="loading" :data="pointsList">
-      <el-table-column label="ID" align="center" prop="point_id" />
+      <el-table-column label="编号" align="center" prop="point_id" />
       <el-table-column label="用户" align="center" prop="user_name" />
       <el-table-column label="总积分" align="center" prop="total_points">
         <template #default="scope">
@@ -154,7 +154,7 @@ const showSearch = ref(true);
 const queryParams = ref({
   pageSize: 50,
   current: 1,
-  user_id: "",
+  user_name: "",
   total_points: "",
   remaining_points: "",
   settlement_date: "",
@@ -173,7 +173,7 @@ const handleQuery = async () => {
     pageSize: queryParams.value.pageSize,
     remaining_points: queryParams.value.remaining_points as any,
     total_points: queryParams.value.total_points as any,
-    user_id: queryParams.value.user_id as any,
+    user_name: queryParams.value.user_name,
     is_Settled: queryParams.value.is_Settled as any,
   });
   loading.value = false;
@@ -191,7 +191,7 @@ const resetQuery = () => {
   queryParams.value = {
     pageSize: 50,
     current: 1,
-    user_id: "",
+    user_name: "",
     total_points: "",
     remaining_points: "",
     settlement_date: "",

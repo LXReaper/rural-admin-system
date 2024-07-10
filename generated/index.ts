@@ -24,6 +24,7 @@ export type { BaseResponse_Page_Announcements_ } from "./models/BaseResponse_Pag
 export type { BaseResponse_Page_Coursesubmissions_ } from "./models/BaseResponse_Page_Coursesubmissions_";
 export type { BaseResponse_Page_LearningMaterials_ } from "./models/BaseResponse_Page_Learningmaterials_";
 export type { BaseResponse_Page_LearningMaterialsVO_ } from "./models/BaseResponse_Page_LearningmaterialsVO_";
+export type { BaseResponse_Page_OnLineUserVO_ } from "./models/BaseResponse_Page_OnLineUserVO_";
 export type { BaseResponse_Page_Points_ } from "./models/BaseResponse_Page_Points_";
 export type { BaseResponse_Page_Post_ } from "./models/BaseResponse_Page_Post_";
 export type { BaseResponse_Page_PostVO_ } from "./models/BaseResponse_Page_PostVO_";
@@ -53,11 +54,13 @@ export type { LearningMaterialsQueryRequest } from "./models/LearningmaterialsQu
 export type { LearningMaterialsUpdateRequest } from "./models/LearningmaterialsUpdateRequest";
 export type { LearningMaterialsVO } from "./models/LearningMaterialsVO";
 export type { LoginUserVO } from "./models/LoginUserVO";
+export type { OnLineUserVO } from "./models/OnLineUserVO";
 export type { OrderItem } from "./models/OrderItem";
 export type { Page_Announcements_ } from "./models/Page_Announcements_";
 export type { Page_Coursesubmissions_ } from "./models/Page_Coursesubmissions_";
 export type { Page_LearningMaterials_ } from "./models/Page_LearningMaterials_";
 export type { Page_LearningMaterialsVO_ } from "./models/Page_LearningMaterialsVO_";
+export type { Page_OnLineUserVO_ } from "./models/Page_OnLineUserVO_";
 export type { Page_Points_ } from "./models/Page_Points_";
 export type { Page_Post_ } from "./models/Page_Post_";
 export type { Page_PostVO_ } from "./models/Page_PostVO_";

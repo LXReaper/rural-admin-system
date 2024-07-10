@@ -10,5 +10,5 @@ export type PointsQueryRequest = {
   sortField?: string;
   sortOrder?: string;
   total_points?: number;
-  user_id?: number;
+  user_name?: string;
 };

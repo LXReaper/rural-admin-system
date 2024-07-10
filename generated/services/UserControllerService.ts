@@ -17,6 +17,7 @@ import type { UserUpdateRequest } from "../models/UserUpdateRequest";
 import type { CancelablePromise } from "../core/CancelablePromise";
 import { OpenAPI } from "../core/OpenAPI";
 import { request as __request } from "../core/request";
+import { BaseResponse_Page_OnLineUserVO_ } from "../models/BaseResponse_Page_OnLineUserVO_";
 
 export class UserControllerService {
   /**
@@ -139,6 +140,38 @@ export class UserControllerService {
     return __request(OpenAPI, {
       method: "GET",
       url: "/api/user/get/login",
+      errors: {
+        401: `Unauthorized`,
+        403: `Forbidden`,
+        404: `Not Found`,
+      },
+    });
+  }
+
+  /**
+   * 分页获取当前登录在线的用户信息
+   * @param current
+   * @param pageSize
+   * @param sortField
+   * @param sortOrder
+   * @returns BaseResponse_Page_OnLineUser_ OK
+   * @throws ApiError
+   */
+  public static getOnlineUsersPageUsingGet(
+    current?: number,
+    pageSize?: number,
+    sortField?: string,
+    sortOrder?: string
+  ): CancelablePromise<BaseResponse_Page_OnLineUserVO_> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/user/get/onlineUser",
+      query: {
+        current: current,
+        pageSize: pageSize,
+        sortField: sortField,
+        sortOrder: sortOrder,
+      },
       errors: {
         401: `Unauthorized`,
         403: `Forbidden`,
@@ -294,6 +327,30 @@ export class UserControllerService {
     return __request(OpenAPI, {
       method: "POST",
       url: "/api/user/logout",
+      errors: {
+        401: `Unauthorized`,
+        403: `Forbidden`,
+        404: `Not Found`,
+      },
+    });
+  }
+
+  /**
+   * 移除在线用户
+   * @param userId userId
+   * @returns BaseResponse_boolean_ OK
+   * @returns any Created
+   * @throws ApiError
+   */
+  public static removeOnlineUserUsingPost(
+    userId?: number
+  ): CancelablePromise<BaseResponse_boolean_ | any> {
+    return __request(OpenAPI, {
+      method: "POST",
+      url: "/api/user/online/remove",
+      query: {
+        userId: userId,
+      },
       errors: {
         401: `Unauthorized`,
         403: `Forbidden`,

@@ -18,6 +18,7 @@ import store from "@/store";
 import AuthorityCtrl from "@/access/authorityCtrl";
 import checkAuthority from "@/access/checkAuthority";
 import TaskExamineView from "@/views/Tasks/TaskExamineView.vue";
+import OnlineVillagerInfoView from "@/views/Villager/OnlineVillagerInfoView.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -41,6 +42,11 @@ const routes: Array<RouteRecordRaw> = [
         path: "/Info/user",
         name: "居民信息",
         component: VillagerInfoView,
+      },
+      {
+        path: "/Info/onlineUser",
+        name: "在线用户",
+        component: OnlineVillagerInfoView,
       },
       {
         path: "/points",
