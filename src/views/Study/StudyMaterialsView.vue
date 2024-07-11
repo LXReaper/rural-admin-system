@@ -118,13 +118,18 @@
       </el-table-column>
     </el-table>
 
-    <!--    &lt;!&ndash;    分页&ndash;&gt;-->
-    <!--    <el-pagination-->
-    <!--      v-show="total > 0"-->
-    <!--      :total="total"-->
-    <!--      :page="queryParams.current"-->
-    <!--      :limit="queryParams.pageSize"-->
-    <!--    />-->
+    <!--    分页-->
+    <el-pagination
+      v-show="total > 0"
+      background
+      :currentPage="queryParams.current"
+      :page-size="total"
+      :page-count="Math.ceil(total / queryParams.pageSize)"
+      :total="Math.ceil(total / queryParams.pageSize)"
+      layout="total, size, prev, pager, next, jumper"
+      @current-change="pageHandleChange"
+      class="mt-4"
+    />
 
     <!-- 添加或修改学习资料内容对话框 -->
     <el-dialog :title="title" v-model="open" width="600px" append-to-body>
@@ -164,7 +169,7 @@ import {
   LearningMaterialsControllerService,
   UserControllerService,
 } from "../../../generated";
-import { ElMessage } from "element-plus";
+import { ElMessage, ElPagination } from "element-plus";
 import moment from "moment";
 
 //总数
@@ -285,6 +290,11 @@ const resetQuery = () => {
     updated_user_name: "",
   };
   handleQueryDebounce();
+};
+//分页触发事件
+const pageHandleChange = (value: number) => {
+  queryParams.value.current = value;
+  handleQuery();
 };
 
 /**

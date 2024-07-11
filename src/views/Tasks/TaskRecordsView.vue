@@ -61,18 +61,24 @@
       </el-table-column>
     </el-table>
 
-    <!--    &lt;!&ndash;    分页&ndash;&gt;-->
-    <!--    <el-pagination-->
-    <!--      v-show="total > 0"-->
-    <!--      :total="total"-->
-    <!--      :page="queryParams.current"-->
-    <!--      :limit="queryParams.pageSize"-->
-    <!--    />-->
+    <!--    分页-->
+    <el-pagination
+      v-show="total > 0"
+      background
+      :currentPage="queryParams.current"
+      :page-size="total"
+      :page-count="Math.ceil(total / queryParams.pageSize)"
+      :total="Math.ceil(total / queryParams.pageSize)"
+      layout="total, size, prev, pager, next, jumper"
+      @current-change="pageHandleChange"
+      class="mt-4"
+    />
   </div>
 </template>
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { debounce } from "../../../utils/debounce_Throttle";
+import { ElPagination } from "element-plus";
 
 //总数
 const total = ref(50);
@@ -104,6 +110,12 @@ onMounted(() => {
 //重置
 const resetQuery = () => {
   console.log();
+};
+
+//分页触发事件
+const pageHandleChange = (value: number) => {
+  queryParams.value.current = value;
+  handleQuery();
 };
 
 /**

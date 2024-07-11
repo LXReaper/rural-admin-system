@@ -188,13 +188,18 @@
       </el-table-column>
     </el-table>
 
-    <!--    &lt;!&ndash;    分页&ndash;&gt;-->
-    <!--    <el-pagination-->
-    <!--      v-show="total > 0"-->
-    <!--      :total="total"-->
-    <!--      :page="queryParams.current"-->
-    <!--      :limit="queryParams.pageSize"-->
-    <!--    />-->
+    <!--    分页-->
+    <el-pagination
+      v-show="total > 0"
+      background
+      :currentPage="queryParams.current"
+      :page-size="total"
+      :page-count="Math.ceil(total / queryParams.pageSize)"
+      :total="Math.ceil(total / queryParams.pageSize)"
+      layout="total, size, prev, pager, next, jumper"
+      @current-change="pageHandleChange"
+      class="mt-4"
+    />
 
     <!--    展示规则信息对话框-->
     <el-dialog v-model="isOpenRuleDetail" draggable append-to-body>
@@ -378,6 +383,11 @@ const resetQuery = () => {
   queryParams.value.all_Num = "";
   queryParams.value.join_Num = "";
   handleQueryDebounce();
+};
+//分页触发事件
+const pageHandleChange = (value: number) => {
+  queryParams.value.current = value;
+  handleQuery();
 };
 
 /**

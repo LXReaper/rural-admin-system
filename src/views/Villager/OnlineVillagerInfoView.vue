@@ -14,16 +14,7 @@
           placeholder="请输入村民姓名"
           size="default"
           clearable
-          @keyup.enter="handleQueryDebounce"
-        />
-      </el-form-item>
-      <el-form-item label="手机号" prop="phoneNumber">
-        <el-input
-          v-model="searchParams.phone_number"
-          placeholder="请输入手机号"
-          size="default"
-          clearable
-          @keyup.enter="handleQueryDebounce"
+          @keydown.enter="handleQueryDebounce"
         />
       </el-form-item>
       <el-form-item>
@@ -98,24 +89,32 @@
             icon-color="#626AEF"
             title="确定移除这个用户"
             @confirm="removeOnlineUser(scope.row)"
+            v-if="
+              scope.row.loginStatus &&
+              scope.row.userId !== store.state.user.loginUser.villager_id
+            "
           >
             <template #reference>
-              <el-button size="small" type="danger" v-if="scope.row.loginStatus"
-                >下线
-              </el-button>
+              <el-button size="small" type="danger">强制下线</el-button>
             </template>
           </el-popconfirm>
+          <el-tag v-else>无任何操作</el-tag>
         </template>
       </el-table-column>
     </el-table>
 
-    <!--    &lt;!&ndash;    分页&ndash;&gt;-->
-    <!--    <el-pagination-->
-    <!--      v-show="total > 0"-->
-    <!--      :total="total"-->
-    <!--      :page="searchParams.current"-->
-    <!--      :limit="searchParams.pageSize"-->
-    <!--    />-->
+    <!--    分页-->
+    <el-pagination
+      background
+      :currentPage="searchParams.current"
+      :page-size="total"
+      :page-count="Math.ceil(total / searchParams.pageSize)"
+      :total="Math.ceil(total / searchParams.pageSize)"
+      layout="total, size, prev, pager, next, jumper"
+      @current-change="pageHandleChange"
+      class="mt-4"
+      v-show="total > 0"
+    />
   </div>
 </template>
 <script setup lang="ts">
@@ -127,10 +126,11 @@ import {
   UserControllerService,
   UserQueryRequest,
 } from "../../../generated";
-import { ElMessage, ElNotification } from "element-plus";
+import { ElMessage, ElNotification, ElPagination } from "element-plus";
 import { Bell, InfoFilled } from "@element-plus/icons-vue";
 import { debounce } from "../../../utils/debounce_Throttle";
 import moment from "moment";
+import store from "@/store";
 
 //总数
 const total = ref(50);
@@ -173,13 +173,10 @@ const filterTag = (value: string, row: any) => {
  * 表单基本数据
  */
 const tableData = ref<OnLineUserVO[]>([]);
-const searchParams = ref<UserQueryRequest>({
+const searchParams = ref({
   pageSize: 50,
   current: 1,
-  villager_id: "" as any,
   villager_name: "",
-  phone_number: "",
-  address: "",
 });
 
 /**
@@ -187,10 +184,11 @@ const searchParams = ref<UserQueryRequest>({
  */
 const handleQuery = async () => {
   loading.value = true;
-  const res = await UserControllerService.getOnlineUsersPageUsingGet(
-    searchParams.value.current,
-    searchParams.value.pageSize
-  );
+  const res = await UserControllerService.getOnlineUsersPageUsingGet({
+    pageSize: searchParams.value.pageSize,
+    current: searchParams.value.current,
+    username: searchParams.value.villager_name,
+  });
   loading.value = false;
   if (res.code === 0) {
     tableData.value = res.data?.records as any;
@@ -207,8 +205,6 @@ const resetQuery = () => {
     pageSize: 50,
     current: 1,
     villager_name: "",
-    phone_number: "",
-    address: "",
   };
   handleQueryDebounce();
 };
@@ -247,6 +243,12 @@ const removeOnlineUser = async (onLineUserVO: OnLineUserVO) => {
     ElMessage.error(
       "移除" + onLineUserVO.villager_name + "失败，" + res.message
     );
+};
+
+//分页触发事件
+const pageHandleChange = (value: number) => {
+  searchParams.value.current = value;
+  handleQuery();
 };
 </script>
 

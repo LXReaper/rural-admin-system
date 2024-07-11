@@ -146,12 +146,11 @@
     <div class="pagination" v-if="total > 0">
       <el-pagination
         background
-        v-model:current-page="queryParams.current"
-        v-model:page-size="queryParams.pageSize"
-        :total="total"
-        prev-text="上一页"
-        next-text="下一页"
-        layout="total, prev, pager, next, jumper"
+        :currentPage="queryParams.current"
+        :page-size="total"
+        :page-count="Math.ceil(total / queryParams.pageSize)"
+        :total="Math.ceil(total / queryParams.pageSize)"
+        layout="total, size, prev, pager, next, jumper"
         @current-change="pageHandleChange"
         class="mt-4"
       />
@@ -165,7 +164,7 @@
             maxlength="2000"
             show-word-limit
             v-model="form.ruleContent"
-            placeholder="请输入规则内容"
+            placeholder=""
           ></el-input>
         </el-form-item>
         <el-form-item label="最大积分数：" prop="rulePoints">
@@ -205,6 +204,7 @@ import { ElMessage, ElNotification } from "element-plus";
 import moment from "moment";
 import store from "@/store";
 import { InfoFilled } from "@element-plus/icons-vue";
+import MyEditor from "@/components/wangEditor/myEditor.vue";
 
 //总数
 const total = ref(50);

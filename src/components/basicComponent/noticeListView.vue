@@ -229,25 +229,14 @@ import { OpenAPI } from "../../../generated";
 /**
  * 连接websocket
  */
-let wxSocket = new WebSocket(
-  `ws://${OpenAPI.BASE.substring(7)}/api/sendNotices`
+const wxSocket = ref(
+  store.state.websocketMessageData.websocketMessage.noticeSocket
 );
-//webSocket连接成功
-wxSocket.onopen = function () {
-  console.log("WebSocket 连接成功");
-};
-//webSocket连接失败
-wxSocket.onerror = function (ev) {
-  console.log("WebSocket 连接失败," + ev);
-};
-wxSocket.onclose = function (ev) {
-  console.log("WebSocket 连接关闭，" + ev);
-};
-wxSocket.onmessage = function (message) {
+wxSocket.value.onmessage = function (message: any) {
   const meg = message.data;
   // console.log(meg);
   const notice = JSON.parse(meg);
-  // console.log(notice);
+  console.log(notice);
   ElNotification({
     title: notice.user + "： " + notice.title,
     message: notice.content,

@@ -114,13 +114,18 @@
       </el-table-column>
     </el-table>
 
-    <!--    &lt;!&ndash;    分页&ndash;&gt;-->
-    <!--    <el-pagination-->
-    <!--      v-show="total > 0"-->
-    <!--      :total="total"-->
-    <!--      :page="queryParams.current"-->
-    <!--      :limit="queryParams.pageSize"-->
-    <!--    />-->
+    <!--    分页-->
+    <el-pagination
+      v-show="total > 0"
+      background
+      :currentPage="queryParams.current"
+      :page-size="total"
+      :page-count="Math.ceil(total / queryParams.pageSize)"
+      :total="Math.ceil(total / queryParams.pageSize)"
+      layout="total, size, prev, pager, next, jumper"
+      @current-change="pageHandleChange"
+      class="mt-4"
+    />
 
     <!--    展示商品id详情的对话框-->
     <el-dialog v-model="isOpenProductIdDetail" draggable append-to-body>
@@ -227,7 +232,7 @@ import {
   TransactionsControllerService,
   TransactionsQueryRequest,
 } from "../../../generated";
-import { ElMessage } from "element-plus";
+import { ElMessage, ElPagination } from "element-plus";
 import moment from "moment";
 import { TransactionsVO } from "../../../generated/models/TransactionsVO";
 
@@ -291,7 +296,20 @@ onMounted(() => {
 });
 //重置
 const resetQuery = () => {
-  console.log();
+  queryParams.value = {
+    pageSize: 50,
+    current: 1,
+    userId: "" as any,
+    productId: "" as any,
+    transaction_status: "" as any,
+    transactionsId: "" as any,
+  };
+  handleQueryDebounce();
+};
+//分页触发事件
+const pageHandleChange = (value: number) => {
+  queryParams.value.current = value;
+  handleQuery();
 };
 /**
  * 打开表格中标签内容的详情信息

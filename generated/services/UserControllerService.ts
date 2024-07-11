@@ -18,6 +18,7 @@ import type { CancelablePromise } from "../core/CancelablePromise";
 import { OpenAPI } from "../core/OpenAPI";
 import { request as __request } from "../core/request";
 import { BaseResponse_Page_OnLineUserVO_ } from "../models/BaseResponse_Page_OnLineUserVO_";
+import { UserOnlineQueryRequest } from "../models/UserOnlineQueryRequest";
 
 export class UserControllerService {
   /**
@@ -150,28 +151,17 @@ export class UserControllerService {
 
   /**
    * 分页获取当前登录在线的用户信息
-   * @param current
-   * @param pageSize
-   * @param sortField
-   * @param sortOrder
-   * @returns BaseResponse_Page_OnLineUser_ OK
+   * @param userOnlineQueryRequest userOnlineQueryRequest
+   * @returns BaseResponse_Page_OnLineUserVO_ OK
    * @throws ApiError
    */
   public static getOnlineUsersPageUsingGet(
-    current?: number,
-    pageSize?: number,
-    sortField?: string,
-    sortOrder?: string
+    userOnlineQueryRequest: UserOnlineQueryRequest
   ): CancelablePromise<BaseResponse_Page_OnLineUserVO_> {
     return __request(OpenAPI, {
-      method: "GET",
+      method: "POST",
       url: "/api/user/get/onlineUser",
-      query: {
-        current: current,
-        pageSize: pageSize,
-        sortField: sortField,
-        sortOrder: sortOrder,
-      },
+      body: userOnlineQueryRequest,
       errors: {
         401: `Unauthorized`,
         403: `Forbidden`,

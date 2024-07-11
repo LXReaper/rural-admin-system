@@ -12,7 +12,7 @@
           v-model="queryParams.productName"
           placeholder="请输入商品名称"
           clearable
-          @keyup.enter="handleQueryDebounce"
+          @keydown.enter="handleQueryDebounce"
         />
       </el-form-item>
       <el-form-item label="商品类型" prop="product_type">
@@ -20,7 +20,7 @@
           v-model="queryParams.productType"
           placeholder="请输入商品类型"
           clearable
-          @keyup.enter="handleQueryDebounce"
+          @keydown.enter="handleQueryDebounce"
         />
       </el-form-item>
       <el-form-item label="商品积分" prop="price">
@@ -28,7 +28,7 @@
           v-model="queryParams.price"
           placeholder="请输入商品积分数"
           clearable
-          @keyup.enter="handleQueryDebounce"
+          @keydown.enter="handleQueryDebounce"
         />
       </el-form-item>
       <el-form-item label="商品库存" prop="stock_quantity">
@@ -36,7 +36,7 @@
           v-model="queryParams.stock_quantity"
           placeholder="请输入商品库存数"
           clearable
-          @keyup.enter="handleQueryDebounce"
+          @keydown.enter="handleQueryDebounce"
         />
       </el-form-item>
       <el-form-item label="上架时间" prop="shelf_time">
@@ -179,13 +179,18 @@
       </el-table-column>
     </el-table>
 
-    <!--    &lt;!&ndash;    分页&ndash;&gt;-->
-    <!--    <el-pagination-->
-    <!--      v-show="total > 0"-->
-    <!--      :total="total"-->
-    <!--      :page="queryParams.current"-->
-    <!--      :limit="queryParams.pageSize"-->
-    <!--    />-->
+    <!--    分页-->
+    <el-pagination
+      v-show="total > 0"
+      background
+      :currentPage="queryParams.current"
+      :page-size="total"
+      :page-count="Math.ceil(total / queryParams.pageSize)"
+      :total="Math.ceil(total / queryParams.pageSize)"
+      layout="total, size, prev, pager, next, jumper"
+      @current-change="pageHandleChange"
+      class="mt-4"
+    />
 
     <!-- 添加或修改商品内容对话框 -->
     <el-dialog :title="title" v-model="open" width="600px" append-to-body>
@@ -279,7 +284,7 @@
 import { onMounted, ref, watch } from "vue";
 import { debounce } from "../../../utils/debounce_Throttle";
 import { Delete, InfoFilled, Plus, ZoomIn } from "@element-plus/icons-vue";
-import { ElMessage, UploadFile } from "element-plus";
+import { ElMessage, ElPagination, UploadFile } from "element-plus";
 import {
   type DeleteRequest,
   Products,
@@ -429,7 +434,11 @@ const resetQuery = () => {
   };
   handleQueryDebounce();
 };
-
+//分页触发事件
+const pageHandleChange = (value: number) => {
+  queryParams.value.current = value;
+  handleQuery();
+};
 /**
  * 增加和多个数据删除按钮
  */

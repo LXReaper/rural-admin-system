@@ -141,13 +141,18 @@
       </el-table-column>
     </el-table>
 
-    <!--    &lt;!&ndash;    分页&ndash;&gt;-->
-    <!--    <el-pagination-->
-    <!--      v-show="total > 0"-->
-    <!--      :total="total"-->
-    <!--      :page="searchParams.current"-->
-    <!--      :limit="searchParams.pageSize"-->
-    <!--    />-->
+    <!--    分页-->
+    <el-pagination
+      background
+      :currentPage="searchParams.current"
+      :page-size="total"
+      :page-count="Math.ceil(total / searchParams.pageSize)"
+      :total="Math.ceil(total / searchParams.pageSize)"
+      layout="total, size, prev, pager, next, jumper"
+      @current-change="pageHandleChange"
+      class="mt-4"
+      v-show="total > 0"
+    />
 
     <!-- 添加或修改用户配置对话框 -->
     <el-dialog :title="title" v-model="open" width="600px" append-to-body>
@@ -257,7 +262,7 @@ import {
   UserControllerService,
   UserQueryRequest,
 } from "../../../generated";
-import { ElMessage, ElNotification } from "element-plus";
+import { ElMessage, ElNotification, ElPagination } from "element-plus";
 import { Bell, InfoFilled } from "@element-plus/icons-vue";
 import { debounce } from "../../../utils/debounce_Throttle";
 import moment from "moment";
@@ -531,6 +536,11 @@ const handleSelectionChange = (selection: any) => {
     ids.value.push({
       id: selection[i].villager_id,
     });
+};
+//分页触发事件
+const pageHandleChange = (value: number) => {
+  searchParams.value.current = value;
+  handleQuery();
 };
 </script>
 

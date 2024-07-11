@@ -235,13 +235,18 @@
       </el-table-column>
     </el-table>
 
-    <!--    &lt;!&ndash;    分页&ndash;&gt;-->
-    <!--    <el-pagination-->
-    <!--      v-show="total > 0"-->
-    <!--      :total="total"-->
-    <!--      :page="queryParams.current"-->
-    <!--      :limit="queryParams.pageSize"-->
-    <!--    />-->
+    <!--    分页-->
+    <el-pagination
+      v-show="total > 0"
+      background
+      :currentPage="queryParams.current"
+      :page-size="total"
+      :page-count="Math.ceil(total / queryParams.pageSize)"
+      :total="Math.ceil(total / queryParams.pageSize)"
+      layout="total, size, prev, pager, next, jumper"
+      @current-change="pageHandleChange"
+      class="mt-4"
+    />
 
     <!-- 审核任务对话框 -->
     <el-dialog :title="title" v-model="open" width="600px" append-to-body>
@@ -405,7 +410,7 @@ import {
   RulesControllerService,
   UserControllerService,
 } from "../../../generated";
-import { ElMessage, ElNotification } from "element-plus";
+import { ElMessage, ElNotification, ElPagination } from "element-plus";
 import { TasksExamineControllerService } from "../../../generated/services/TasksExamineControllerService";
 import moment from "moment/moment";
 
@@ -449,6 +454,12 @@ const reset = () => {
     id: 0,
     is_accepted: 0,
   };
+};
+
+//分页触发事件
+const pageHandleChange = (value: number) => {
+  queryParams.value.current = value;
+  handleQuery();
 };
 
 /**
