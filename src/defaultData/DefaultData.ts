@@ -44,3 +44,19 @@ export const userData = [
     props: "updated_at",
   },
 ];
+
+//公告类型
+export const ANNOUNCEMENT_TYPE = [
+  {
+    value: "home_announcement",
+    label: "首页页面公告",
+  },
+  {
+    value: "announcement_announcement",
+    label: "公告页面公告",
+  },
+  {
+    value: "message_announcement",
+    label: "消息公告",
+  },
+];

@@ -89,6 +89,8 @@
     <el-table
       v-loading="loading"
       :data="productsList"
+      stripe
+      border
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />

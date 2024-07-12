@@ -2,16 +2,14 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type AnnouncementsQueryRequest = {
+export type AnnouncementsVO = {
   announcement_id?: number;
   announcement_type?: string;
   content?: string;
-  current?: number;
   image_url?: string;
-  pageSize?: number;
-  sortField?: string;
-  sortOrder?: string;
+  publish_date?: string;
   title?: string;
+  update_date?: string;
   updated_user_name?: string;
   user_name?: string;
 };

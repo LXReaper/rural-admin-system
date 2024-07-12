@@ -40,7 +40,7 @@
     </el-form>
 
     <!--    表格-->
-    <el-table v-loading="loading" :data="insList">
+    <el-table v-loading="loading" stripe border :data="insList">
       <el-table-column label="ID" align="center" prop="checkId" />
       <el-table-column
         label="签到日期"

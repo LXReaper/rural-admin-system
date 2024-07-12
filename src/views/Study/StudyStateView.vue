@@ -32,7 +32,7 @@
     </el-form>
 
     <!--    表格-->
-    <el-table v-loading="loading" :data="courseSubmissionsList">
+    <el-table v-loading="loading" stripe border :data="courseSubmissionsList">
       <el-table-column label="ID" align="center" prop="submissionId" />
       <el-table-column label="用户ID" align="center" prop="userId" />
       <el-table-column label="资料ID" align="center" prop="materialId" />

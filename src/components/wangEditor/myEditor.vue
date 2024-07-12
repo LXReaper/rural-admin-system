@@ -8,7 +8,7 @@
       :mode="mode"
     />
     <Editor
-      style="height: 300px; overflow-y: hidden"
+      :style="{ height: `${props.height}px`, overflowY: 'hidden' }"
       v-model="valueHtml"
       :defaultConfig="editorConfig"
       :mode="mode"
@@ -40,6 +40,7 @@ interface Props {
   placeholder: string;
   readOnly: boolean;
   maxLength: number;
+  height: number;
   handleChange: (v: string) => void;
 }
 
@@ -48,6 +49,7 @@ const props = withDefaults(defineProps<Props>(), {
   placeholder: () => "请输入内容...", //提示内容
   readOnly: false, //是否只读
   maxLength: 2000, //文本内容最大数量
+  height: 300, //编辑器的高度（px）
   handleChange: (v: string) => {
     //外部获取编辑器组件中的内容
     console.log(v);
@@ -61,7 +63,7 @@ const valueHtml = ref(props.valueHtml);
 
 //模式
 const mode = ref("default"); //simple
-
+//工具栏配置
 const toolbarConfig = {};
 //编辑器配置
 const editorConfig = {

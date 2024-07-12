@@ -40,7 +40,7 @@
     </el-form>
 
     <!--    表格-->
-    <el-table v-loading="loading" :data="learningCoursesList">
+    <el-table v-loading="loading" stripe border :data="learningCoursesList">
       <el-table-column label="ID" align="center" prop="learningCoursesId" />
       <el-table-column label="用户ID" align="center" prop="userId" />
       <el-table-column label="资料ID" align="center" prop="materialId" />

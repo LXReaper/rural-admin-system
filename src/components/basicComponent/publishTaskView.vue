@@ -428,7 +428,6 @@ const closeTaskAddDialog = () => {
 const publishTask = () => {
   reset();
   openAddTaskDialog.value = true;
-  console.log();
 };
 const uploadTask = async () => {
   if (!task.value.deadline) {

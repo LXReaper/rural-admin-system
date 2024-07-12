@@ -39,7 +39,7 @@
           v-model="queryParams.is_Settled"
           placeholder="请选择结算状态"
           @change="handleQueryDebounce"
-          size="large"
+          size="default"
           style="width: 240px"
         >
           <el-option
@@ -73,7 +73,7 @@
       </el-form-item>
     </el-form>
     <!--    表格-->
-    <el-table v-loading="loading" :data="pointsList">
+    <el-table v-loading="loading" stripe border :data="pointsList">
       <el-table-column label="编号" align="center" prop="point_id" />
       <el-table-column label="用户" align="center" prop="user_name" />
       <el-table-column label="总积分" align="center" prop="total_points">

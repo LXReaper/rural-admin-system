@@ -10,7 +10,14 @@
         </el-space>
       </div>
       <div style="text-align: right; margin-top: -25px">
-        <el-space direction="horizontal" style="padding-left: 80%">
+        <el-space direction="horizontal" style="padding-left: 73%">
+          <div
+            style="margin-right: 5vw"
+            v-if="store.state.user.loginUser.villager_id"
+          >
+            <!--            发布公告-->
+            <publish-announcement-view />
+          </div>
           <div
             style="margin-right: 5vw"
             v-if="store.state.user.loginUser.villager_id"
@@ -74,6 +81,7 @@ import router from "@/router";
 import { OpenAPI, UserControllerService } from "../../generated";
 import NoticeListView from "@/components/basicComponent/noticeListView.vue";
 import PublishTaskView from "@/components/basicComponent/publishTaskView.vue";
+import PublishAnnouncementView from "@/components/basicComponent/publishAnnouncementView.vue";
 
 const loginUser = ref(store.state.user.loginUser);
 const userName = ref(store.state.user.loginUser.villager_name);
