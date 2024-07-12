@@ -128,12 +128,12 @@
           cursor: pointer;
         "
         v-for="(item, i) in ruleList"
-        @click="selectRule(item, i)"
-        @mouseover="isHoverRule = i"
+        @click="selectRule(item, item.rule_id)"
+        @mouseover="isHoverRule = item.rule_id"
         @mouseout="isHoverRule = -1"
         :class="{
-          ruleSelectTab: isHoverRule == i,
-          ruleClickTab: isClickRule[i] == i,
+          ruleSelectTab: isHoverRule == item.rule_id,
+          ruleClickTab: isClickRule[item.rule_id] == item.rule_id,
         }"
         :key="i"
       >
@@ -206,12 +206,13 @@
           cursor: pointer;
         "
         v-for="(item, i) in materialList"
-        @click="selectMaterial(item, i)"
-        @mouseover="isHoverMaterial = i"
+        @click="selectMaterial(item, item.material_id)"
+        @mouseover="isHoverMaterial = item.material_id"
         @mouseout="isHoverMaterial = -1"
         :class="{
-          materialSelectTab: isHoverMaterial == i,
-          materialClickTab: isClickMaterial[i] == i,
+          materialSelectTab: isHoverMaterial == item.material_id,
+          materialClickTab:
+            isClickMaterial[item.material_id] == item.material_id,
         }"
         :key="i"
       >
@@ -303,7 +304,8 @@ const isHoverRule = ref(-1);
 const isClickRule = ref<number[]>([]);
 const selectRule = (item: RulesVO, i: number) => {
   rulesMap[item.rule_id as number] = !rulesMap[item.rule_id as number];
-  isClickRule.value[i] = isClickRule.value[i] == -1 ? i : -1;
+  isClickRule.value[i] =
+    isClickRule.value[i] == -1 || !isClickRule.value[i] ? i : -1;
 };
 //关闭规则对话框前的事件
 const handleCloseRules = () => {
@@ -351,7 +353,8 @@ const isClickMaterial = ref<number[]>([]);
 const selectMaterial = (item: LearningMaterialsVO, i: number) => {
   materialMap[item.material_id as number] =
     !materialMap[item.material_id as number];
-  isClickMaterial.value[i] = isClickMaterial.value[i] == -1 ? i : -1;
+  isClickMaterial.value[i] =
+    isClickMaterial.value[i] == -1 || !isClickMaterial.value[i] ? i : -1;
 };
 //关闭资料对话框前的事件
 const handleCloseMaterial = () => {
