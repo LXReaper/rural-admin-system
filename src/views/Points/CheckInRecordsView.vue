@@ -76,7 +76,7 @@ import { debounce } from "../../../utils/debounce_Throttle";
 import { ElPagination } from "element-plus";
 
 //总数
-const total = ref(50);
+const total = ref(0);
 //是否加载
 const loading = ref(true);
 // 显示搜索条件

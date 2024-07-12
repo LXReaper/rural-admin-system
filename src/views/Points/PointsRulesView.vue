@@ -207,7 +207,7 @@ import { InfoFilled } from "@element-plus/icons-vue";
 import MyEditor from "@/components/wangEditor/myEditor.vue";
 
 //总数
-const total = ref(50);
+const total = ref(0);
 //加载
 const loading = ref(true);
 //显示搜索条件

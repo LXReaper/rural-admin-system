@@ -173,7 +173,7 @@ import { ElMessage, ElPagination } from "element-plus";
 import moment from "moment";
 
 //总数
-const total = ref(50);
+const total = ref(0);
 //是否加载
 const loading = ref(true);
 // 删除按钮禁用

@@ -295,7 +295,7 @@ import {
 import moment from "moment/moment";
 
 //总数
-const total = ref(50);
+const total = ref(0);
 //是否加载
 const loading = ref(true);
 // 删除按钮禁用

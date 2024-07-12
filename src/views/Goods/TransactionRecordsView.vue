@@ -237,7 +237,7 @@ import moment from "moment";
 import { TransactionsVO } from "../../../generated/models/TransactionsVO";
 
 //总数
-const total = ref(50);
+const total = ref(0);
 //是否加载
 const loading = ref(true);
 //显示搜索条件
@@ -288,6 +288,7 @@ const handleQuery = async () => {
   loading.value = false;
   if (res.code === 0) {
     transactionsList.value = res.data.records;
+    total.value = res.data.total;
   } else ElMessage.error("订单信息请求失败，" + res.message);
 };
 const handleQueryDebounce = debounce(handleQuery, 500);

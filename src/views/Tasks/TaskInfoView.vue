@@ -333,7 +333,7 @@ import moment from "moment";
 import { ElMessage } from "element-plus";
 
 //总数
-const total = ref(50);
+const total = ref(0);
 //是否加载
 const loading = ref(true);
 //显示搜索条件

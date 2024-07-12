@@ -133,7 +133,7 @@ import moment from "moment";
 import store from "@/store";
 
 //总数
-const total = ref(50);
+const total = ref(0);
 //是否进入加载状态
 const loading = ref(true);
 //显示搜索条件
