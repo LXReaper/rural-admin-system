@@ -15,6 +15,7 @@
     "bubbly-bg": "^0.2.3",
     "core-js": "^3.8.3",
     "element-plus": "^2.7.2",
+    "html2canvas": "^1.4.1",
     "moment": "^2.30.1",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3",

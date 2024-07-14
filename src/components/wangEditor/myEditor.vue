@@ -8,7 +8,11 @@
       :mode="mode"
     />
     <Editor
-      :style="{ height: `${props.height}px`, overflowY: 'hidden' }"
+      :style="{
+        height: `${props.height}`,
+        maxWidth: `${props.width}`,
+        overflowY: 'hidden',
+      }"
       v-model="valueHtml"
       :defaultConfig="editorConfig"
       :mode="mode"
@@ -40,8 +44,10 @@ interface Props {
   placeholder: string;
   readOnly: boolean;
   maxLength: number;
-  height: number;
-  handleChange: (v: string) => void;
+  height: string;
+  width: string;
+  handleChangeText: (v: string) => void;
+  handleChangeHtml: (v: string) => void;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -49,9 +55,14 @@ const props = withDefaults(defineProps<Props>(), {
   placeholder: () => "请输入内容...", //提示内容
   readOnly: false, //是否只读
   maxLength: 2000, //文本内容最大数量
-  height: 300, //编辑器的高度（px）
-  handleChange: (v: string) => {
-    //外部获取编辑器组件中的内容
+  height: "300px", //编辑器的高度
+  width: "670px", //编辑器的宽度
+  handleChangeText: (v: string) => {
+    //外部获取编辑器组件中的Text内容
+    console.log(v);
+  },
+  handleChangeHtml: (v: string) => {
+    //外部获取编辑器组件中的Html内容
     console.log(v);
   },
 });
@@ -91,7 +102,8 @@ const handleCreated = (editor: any) => {
  * @param editor
  */
 const handleChange = (editor: any) => {
-  props.handleChange(editor.getText());
+  props.handleChangeText(editor.getText());
+  props.handleChangeHtml(editor.getHtml()); //.replace(/<p>/g, "<div>").replace(/<\/p>/g, "</div>")
 };
 const handleDestroyed = (editor: any) => {
   console.log("destroyed", editor);

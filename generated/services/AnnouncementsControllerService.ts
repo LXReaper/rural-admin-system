@@ -136,7 +136,7 @@ export class AnnouncementsControllerService {
    * @returns any Created
    * @throws ApiError
    */
-  public static listTasksVoByPageUsingPost(
+  public static listAnnouncementsVoByPageUsingPost(
     announcementsQueryRequest: AnnouncementsQueryRequest
   ): CancelablePromise<BaseResponse_Page_AnnouncementsVO_ | any> {
     return __request(OpenAPI, {

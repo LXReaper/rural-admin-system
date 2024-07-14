@@ -25,6 +25,12 @@
         </el-icon>
         <template #title>在线用户</template>
       </el-menu-item>
+      <el-menu-item index="/announcements/admin">
+        <el-icon>
+          <DataAnalysis />
+        </el-icon>
+        <template #title>公告管理</template>
+      </el-menu-item>
       <el-sub-menu index="3">
         <template #title>
           <el-icon>
@@ -146,6 +152,7 @@ import {
   CircleCheck,
   CircleCheckFilled,
   Comment,
+  DataAnalysis,
   DataBoard,
   Document,
   GoodsFilled,

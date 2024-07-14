@@ -19,6 +19,7 @@ import AuthorityCtrl from "@/access/authorityCtrl";
 import checkAuthority from "@/access/checkAuthority";
 import TaskExamineView from "@/views/Tasks/TaskExamineView.vue";
 import OnlineVillagerInfoView from "@/views/Villager/OnlineVillagerInfoView.vue";
+import AnnouncementsView from "@/views/Announcement/AnnouncementsView.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -47,6 +48,11 @@ const routes: Array<RouteRecordRaw> = [
         path: "/Info/onlineUser",
         name: "在线用户",
         component: OnlineVillagerInfoView,
+      },
+      {
+        path: "/announcements/admin",
+        name: "公告管理",
+        component: AnnouncementsView,
       },
       {
         path: "/points",

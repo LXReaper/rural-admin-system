@@ -10,8 +10,13 @@ import "element-plus/theme-chalk/src/index.scss";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import zhCn from "element-plus/dist/locale/zh-cn.mjs"; //中文
+//html2canvas
+import html2canvas from "html2canvas";
 
 createApp(App)
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  .use(html2canvas)
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   .use(ElementPlus, { locale: zhCn })
