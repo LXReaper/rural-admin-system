@@ -60,8 +60,7 @@
             :max-length="5000"
             :width="'71vw'"
             :placeholder="'请输入公告内容'"
-            :handle-change-text="(text) => (announcement.content = text)"
-            :handle-change-html="(html) => (htmlContent = html)"
+            :handle-change-html="(html) => (announcement.content = html)"
           />
           <div style="margin: 2vh 0">
             <el-button
@@ -169,13 +168,6 @@ const publishAnnouncement = () => {
   openAddAnnouncementDialog.value = true;
 };
 const uploadAnnouncement = async () => {
-  //当不是消息公告时才把公告内容设置为图片
-  if (
-    announcement.value.announcement_type &&
-    announcement.value.announcement_type !== ANNOUNCEMENT_TYPE[2].value
-  ) {
-    transformContentToCanvas();
-  }
   const res = await AnnouncementsControllerService.addAnnouncementsUsingPost({
     ...announcement.value,
     user_id: store.state.user.loginUser.villager_id,
@@ -188,7 +180,7 @@ const uploadAnnouncement = async () => {
 
 //将公告内容转图片
 const transformContentToCanvas = () => {
-  let html = htmlContent.value as string;
+  let html = announcement.value.content as string;
   //1、先查询到一个隐藏div中的元素
   let hiddenDiv = document.querySelector("#hiddenDiv");
   let myAnnouncement = document.querySelector("#myAnnouncement");
@@ -202,23 +194,24 @@ const transformContentToCanvas = () => {
     // 使用DOM解析器创建DOM结构
     // console.log(hiddenDiv);
 
-    html2canvas(hiddenDiv as any, {
-      backgroundColor: null, // null 表示设置背景为透明色
-      allowTaint: true,
-      logging: false,
-      useCORS: true,
-      width: 400,
-      height: 400,
-      scale: 4, //按比例增加分辨率
-    })
-      .then((canvas) => {
-        htmlContent.value = canvas.toDataURL("image/jpg", 1.0);
-        console.log(htmlContent.value);
-        announcement.value.content = htmlContent.value;
-      })
-      .catch((error) => {
-        console.log("html文本转换错误" + error);
-      });
+    //画成图
+    // html2canvas(hiddenDiv as any, {
+    //   backgroundColor: null, // null 表示设置背景为透明色
+    //   allowTaint: true,
+    //   logging: false,
+    //   useCORS: true,
+    //   width: 400,
+    //   height: 400,
+    //   scale: 4, //按比例增加分辨率
+    // })
+    //   .then((canvas) => {
+    //     htmlContent.value = canvas.toDataURL("image/jpg", 1.0);
+    //     // console.log(htmlContent.value);
+    //     // announcement.value.content = htmlContent.value;
+    //   })
+    //   .catch((error) => {
+    //     console.log("html文本转换错误" + error);
+    //   });
   }
 };
 </script>

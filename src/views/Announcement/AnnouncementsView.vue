@@ -84,7 +84,21 @@
           </el-select>
         </template>
       </el-table-column>
-      <el-table-column label="公告内容" align="center" prop="content" />
+      <el-table-column label="公告内容" align="center" prop="content">
+        <template #default="scope">
+          <div
+            v-if="scope.row.announcement_type === ANNOUNCEMENT_TYPE[2].value"
+          >
+            {{ scope.row.content }}
+          </div>
+          <my-view
+            :value-html="scope.row.content"
+            :height="'25vh'"
+            :width="'10vw'"
+            v-else
+          />
+        </template>
+      </el-table-column>
       <el-table-column label="公告图片" align="center" prop="image_url">
         <template #default="scope">
           <el-image
@@ -120,6 +134,25 @@
           <span>{{ scope.row.update_date }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="操作" align="center">
+        <template #default="scope">
+          <el-button size="small" @click="handleEdit(scope.$index, scope.row)">
+            编辑
+          </el-button>
+          <el-popconfirm
+            confirm-button-text="确定"
+            cancel-button-text="取消"
+            :icon="InfoFilled"
+            icon-color="#626AEF"
+            title="确定删除这条公告"
+            @confirm="confirmEvent(scope.$index, scope.row)"
+          >
+            <template #reference>
+              <el-button size="small" type="danger">删除</el-button>
+            </template>
+          </el-popconfirm>
+        </template>
+      </el-table-column>
     </el-table>
 
     <!--    分页-->
@@ -134,6 +167,68 @@
       @current-change="pageHandleChange"
       class="mt-4"
     />
+    <!--修改公告配置对话框 -->
+    <el-dialog
+      :title="`编辑${form.title}`"
+      v-model="open"
+      width="600px"
+      append-to-body
+      destroy-on-close
+      :fullscreen="true"
+    >
+      <el-form :model="form" :rules="rules" label-width="80px">
+        <el-form-item label="公告标题" prop="title">
+          <el-input
+            v-model="form.title"
+            placeholder="请输入公告标题"
+            maxlength="50"
+          />
+        </el-form-item>
+        <el-form-item label="公告内容" prop="content">
+          <el-input
+            type="textarea"
+            v-model="form.content"
+            placeholder="请输入公告内容"
+            v-if="form.announcement_type === ANNOUNCEMENT_TYPE[2].value"
+          />
+          <my-editor
+            :max-length="5000"
+            :width="'71vw'"
+            :height="'45vh'"
+            :value-html="form.content"
+            :handleChangeHtml="(v) => (form.content = v)"
+            v-else
+          />
+        </el-form-item>
+        <el-form-item label="公告类型" prop="announcement_type">
+          <el-select
+            v-model="form.announcement_type"
+            placeholder="请选择公告类型"
+            size="default"
+          >
+            <el-option
+              v-for="item in ANNOUNCEMENT_TYPE"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="公告图片" prop="image_url">
+          <el-image
+            style="width: 10vw; height: 20vh"
+            :src="form.image_url"
+            v-if="form.image_url"
+          ></el-image>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button type="primary" @click="updateEditor">确 定</el-button>
+          <el-button @click="cancel">取 消</el-button>
+        </div>
+      </template>
+    </el-dialog>
   </div>
 </template>
 <script setup lang="ts">
@@ -144,6 +239,9 @@ import { AnnouncementsControllerService } from "../../../generated";
 import { ANNOUNCEMENT_TYPE } from "@/defaultData/DefaultData";
 import { AnnouncementsVO } from "../../../generated/models/AnnouncementsVO";
 import store from "@/store";
+import { InfoFilled } from "@element-plus/icons-vue";
+import MyView from "@/components/wangEditor/myView.vue";
+import MyEditor from "@/components/wangEditor/myEditor.vue";
 
 //总数
 const total = ref(0);
@@ -222,6 +320,8 @@ wxSocket.value.onmessage = function (message: any) {
 /**
  * 编辑
  */
+//打开编辑
+const open = ref(false);
 //公告表单
 const form = ref({
   announcement_id: "",
@@ -262,8 +362,48 @@ const updateEditor = async () => {
   );
   if (res.code === 0) {
     ElMessage.success("修改成功");
-    await handleQuery();
+    await handleQuery().then((r) => (open.value = false));
   } else ElMessage.error("修改失败，" + res.message);
+};
+//编辑
+const handleEdit = (i: number, announcementsVO: AnnouncementsVO) => {
+  form.value.announcement_id = announcementsVO.announcement_id as any;
+  form.value.title = announcementsVO.title as any;
+  form.value.announcement_type = announcementsVO.announcement_type as any;
+  form.value.content = announcementsVO.content as any;
+  form.value.image_url = announcementsVO.image_url as any;
+  open.value = true;
+};
+
+/**
+ * 对话框
+ * @param i
+ * @param announcementsVO
+ */
+//关闭对话框
+const cancel = () => {
+  resetForm();
+  open.value = false;
+};
+//规则
+const rules = ref({
+  title: [{ required: true, message: "输入公告标题", trigger: "blur" }],
+  content: [{ required: true, message: "输入公告内容", trigger: "blur" }],
+  announcement_type: [
+    { required: true, message: "输入公告类型", trigger: "blur" },
+  ],
+});
+
+//删除公告
+const confirmEvent = async (i: number, announcementsVO: AnnouncementsVO) => {
+  const res = await AnnouncementsControllerService.deleteAnnouncementsUsingPost(
+    {
+      id: announcementsVO.announcement_id,
+    }
+  );
+  if (res.code === 0) {
+    await handleQuery();
+  } else ElMessage.error("删除公告失败，" + res.message);
 };
 </script>
 
