@@ -73,6 +73,12 @@
             </el-icon>
             任务审核
           </el-menu-item>
+          <el-menu-item index="/task/check">
+            <el-icon>
+              <Checked />
+            </el-icon>
+            任务检查
+          </el-menu-item>
           <el-menu-item index="/task/info">
             <el-icon>
               <List />
@@ -81,7 +87,7 @@
           </el-menu-item>
           <el-menu-item index="/task/records">
             <el-icon>
-              <Checked />
+              <EditPen />
             </el-icon>
             任务记录
           </el-menu-item>
@@ -155,6 +161,7 @@ import {
   DataAnalysis,
   DataBoard,
   Document,
+  EditPen,
   GoodsFilled,
   House,
   List,

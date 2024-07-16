@@ -33,6 +33,7 @@
           placeholder="请选择公告类型"
           size="default"
           style="width: 240px"
+          @change="changeAnnouncementType"
         >
           <el-option
             v-for="item in ANNOUNCEMENT_TYPE"
@@ -60,6 +61,7 @@
             :max-length="5000"
             :width="'71vw'"
             :placeholder="'请输入公告内容'"
+            :handle-change-text="(text) => (textContent = text)"
             :handle-change-html="(html) => (announcement.content = html)"
           />
           <div style="margin: 2vh 0">
@@ -125,8 +127,8 @@ import html2canvas from "html2canvas";
 /**
  * 公告对话框
  */
-//公告内容的html文本
-const htmlContent = ref();
+//公告内容的Text文本
+const textContent = ref();
 //公告内容是否预览
 const preview = ref(false);
 //打开添加公告对话框
@@ -174,8 +176,14 @@ const uploadAnnouncement = async () => {
   });
   if (res.code === 0) {
     ElNotification.success("公告已发布");
+    openAddAnnouncementDialog.value = false;
   } else ElNotification.error("公告发布失败，" + res.message);
-  openAddAnnouncementDialog.value = false;
+};
+
+//选择公告类型
+const changeAnnouncementType = () => {
+  if (announcement.value.announcement_type === ANNOUNCEMENT_TYPE[2].value)
+    announcement.value.content = textContent.value;
 };
 
 //将公告内容转图片

@@ -7,28 +7,28 @@
       v-show="showSearch"
       label-width="68px"
     >
-      <el-form-item label="记录ID" prop="submission_id">
+      <el-form-item label="记录编号" prop="submission_id">
         <el-input
           v-model="queryParams.submission_id"
-          placeholder="请输入记录ID"
+          placeholder="请输入记录编号"
           clearable
-          @keyup.enter="handleQueryDebounce"
+          @keydown.enter="handleQueryDebounce"
         />
       </el-form-item>
-      <el-form-item label="用户ID" prop="user_id">
+      <el-form-item label="用户" prop="user_name">
         <el-input
-          v-model="queryParams.user_id"
-          placeholder="请输入用户ID"
+          v-model="queryParams.user_name"
+          placeholder="请输入用户名"
           clearable
-          @keyup.enter="handleQueryDebounce"
+          @keydown.enter="handleQueryDebounce"
         />
       </el-form-item>
-      <el-form-item label="任务ID" prop="task_id">
+      <el-form-item label="任务编号" prop="task_id">
         <el-input
           v-model="queryParams.task_id"
-          placeholder="请输入任务ID"
+          placeholder="请输入任务编号"
           clearable
-          @keyup.enter="handleQueryDebounce"
+          @keydown.enter="handleQueryDebounce"
         />
       </el-form-item>
       <el-form-item>
@@ -41,21 +41,13 @@
 
     <!--    表格-->
     <el-table v-loading="loading" stripe border :data="taskSubmissionsList">
-      <el-table-column label="ID" align="center" prop="submissionId" />
-      <el-table-column label="用户ID" align="center" prop="userId" />
-      <el-table-column label="任务ID" align="center" prop="taskId" />
-      <el-table-column
-        label="任务状态"
-        align="center"
-        prop="task_status"
-        :filters="filters"
-        :filter-method="filterTag"
-      >
+      <el-table-column label="编号" align="center" prop="submission_id" />
+      <el-table-column label="任务" align="center" prop="task_id" />
+      <el-table-column label="用户" align="center" prop="user_name" />
+      <el-table-column label="任务状态" align="center" prop="task_status">
         <template #default="scope">
-          <el-tag
-            :type="scope.row.task_status === '0' ? '' : 'success'"
-            disable-transitions
-            >{{ scope.row.task_status }}
+          <el-tag :type="scope.row.task_status === 0 ? 'warning' : 'success'"
+            >{{ scope.row.task_status === 0 ? "正在进行" : "已完成" }}
           </el-tag>
         </template>
       </el-table-column>
@@ -78,7 +70,8 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { debounce } from "../../../utils/debounce_Throttle";
-import { ElPagination } from "element-plus";
+import { ElMessage, ElPagination } from "element-plus";
+import { TaskSubmissionsControllerService } from "../../../generated/services/TaskSubmissionsControllerService";
 
 //总数
 const total = ref(0);
@@ -91,17 +84,30 @@ const queryParams = ref({
   pageSize: 50,
   current: 1,
   submission_id: "",
-  user_id: "",
+  user_name: "",
   task_id: "",
 });
 //所有查询到的数据
 const taskSubmissionsList = ref([]);
 
 //查询数据
-const handleQuery = () => {
+const handleQuery = async () => {
   loading.value = true;
-  console.log();
+  const res =
+    await TaskSubmissionsControllerService.listTaskSubmissionsVOByPageUsingPost(
+      {
+        pageSize: queryParams.value.pageSize,
+        current: queryParams.value.current,
+        submissionId: queryParams.value.submission_id as any,
+        user_name: queryParams.value.user_name,
+        taskId: queryParams.value.task_id as any,
+      }
+    );
   loading.value = false;
+  if (res.code === 0) {
+    taskSubmissionsList.value = res.data.records;
+    total.value = res.data.total;
+  } else ElMessage.error("任务状态信息加载失败，" + res.message);
 };
 const handleQueryDebounce = debounce(handleQuery, 500);
 onMounted(() => {
@@ -116,17 +122,6 @@ const resetQuery = () => {
 const pageHandleChange = (value: number) => {
   queryParams.value.current = value;
   handleQuery();
-};
-
-/**
- * 筛选框
- */
-const filters = [
-  { text: "正在进行", value: "0" },
-  { text: "已完成", value: "1" },
-];
-const filterTag = (value: string, row: any) => {
-  return row.userRole === value;
 };
 </script>
 

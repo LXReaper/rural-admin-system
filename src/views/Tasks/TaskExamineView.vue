@@ -251,7 +251,7 @@
     <!-- 审核任务对话框 -->
     <el-dialog :title="title" v-model="open" width="600px" append-to-body>
       <el-form :model="curState" :rules="rules" label-width="80px">
-        <el-form-item label="审核状态" prop="video_url">
+        <el-form-item label="审核状态" prop="is_accepted">
           <el-select
             v-model="curState.is_accepted"
             placeholder="请选择审核的状态"
@@ -515,7 +515,7 @@ const handleQuery = async () => {
   if (res.code === 0) {
     taskExamineList.value = res.data.records;
     total.value = res.data.total;
-  } else ElMessage.error("查询失败，" + res.message);
+  } else ElMessage.error("加载失败，" + res.message);
 };
 const handleQueryDebounce = debounce(handleQuery, 500);
 onMounted(() => {

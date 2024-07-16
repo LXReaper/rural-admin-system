@@ -11,4 +11,5 @@ export type TasksubmissionsQueryRequest = {
   taskId?: number;
   taskStatus?: number;
   userId?: number;
+  user_name?: string;
 };

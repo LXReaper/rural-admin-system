@@ -49,7 +49,7 @@ export class TasksControllerService {
     tasksConfirmRequest: TasksConfirmRequest
   ): CancelablePromise<BaseResponse_boolean_> {
     return __request(OpenAPI, {
-      method: "GET",
+      method: "POST",
       url: "/api/tasks/confirm/complete/task",
       body: tasksConfirmRequest,
       errors: {

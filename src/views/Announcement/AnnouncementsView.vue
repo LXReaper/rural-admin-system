@@ -93,7 +93,7 @@
           </div>
           <my-view
             :value-html="scope.row.content"
-            :height="'25vh'"
+            :height="'15vh'"
             :width="'10vw'"
             v-else
           />
@@ -136,7 +136,11 @@
       </el-table-column>
       <el-table-column label="操作" align="center">
         <template #default="scope">
-          <el-button size="small" @click="handleEdit(scope.$index, scope.row)">
+          <el-button
+            size="small"
+            type="primary"
+            @click="handleEdit(scope.$index, scope.row)"
+          >
             编辑
           </el-button>
           <el-popconfirm
@@ -196,6 +200,7 @@
             :width="'71vw'"
             :height="'45vh'"
             :value-html="form.content"
+            :handle-change-text="(text) => (textContent = text)"
             :handleChangeHtml="(v) => (form.content = v)"
             v-else
           />
@@ -205,6 +210,7 @@
             v-model="form.announcement_type"
             placeholder="请选择公告类型"
             size="default"
+            @change="changeAnnouncementType"
           >
             <el-option
               v-for="item in ANNOUNCEMENT_TYPE"
@@ -224,7 +230,7 @@
       </el-form>
       <template #footer>
         <div class="dialog-footer">
-          <el-button type="primary" @click="updateEditor">确 定</el-button>
+          <el-button type="primary" @click="updateEditor">保 存</el-button>
           <el-button @click="cancel">取 消</el-button>
         </div>
       </template>
@@ -320,6 +326,8 @@ wxSocket.value.onmessage = function (message: any) {
 /**
  * 编辑
  */
+//公告内容的Text文本
+const textContent = ref();
 //打开编辑
 const open = ref(false);
 //公告表单
@@ -384,6 +392,11 @@ const handleEdit = (i: number, announcementsVO: AnnouncementsVO) => {
 const cancel = () => {
   resetForm();
   open.value = false;
+};
+//选择公告类型
+const changeAnnouncementType = () => {
+  if (form.value.announcement_type === ANNOUNCEMENT_TYPE[2].value)
+    form.value.content = textContent.value;
 };
 //规则
 const rules = ref({

@@ -12,8 +12,14 @@ import "element-plus/theme-chalk/src/index.scss";
 import zhCn from "element-plus/dist/locale/zh-cn.mjs"; //中文
 //html2canvas
 import html2canvas from "html2canvas";
+//视频组件
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import vue3videoPlay from "vue3-video-play"; // 引入组件
+import "vue3-video-play/dist/style.css"; // 引入css
 
 createApp(App)
+  .use(vue3videoPlay)
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   .use(html2canvas)

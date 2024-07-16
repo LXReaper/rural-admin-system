@@ -5,6 +5,7 @@
 import type { BaseResponse_boolean_ } from "../models/BaseResponse_boolean_";
 import type { BaseResponse_long_ } from "../models/BaseResponse_long_";
 import type { BaseResponse_Page_Tasksubmissions_ } from "../models/BaseResponse_Page_Tasksubmissions_";
+import type { BaseResponse_Page_TaskSubmissionsVO_ } from "../models/BaseResponse_Page_TaskSubmissionsVO_";
 import type { BaseResponse_Tasksubmissions_ } from "../models/BaseResponse_Tasksubmissions_";
 import type { DeleteRequest } from "../models/DeleteRequest";
 import type { TasksubmissionsAddRequest } from "../models/TasksubmissionsAddRequest";
@@ -95,6 +96,28 @@ export class TaskSubmissionsControllerService {
     return __request(OpenAPI, {
       method: "POST",
       url: "/api/tasksubmissions/list/page",
+      body: tasksubmissionsQueryRequest,
+      errors: {
+        401: `Unauthorized`,
+        403: `Forbidden`,
+        404: `Not Found`,
+      },
+    });
+  }
+
+  /**
+   * 分页获取任务接取信息封装列表
+   * @param tasksubmissionsQueryRequest tasksubmissionsQueryRequest
+   * @returns BaseResponse_Page_TaskSubmissionsVO_ OK
+   * @returns any Created
+   * @throws ApiError
+   */
+  public static listTaskSubmissionsVOByPageUsingPost(
+    tasksubmissionsQueryRequest: TasksubmissionsQueryRequest
+  ): CancelablePromise<BaseResponse_Page_TaskSubmissionsVO_ | any> {
+    return __request(OpenAPI, {
+      method: "POST",
+      url: "/api/tasksubmissions/list/page/vo",
       body: tasksubmissionsQueryRequest,
       errors: {
         401: `Unauthorized`,

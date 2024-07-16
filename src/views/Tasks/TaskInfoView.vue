@@ -173,7 +173,9 @@
       </el-table-column>
       <el-table-column label="积分数值" align="center" prop="points_value">
         <template #default="scope">
-          <el-tag type="success">{{ scope.row.points_value }}</el-tag>
+          <el-tag type="success">{{
+            scope.row.points_value / scope.row.all_Num
+          }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="最大可接取人数" align="center" prop="all_Num">

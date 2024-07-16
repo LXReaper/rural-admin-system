@@ -5,6 +5,7 @@
 import type { BaseResponse_boolean_ } from "../models/BaseResponse_boolean_";
 import type { BaseResponse_long_ } from "../models/BaseResponse_long_";
 import type { BaseResponse_Page_TasksCase_ } from "../models/BaseResponse_Page_TasksCase_";
+import type { BaseResponse_Page_TasksCaseVO_ } from "../models/BaseResponse_Page_TasksCaseVO_";
 import type { DeleteRequest } from "../models/DeleteRequest";
 import type { TasksCaseAddRequest } from "../models/TasksCaseAddRequest";
 import type { TasksCaseQueryRequest } from "../models/TasksCaseQueryRequest";
@@ -50,6 +51,52 @@ export class TaskCaseControllerService {
       method: "POST",
       url: "/api/task/case/list/page",
       body: tasksCaseQueryRequest,
+      errors: {
+        401: `Unauthorized`,
+        403: `Forbidden`,
+        404: `Not Found`,
+      },
+    });
+  }
+
+  /**
+   * 分页获取任务情况封装列表
+   * @param tasksCaseQueryRequest tasksCaseQueryRequest
+   * @returns BaseResponse_Page_TasksCaseVO_ OK
+   * @returns any Created
+   * @throws ApiError
+   */
+  public static listTasksCaseVoByPageUsingPost(
+    tasksCaseQueryRequest: TasksCaseQueryRequest
+  ): CancelablePromise<BaseResponse_Page_TasksCaseVO_ | any> {
+    return __request(OpenAPI, {
+      method: "POST",
+      url: "/api/task/case/list/page/vo",
+      body: tasksCaseQueryRequest,
+      errors: {
+        401: `Unauthorized`,
+        403: `Forbidden`,
+        404: `Not Found`,
+      },
+    });
+  }
+
+  /**
+   * 取消任务
+   * @param taskId taskId
+   * @returns BaseResponse_boolean_ OK
+   * @returns any Created
+   * @throws ApiError
+   */
+  public static removeMyTaskUsingPost(
+    taskId?: number
+  ): CancelablePromise<BaseResponse_boolean_ | any> {
+    return __request(OpenAPI, {
+      method: "POST",
+      url: "/api/task/case/remove/task",
+      query: {
+        taskId: taskId,
+      },
       errors: {
         401: `Unauthorized`,
         403: `Forbidden`,

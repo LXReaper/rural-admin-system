@@ -38,6 +38,7 @@ import {
   defineProps,
 } from "vue";
 import { Editor, Toolbar } from "@wangeditor/editor-for-vue";
+import { ElMessage } from "element-plus";
 
 interface Props {
   valueHtml: string;

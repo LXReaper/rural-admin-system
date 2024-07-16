@@ -20,6 +20,7 @@ import checkAuthority from "@/access/checkAuthority";
 import TaskExamineView from "@/views/Tasks/TaskExamineView.vue";
 import OnlineVillagerInfoView from "@/views/Villager/OnlineVillagerInfoView.vue";
 import AnnouncementsView from "@/views/Announcement/AnnouncementsView.vue";
+import TaskCheckView from "@/views/Tasks/TaskCheckView.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -83,6 +84,11 @@ const routes: Array<RouteRecordRaw> = [
             path: "/task/examine",
             name: "任务审核",
             component: TaskExamineView,
+          },
+          {
+            path: "/task/check",
+            name: "任务检查",
+            component: TaskCheckView,
           },
           {
             path: "/task/info",

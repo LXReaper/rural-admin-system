@@ -2,17 +2,14 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type TasksCaseQueryRequest = {
-  current?: number;
+export type TasksCaseVO = {
   id?: number;
   is_accepted?: number;
-  pageSize?: number;
   publish_date?: string;
-  sortField?: string;
-  sortOrder?: string;
   task_content?: string;
   task_id?: number;
-  task_video_url?: string;
+  task_video_url?: Array<string>;
   update_date?: string;
+  user_id?: number;
   user_name?: string;
 };
