@@ -13,4 +13,5 @@ export type TransactionsQueryRequest = {
   transaction_quantity?: string;
   transactionsId?: number;
   userId?: number;
+  userName?: string;
 };

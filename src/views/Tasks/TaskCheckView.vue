@@ -212,47 +212,53 @@
       </template>
     </el-dialog>
     <!--    展示视频信息对话框-->
-    <el-dialog v-model="isOpenVideoDetail" draggable append-to-body>
-      <el-descriptions
-        :title="'视频'"
-        direction="vertical"
-        :column="1"
-        :size="'small'"
-        border
-      >
-        <el-descriptions-item label="视频">
-          <my-video
-            :src="curVideoURL"
-            :title="videoUser"
-            style="margin-left: 10vw"
-          />
-        </el-descriptions-item>
-      </el-descriptions>
+    <el-dialog
+      v-model="isOpenVideoDetail"
+      :title="'视频'"
+      style="height: 55vh; width: 46vw"
+      destroy-on-close
+      draggable
+      append-to-body
+    >
+      <div style="margin-left: 1.3vw">
+        <my-video
+          :src="curVideoURL"
+          :type="curVideoURL.endsWith('.m3u8') ? 'm3u8' : 'video/mp4'"
+          :title="videoUser"
+          :is-destroy="!isOpenVideoDetail"
+        />
+      </div>
     </el-dialog>
     <!--    展示视频详情的对话框-->
-    <el-dialog v-model="isOpenURLsDetail" draggable append-to-body>
-      <el-descriptions
-        :title="detailTitle"
-        :extra="`点击编号可以展示${detailTitle}信息`"
-        direction="vertical"
-        :column="4"
-        :size="'default'"
-        border
-      >
-        <el-descriptions-item :label="`${detailTitle}`">
-          <span v-for="(item, i) in curVideoURLList" :key="i">
-            <el-tag
-              type="primary"
-              style="cursor: pointer"
-              @click="openDetailInfo(i)"
-              round
-              effect="plain"
-              :hit="true"
-              ><text style="text-decoration: underline">{{ item }}</text>
-            </el-tag>
-          </span>
-        </el-descriptions-item>
-      </el-descriptions>
+    <el-dialog
+      v-model="isOpenURLsDetail"
+      :title="`${videoUser}的视频`"
+      destroy-on-close
+      draggable
+      append-to-body
+    >
+      <el-scrollbar style="height: 50vh">
+        <div
+          style="
+            height: 6vh;
+            border: 1px solid #dad2d1;
+            background-color: #f6f6f6;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-top: 1vh;
+            cursor: pointer;
+          "
+          :class="{ videoHoverTab: hoverVideoId == i }"
+          v-for="(item, i) in curVideoURLList"
+          @click="openDetailInfo(i)"
+          @mouseover="hoverVideoId = i"
+          @mouseout="hoverVideoId = -1"
+          :key="i"
+        >
+          <div>
+            {{ item.split("/")[item.split("/").length - 1].split(".")[0] }}
+          </div>
+        </div>
+      </el-scrollbar>
     </el-dialog>
   </div>
 </template>
@@ -445,6 +451,7 @@ const isOpenURLsDetail = ref(false); //是否打开id详情对话框
 const videoUser = ref("");
 const curVideoURLList = ref([]);
 const curVideoURL = ref("");
+const hoverVideoId = ref(-1); //hover视频的id
 //打开详情id对话框
 const openDetailIdDialog = (name: string, taskCase: TasksCaseVO) => {
   detailTitle.value = name;
@@ -468,5 +475,11 @@ const isOpenVideoDetail = ref(false);
 
 <style scoped>
 #TaskExamineView {
+}
+
+.videoHoverTab {
+  background-color: #c6f6f6 !important;
+  margin-left: 1vw !important;
+  box-shadow: 10px 7px 6px rgba(0, 0, 0, 0.1) !important;
 }
 </style>

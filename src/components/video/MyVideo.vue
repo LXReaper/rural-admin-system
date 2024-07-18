@@ -1,6 +1,7 @@
 <template>
   <vue3VideoPlay
-    width="800px"
+    :width="props.width"
+    :ref="videoPlayer"
     v-bind="options"
     @play="onPlay"
     @pause="onPause"
@@ -10,20 +11,35 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, withDefaults, defineProps } from "vue";
+import {
+  reactive,
+  withDefaults,
+  defineProps,
+  ref,
+  onUnmounted,
+  watch,
+} from "vue";
+import { ElMessage } from "element-plus";
 
 //父组件传值
 interface Props {
   title: string; //视频名称
   src: string; //视频源
   poster: string; //封面
+  type: string; //视频类型
+  width: string; //视频播放器的宽度
 }
 
 const props = withDefaults(defineProps<Props>(), {
   title: "钢铁侠",
   src: "https://cdn.jsdelivr.net/gh/xdlumia/files/video-play/IronMan.mp4", //视频源
   poster: "", //封面
+  type: "video/mp4", //视频类型
+  width: "800px",
 });
+
+//播放器实例
+const videoPlayer = ref();
 
 //基本配置
 const options = reactive({
@@ -39,7 +55,7 @@ const options = reactive({
   autoPlay: false, //自动播放
   loop: false, //循环播放
   mirror: false, //镜像画面
-  ligthOff: false, //关灯模式
+  lightOff: false, //关灯模式
   volume: 0.3, //默认音量大小
   control: true, //是否显示控制
   controlBtns: [
@@ -51,7 +67,8 @@ const options = reactive({
     "pip",
     "pageFullScreen",
     "fullScreen",
-  ], //显示所有按钮,
+  ], //显示所有按钮
+  type: "video/mp4", //video/mp4 | m3u8 | video/avi | video/mov
 });
 const onPlay = (ev: any) => {
   console.log("播放");

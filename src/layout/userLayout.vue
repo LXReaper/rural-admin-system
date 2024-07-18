@@ -1,11 +1,6 @@
 <template>
   <div id="userLayout">
-    <el-form
-      ref="loginForm"
-      v-model="loginForm"
-      class="login-form"
-      :rules="rules"
-    >
+    <el-form v-model="loginForm" class="login-form" :rules="rules">
       <h3 class="title">乡村积分治理后台管理系统</h3>
       <el-form-item prop="userAccount">
         <el-input

@@ -18,7 +18,7 @@
       <el-form-item label="发布用户" prop="user_name">
         <el-input
           v-model="queryParams.user_name"
-          placeholder="请输入发布用户"
+          placeholder="请输入发布用户姓名"
           clearable
           @keydown.enter="handleQueryDebounce"
         />
@@ -26,7 +26,7 @@
       <el-form-item label="更新用户" prop="updated_user_name">
         <el-input
           v-model="queryParams.updated_user_name"
-          placeholder="请输入更新用户"
+          placeholder="请输入更新用户姓名"
           clearable
           @keydown.enter="handleQueryDebounce"
         />
@@ -70,11 +70,12 @@
         label="发布日期"
         align="center"
         prop="publish_date"
+        show-overflow-tooltip
         width="180"
       >
         <template #default="scope">
-          <span>{{
-            moment(scope.row.publish_date).format("YYYY年MM月DD日 HH时mm分ss秒")
+          <span style="white-space: nowrap">{{
+            moment(scope.row.publish_date).format("YYYY年MM月DD日HH时mm分ss秒")
           }}</span>
         </template>
       </el-table-column>
@@ -87,11 +88,12 @@
         label="更新日期"
         align="center"
         prop="update_date"
+        show-overflow-tooltip
         width="180"
       >
         <template #default="scope">
-          <span>{{
-            moment(scope.row.update_date).format("YYYY年MM月DD日 HH时mm分ss秒")
+          <span style="white-space: nowrap">{{
+            moment(scope.row.update_date).format("YYYY年MM月DD日HH时mm分ss秒")
           }}</span>
         </template>
       </el-table-column>

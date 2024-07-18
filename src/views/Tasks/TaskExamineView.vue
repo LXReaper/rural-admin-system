@@ -374,29 +374,41 @@
       </el-descriptions>
     </el-dialog>
     <!--    展示规则和资料id详情的对话框-->
-    <el-dialog v-model="isOpenIdDetail" draggable append-to-body>
+    <el-dialog
+      v-model="isOpenIdDetail"
+      :title="detailTitle"
+      destroy-on-close
+      draggable
+      append-to-body
+    >
       <el-descriptions
-        :title="detailTitle"
+        :title="`${detailTitle}编号：`"
         :extra="`点击编号可以展示${detailTitle}信息`"
         direction="vertical"
         :column="4"
         :size="'default'"
         border
-      >
-        <el-descriptions-item :label="`${detailTitle}编号`">
-          <span v-for="(item, i) in curDetailIdList" :key="i">
-            <el-tag
-              type="primary"
-              style="cursor: pointer"
-              @click="openDetailInfo(i)"
-              round
-              effect="plain"
-              :hit="true"
-              ><text style="text-decoration: underline">{{ item }}</text>
-            </el-tag>
-          </span>
-        </el-descriptions-item>
-      </el-descriptions>
+      />
+      <el-scrollbar style="height: 50vh">
+        <div
+          style="
+            height: 6vh;
+            border: 1px solid #dad2d1;
+            background-color: #f6f6f6;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-top: 1vh;
+            cursor: pointer;
+          "
+          :class="{ hoverTab: hoverId == item }"
+          v-for="(item, i) in curDetailIdList"
+          @click="openDetailInfo(i)"
+          @mouseover="hoverId = item"
+          @mouseout="hoverId = -1"
+          :key="i"
+        >
+          <div>{{ detailTitle.substring(0, 2) + (i + 1) }}</div>
+        </div>
+      </el-scrollbar>
     </el-dialog>
   </div>
 </template>
@@ -600,6 +612,7 @@ const handleDelete = async () => {
 /**
  * 展示规则和学习资料id详情
  */
+const hoverId = ref(-1); //hover某块id信息
 const detailTitle = ref("");
 const isOpenIdDetail = ref(false); //是否打开id详情对话框
 const curDetailIdList = ref([]);
@@ -674,5 +687,11 @@ const getLearningMaterialById = async (id: number) => {
 
 <style scoped>
 #TaskExamineView {
+}
+
+.hoverTab {
+  background-color: #c6f6f6 !important;
+  margin-left: 1vw !important;
+  box-shadow: 10px 7px 6px rgba(0, 0, 0, 0.1) !important;
 }
 </style>

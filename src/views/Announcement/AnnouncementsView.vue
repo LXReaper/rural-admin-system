@@ -186,6 +186,7 @@
             v-model="form.title"
             placeholder="请输入公告标题"
             maxlength="50"
+            style="width: 60vw"
           />
         </el-form-item>
         <el-form-item label="公告内容" prop="content">
@@ -210,6 +211,7 @@
             v-model="form.announcement_type"
             placeholder="请选择公告类型"
             size="default"
+            style="width: 60vw"
             @change="changeAnnouncementType"
           >
             <el-option

@@ -7,26 +7,26 @@
       v-show="showSearch"
       label-width="68px"
     >
-      <el-form-item label="用户ID" prop="user_id">
+      <el-form-item label="用户" prop="userName">
         <el-input
-          v-model="queryParams.userId"
-          placeholder="请输入用户ID"
+          v-model="queryParams.userName"
+          placeholder="请输入用户姓名"
           clearable
           @keydown.enter="handleQueryDebounce"
         />
       </el-form-item>
-      <el-form-item label="订单ID" prop="transactionsId">
+      <el-form-item label="订单编号" prop="transactionsId">
         <el-input
           v-model="queryParams.transactionsId"
-          placeholder="请输入订单ID"
+          placeholder="请输入订单编号"
           clearable
           @keydown.enter="handleQueryDebounce"
         />
       </el-form-item>
-      <el-form-item label="商品ID" prop="productId">
+      <el-form-item label="商品编号" prop="productId">
         <el-input
           v-model="queryParams.productId"
-          placeholder="请输入商品ID"
+          placeholder="请输入商品编号"
           clearable
           @keydown.enter="handleQueryDebounce"
         />
@@ -61,7 +61,7 @@
 
     <!--    表格-->
     <el-table v-loading="loading" stripe border :data="transactionsList">
-      <el-table-column label="订单ID" align="center" prop="transactions_Id" />
+      <el-table-column label="订单编号" align="center" prop="transactions_Id" />
       <el-table-column label="交易用户" align="center" prop="villager_name" />
       <el-table-column label="商品" align="center" prop="product_id">
         <template #default="scope">
@@ -136,21 +136,27 @@
         :column="4"
         :size="'default'"
         border
-      >
-        <el-descriptions-item label="商品编号">
-          <span v-for="(item, i) in curTransactionsVO.product_id" :key="i">
-            <el-tag
-              type="primary"
-              style="cursor: pointer"
-              @click="openProductDetail(curTransactionsVO, i as number)"
-              round
-              effect="plain"
-              :hit="true"
-              ><text style="text-decoration: underline">{{ item }}</text>
-            </el-tag>
-          </span>
-        </el-descriptions-item>
-      </el-descriptions>
+      />
+      <el-scrollbar style="height: 50vh">
+        <div
+          style="
+            height: 6vh;
+            border: 1px solid #dad2d1;
+            background-color: #f6f6f6;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-top: 1vh;
+            cursor: pointer;
+          "
+          :class="{ hoverTab: hoverId == i }"
+          v-for="(item, i) in curTransactionsVO.product_id"
+          :key="i"
+          @click="openProductDetail(curTransactionsVO, i as number)"
+          @mouseover="hoverId = i as any"
+          @mouseout="hoverId = -1"
+        >
+          <div>{{ curTransactionsVO?.productsList[i].product_name }}</div>
+        </div>
+      </el-scrollbar>
     </el-dialog>
     <!--    展示商品详情的对话框-->
     <el-dialog v-model="isOpenProductDetail" draggable append-to-body>
@@ -247,6 +253,7 @@ const queryParams = ref<TransactionsQueryRequest>({
   pageSize: 50,
   current: 1,
   userId: "" as any,
+  userName: "",
   productId: "" as any,
   transaction_status: "" as any,
   transactionsId: "" as any,
@@ -280,6 +287,7 @@ const handleQuery = async () => {
     await TransactionsControllerService.listTransactionsByPageUsingPost({
       pageSize: queryParams.value.pageSize,
       current: queryParams.value.current,
+      userName: queryParams.value.userName,
       userId: queryParams.value.userId,
       productId: [parseInt(queryParams.value.productId as any)],
       transaction_status: queryParams.value.transaction_status,
@@ -301,6 +309,7 @@ const resetQuery = () => {
     pageSize: 50,
     current: 1,
     userId: "" as any,
+    userName: "",
     productId: "" as any,
     transaction_status: "" as any,
     transactionsId: "" as any,
@@ -315,6 +324,7 @@ const pageHandleChange = (value: number) => {
 /**
  * 打开表格中标签内容的详情信息
  */
+const hoverId = ref(-1); //hover某块id信息
 const curTransactionsVO = ref();
 const isOpenProductIdDetail = ref(false);
 //打开商品id详情
@@ -362,5 +372,11 @@ const cancelProductDetail = () => {
 
 <style scoped>
 #TransactionRecordsView {
+}
+
+.hoverTab {
+  background-color: #c6f6f6 !important;
+  margin-left: 1vw !important;
+  box-shadow: 10px 7px 6px rgba(0, 0, 0, 0.1) !important;
 }
 </style>
