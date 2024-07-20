@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export type Products = {
+  consumption_Num?: number;
   is_deleted?: number;
   price?: number;
   product_Image?: string;
@@ -13,4 +14,5 @@ export type Products = {
   shelf_time?: string;
   stock_quantity?: number;
   update_time?: string;
+  user_id?: number;
 };

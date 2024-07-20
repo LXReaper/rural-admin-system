@@ -174,9 +174,13 @@
           >{{ productDetail.product_name }}
         </el-descriptions-item>
         <el-descriptions-item label="商品类型">
-          <el-tag type="primary" round
-            >{{ productDetail.product_type }}
-          </el-tag>
+          <el-space
+            direction="vertical"
+            v-for="(item, i) in productDetail.product_type"
+            :key="i"
+          >
+            <el-tag type="primary" round>{{ item }} </el-tag>
+          </el-space>
         </el-descriptions-item>
         <el-descriptions-item label="商品库存">
           <el-tag type="success" round

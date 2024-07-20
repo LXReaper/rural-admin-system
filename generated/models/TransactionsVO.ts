@@ -2,12 +2,12 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Products } from "./Products";
+import { ProductsVO } from "./ProductsVO";
 
 export type TransactionsVO = {
   price?: Array<number>;
   product_id?: Array<number>;
-  productsList?: Array<Products>;
+  productsList?: Array<ProductsVO>;
   transaction_quantity?: Array<number>;
   transaction_status?: boolean;
   transaction_time?: string;

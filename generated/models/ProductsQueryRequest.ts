@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export type ProductsQueryRequest = {
+  consumption_Num?: number;
   current?: number;
   pageSize?: number;
   price?: number;
@@ -15,4 +16,5 @@ export type ProductsQueryRequest = {
   sortOrder?: string;
   stock_quantity?: number;
   updateTime?: string;
+  user_name?: string;
 };

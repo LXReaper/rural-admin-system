@@ -7,6 +7,6 @@ export type ProductsAddRequest = {
   productDescription?: string;
   productImage?: string;
   productName?: string;
-  productType?: string;
+  productType?: Array<string>;
   stockQuantity?: number;
 };

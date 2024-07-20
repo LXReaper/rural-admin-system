@@ -2,7 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type ProductsUpdateRequest = {
+export type ProductsVO = {
   consumption_Num?: number;
   price?: number;
   product_Image?: string;
@@ -10,5 +10,8 @@ export type ProductsUpdateRequest = {
   product_id?: number;
   product_name?: string;
   product_type?: Array<string>;
+  shelf_time?: string;
   stock_quantity?: number;
+  update_time?: string;
+  user_name?: string;
 };

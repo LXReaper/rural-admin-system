@@ -5,6 +5,7 @@
 import type { BaseResponse_boolean_ } from "../models/BaseResponse_boolean_";
 import type { BaseResponse_long_ } from "../models/BaseResponse_long_";
 import type { BaseResponse_Page_Products_ } from "../models/BaseResponse_Page_Products_";
+import type { BaseResponse_Page_ProductsVO_ } from "../models/BaseResponse_Page_ProductsVO_";
 import type { BaseResponse_Products_ } from "../models/BaseResponse_Products_";
 import type { DeleteRequest } from "../models/DeleteRequest";
 import type { ProductsAddRequest } from "../models/ProductsAddRequest";
@@ -117,6 +118,28 @@ export class ProductsControllerService {
     return __request(OpenAPI, {
       method: "POST",
       url: "/api/products/list/page",
+      body: productsQueryRequest,
+      errors: {
+        401: `Unauthorized`,
+        403: `Forbidden`,
+        404: `Not Found`,
+      },
+    });
+  }
+
+  /**
+   * 分页获取商品信息封装列表
+   * @param productsQueryRequest productsQueryRequest
+   * @returns BaseResponse_Page_ProductsVO_ OK
+   * @returns any Created
+   * @throws ApiError
+   */
+  public static listProductsVoByPageUsingPost(
+    productsQueryRequest: ProductsQueryRequest
+  ): CancelablePromise<BaseResponse_Page_ProductsVO_ | any> {
+    return __request(OpenAPI, {
+      method: "POST",
+      url: "/api/products/list/page/vo",
       body: productsQueryRequest,
       errors: {
         401: `Unauthorized`,

@@ -23,6 +23,14 @@
           @keydown.enter="handleQueryDebounce"
         />
       </el-form-item>
+      <el-form-item label="用户名" prop="user_name">
+        <el-input
+          v-model="queryParams.user_name"
+          placeholder="请输入上架商品的用户名"
+          clearable
+          @keydown.enter="handleQueryDebounce"
+        />
+      </el-form-item>
       <el-form-item label="商品积分" prop="price">
         <el-input
           v-model="queryParams.price"
@@ -116,7 +124,13 @@
       />
       <el-table-column label="商品类型" align="center" prop="product_type">
         <template #default="scope">
-          <el-tag type="primary" round>{{ scope.row.product_type }}</el-tag>
+          <el-space
+            direction="vertical"
+            v-for="(item, i) in scope.row.product_type"
+            :key="i"
+          >
+            <el-tag type="primary" round>{{ item }}</el-tag>
+          </el-space>
         </template>
       </el-table-column>
       <el-table-column label="商品积分" align="center" prop="price">
@@ -130,6 +144,12 @@
           <el-tag type="success" round>{{ scope.row.stock_quantity }}</el-tag>
         </template>
       </el-table-column>
+      <el-table-column label="商品购买量" align="center" prop="consumption_Num">
+        <template #default="scope">
+          <el-tag type="warning" round>{{ scope.row.consumption_Num }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="用户名" align="center" prop="user_name" />
       <el-table-column
         label="上架时间"
         align="center"
@@ -213,10 +233,30 @@
         </el-form-item>
         <el-form-item label="商品类型" prop="productType">
           <el-input
-            v-model="form.productType"
+            v-model="curProductType"
+            @keydown.enter="
+              () => {
+                form.productType.push(curProductType);
+                curProductType = '';
+              }
+            "
+            @keydown.delete="
+              () => {
+                form.productType.pop();
+              }
+            "
             placeholder="请输入商品类型"
             maxlength="30"
-          />
+            size="large"
+          >
+            <template #prefix>
+              <div v-for="(type, i) in form.productType" :key="i">
+                <div style="margin-left: 0.1vw">
+                  <el-tag type="primary">{{ type }}</el-tag>
+                </div>
+              </div>
+            </template>
+          </el-input>
         </el-form-item>
         <el-form-item label="商品图片">
           <el-upload
@@ -320,6 +360,7 @@ const queryParams = ref<ProductsQueryRequest>({
   stock_quantity: "" as any,
   shelfTime: "",
   updateTime: "",
+  user_name: "",
 });
 //查询得到的数据
 const productsList = ref<Products[]>([]);
@@ -329,10 +370,11 @@ const form = ref({
   productName: "",
   productDescription: "",
   productImage: "",
-  productType: "",
+  productType: [],
   price: 0,
   stockQuantity: 0,
 });
+const curProductType = ref("");
 
 //表单重置
 const reset = () => {
@@ -340,10 +382,11 @@ const reset = () => {
     productName: "",
     productDescription: "",
     productImage: "",
-    productType: "",
+    productType: [],
     price: 0,
     stockQuantity: 0,
   };
+  curProductType.value = "";
 };
 /**
  * 对话框
@@ -384,7 +427,7 @@ const submitForm = async () => {
   } else {
     const updateRes = await ProductsControllerService.updateProductsUsingPost({
       price: form.value.price as any,
-      productImage: form.value.productImage,
+      product_Image: form.value.productImage,
       product_description: form.value.productDescription,
       product_id: productsList.value[curEdit.value].product_id,
       product_name: form.value.productName,
@@ -409,7 +452,7 @@ const cancel = () => {
 //查询数据
 const handleQuery = async () => {
   loading.value = true;
-  const res = await ProductsControllerService.listProductsByPageUsingPost(
+  const res = await ProductsControllerService.listProductsVoByPageUsingPost(
     queryParams.value
   );
   loading.value = false;
