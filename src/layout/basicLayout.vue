@@ -82,6 +82,7 @@ import { OpenAPI, UserControllerService } from "../../generated";
 import NoticeListView from "@/components/basicComponent/noticeListView.vue";
 import PublishTaskView from "@/components/basicComponent/publishTaskView.vue";
 import PublishAnnouncementView from "@/components/basicComponent/publishAnnouncementView.vue";
+import TabBarView from "@/components/basicComponent/tabBarView.vue";
 
 const loginUser = ref(store.state.user.loginUser);
 const userName = ref(store.state.user.loginUser.villager_name);

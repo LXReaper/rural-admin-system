@@ -96,7 +96,7 @@
     </el-form>
 
     <!--    表格-->
-    <el-table v-loading="loading" stripe border :data="tasksList">
+    <el-table size="small" v-loading="loading" stripe border :data="tasksList">
       <el-table-column label="任务编号" align="center" prop="task_id" />
       <el-table-column
         label="任务内容"

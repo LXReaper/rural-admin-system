@@ -13,6 +13,7 @@ export type Products = {
   product_type?: string;
   shelf_time?: string;
   stock_quantity?: number;
+  shelf_status?: number;
   update_time?: string;
   user_id?: number;
 };

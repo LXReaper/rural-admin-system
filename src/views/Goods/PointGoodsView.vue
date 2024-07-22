@@ -47,6 +47,31 @@
           @keydown.enter="handleQueryDebounce"
         />
       </el-form-item>
+      <el-form-item label="是否上架" prop="shelf_status">
+        <el-select
+          v-model="queryParams.shelf_status"
+          placeholder="是否上架"
+          size="default"
+          style="width: 240px"
+          @change="handleQueryDebounce"
+        >
+          <el-option
+            v-for="item in [
+              {
+                value: 0,
+                label: '未上架',
+              },
+              {
+                value: 1,
+                label: '已上架',
+              },
+            ]"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="上架时间" prop="shelf_time">
         <el-date-picker
           clearable
@@ -95,6 +120,7 @@
     </el-row>
     <!--    表格-->
     <el-table
+      size="small"
       v-loading="loading"
       :data="productsList"
       stripe
@@ -150,6 +176,22 @@
         </template>
       </el-table-column>
       <el-table-column label="用户名" align="center" prop="user_name" />
+      <el-table-column label="是否上架" align="center" prop="shelf_status">
+        <template #default="scope">
+          <el-switch
+            :model-value="scope.row.shelf_status === 1"
+            inline-prompt
+            active-text="上架"
+            inactive-text="下架"
+            @change="
+              (val: boolean) => {
+                productsList[scope.$index].shelf_status = val ? 1 : 0;
+                handleEdit(scope.$index, scope.row, 'one');
+              }
+            "
+          />
+        </template>
+      </el-table-column>
       <el-table-column
         label="上架时间"
         align="center"
@@ -182,7 +224,10 @@
       </el-table-column>
       <el-table-column label="操作" align="center">
         <template #default="scope">
-          <el-button size="small" @click="handleEdit(scope.$index, scope.row)">
+          <el-button
+            size="small"
+            @click="handleEdit(scope.$index, scope.row, 'all')"
+          >
             编辑
           </el-button>
           <el-popconfirm
@@ -294,6 +339,15 @@
             </template>
           </el-upload>
         </el-form-item>
+        <el-form-item label="是否上架" prop="shelf_status">
+          <el-switch
+            :model-value="form.shelf_status === 1"
+            inline-prompt
+            active-text="上架"
+            inactive-text="下架"
+            @change="(val: boolean) => form.shelf_status = val ? 1 : 0"
+          />
+        </el-form-item>
         <el-form-item label="商品积分" prop="price">
           <el-input-number
             v-model="form.price"
@@ -305,7 +359,7 @@
         <el-form-item label="商品库存" prop="stockQuantity">
           <el-input-number
             v-model="form.stockQuantity"
-            :step="0.1"
+            :step="1"
             size="large"
             maxlength="30"
           />
@@ -335,6 +389,7 @@ import {
   UserControllerService,
 } from "../../../generated";
 import moment from "moment/moment";
+import { ANNOUNCEMENT_TYPE } from "@/defaultData/DefaultData";
 
 //总数
 const total = ref(0);
@@ -361,6 +416,7 @@ const queryParams = ref<ProductsQueryRequest>({
   shelfTime: "",
   updateTime: "",
   user_name: "",
+  shelf_status: "" as any,
 });
 //查询得到的数据
 const productsList = ref<Products[]>([]);
@@ -373,6 +429,7 @@ const form = ref({
   productType: [],
   price: 0,
   stockQuantity: 0,
+  shelf_status: 0,
 });
 const curProductType = ref("");
 
@@ -385,6 +442,7 @@ const reset = () => {
     productType: [],
     price: 0,
     stockQuantity: 0,
+    shelf_status: 0,
   };
   curProductType.value = "";
 };
@@ -398,6 +456,9 @@ const rules = ref({
   ],
   productType: [
     { required: true, message: "商品类型不能为空", trigger: "blur" },
+  ],
+  productDescription: [
+    { required: true, message: "商品描述不能为空", trigger: "blur" },
   ],
   price: [{ required: true, message: "商品积分不能为空", trigger: "blur" }],
   stockQuantity: [
@@ -433,6 +494,7 @@ const submitForm = async () => {
       product_name: form.value.productName,
       product_type: form.value.productType,
       stock_quantity: form.value.stockQuantity as any,
+      shelf_status: form.value.shelf_status,
     });
     if (updateRes.code === 0) {
       ElMessage.success("修改成功");
@@ -476,6 +538,7 @@ const resetQuery = () => {
     stock_quantity: "" as any,
     shelfTime: "",
     updateTime: "",
+    shelf_status: "" as any,
   };
   handleQueryDebounce();
 };
@@ -499,9 +562,10 @@ const handleAdd = () => {
  * 编辑和删除操作
  * @param index
  * @param row
+ * @param type 如果是all则表示编辑所有，one则表示编辑一个
  */
 const curEdit = ref(0);
-const handleEdit = (index: number, row: any) => {
+const handleEdit = (index: number, row: any, type: string) => {
   form.value = {
     productName: productsList.value[index].product_name as any,
     productDescription: productsList.value[index].product_description as any,
@@ -509,10 +573,15 @@ const handleEdit = (index: number, row: any) => {
     productType: productsList.value[index].product_type as any,
     price: productsList.value[index].price as any,
     stockQuantity: productsList.value[index].stock_quantity as any,
+    shelf_status: productsList.value[index].shelf_status as any,
   };
   curEdit.value = index;
-  open.value = true;
+  if (type === "all") open.value = true;
   title.value = `修改${productsList.value[index].product_name}的信息`;
+  if (type !== "all") {
+    //单个数据修改则直接提交
+    submitForm();
+  }
 };
 const onDelete = async (index: number, row: any) => {
   const res = await ProductsControllerService.deleteProductsUsingPost({

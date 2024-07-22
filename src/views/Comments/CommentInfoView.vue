@@ -40,7 +40,13 @@
     </el-form>
 
     <!--    表格-->
-    <el-table v-loading="loading" stripe border :data="commentsList">
+    <el-table
+      size="small"
+      v-loading="loading"
+      stripe
+      border
+      :data="commentsList"
+    >
       <el-table-column label="评论ID" align="center" prop="commentId" />
       <el-table-column label="评论内容" align="center" prop="commentContent" />
       <el-table-column label="评论者ID" align="center" prop="commenterId" />

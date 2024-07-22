@@ -68,6 +68,7 @@
 
     <!--    表格-->
     <el-table
+      size="small"
       v-loading="loading"
       :data="rulesList"
       stripe

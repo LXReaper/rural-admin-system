@@ -13,4 +13,5 @@ export type Announcements = {
   update_date?: string;
   updated_user_id?: number;
   user_id?: number;
+  is_show?: number;
 };

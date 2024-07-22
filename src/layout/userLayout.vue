@@ -18,20 +18,6 @@
           @keydown.enter="handleLogin"
         />
       </el-form-item>
-      <!--      <el-form-item prop="code" v-if="captchaEnabled">-->
-      <!--        <el-input-->
-      <!--          v-model="loginForm.code"-->
-      <!--          auto-complete="off"-->
-      <!--          placeholder="验证码"-->
-      <!--          style="width: 63%"-->
-      <!--          @keyup.enter.native="handleLogin"-->
-      <!--        >-->
-      <!--          <svg-icon slot="prefix" icon-class="validCode" class="el-input__icon input-icon" />-->
-      <!--        </el-input>-->
-      <!--        <div class="login-code">-->
-      <!--          <img :src="codeUrl" @click="getCode" class="login-code-img"/>-->
-      <!--        </div>-->
-      <!--      </el-form-item>-->
       <el-checkbox v-model="rememberMe" style="margin: 0 0 25px 0"
         >记住密码
       </el-checkbox>

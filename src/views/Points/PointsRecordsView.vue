@@ -73,7 +73,7 @@
       </el-form-item>
     </el-form>
     <!--    表格-->
-    <el-table v-loading="loading" stripe border :data="pointsList">
+    <el-table size="small" v-loading="loading" stripe border :data="pointsList">
       <el-table-column label="编号" align="center" prop="point_id" />
       <el-table-column label="用户" align="center" prop="user_name" />
       <el-table-column label="总积分" align="center" prop="total_points">

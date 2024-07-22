@@ -60,7 +60,13 @@
     </el-form>
 
     <!--    表格-->
-    <el-table v-loading="loading" stripe border :data="transactionsList">
+    <el-table
+      size="small"
+      v-loading="loading"
+      stripe
+      border
+      :data="transactionsList"
+    >
       <el-table-column label="订单编号" align="center" prop="transactions_Id" />
       <el-table-column label="交易用户" align="center" prop="villager_name" />
       <el-table-column label="商品" align="center" prop="product_id">
@@ -99,7 +105,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        label="交易时间"
+        label="订单生成时间"
         align="center"
         prop="transaction_time"
         width="180"
@@ -109,6 +115,18 @@
             moment(scope.row.transaction_time).format(
               "YYYY年MM月DD日 HH时mm分ss秒"
             )
+          }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="交易完成时间"
+        align="center"
+        prop="update_time"
+        width="180"
+      >
+        <template #default="scope">
+          <span>{{
+            moment(scope.row.update_time).format("YYYY年MM月DD日 HH时mm分ss秒")
           }}</span>
         </template>
       </el-table-column>
@@ -179,7 +197,7 @@
             v-for="(item, i) in productDetail.product_type"
             :key="i"
           >
-            <el-tag type="primary" round>{{ item }} </el-tag>
+            <el-tag type="primary" round>{{ item }}</el-tag>
           </el-space>
         </el-descriptions-item>
         <el-descriptions-item label="商品库存">

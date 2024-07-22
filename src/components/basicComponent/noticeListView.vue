@@ -1,7 +1,7 @@
 <template>
   <!--  通知组件-->
   <div id="noticeListView">
-    <el-popover :width="418" trigger="click">
+    <el-popover :width="418" trigger="hover">
       <el-space direction="horizontal" style="height: 5vh; white-space: nowrap">
         <el-icon size="20">
           <Message />

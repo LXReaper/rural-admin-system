@@ -15,6 +15,7 @@ export type ProductsQueryRequest = {
   sortField?: string;
   sortOrder?: string;
   stock_quantity?: number;
+  shelf_status?: number;
   updateTime?: string;
   user_name?: string;
 };

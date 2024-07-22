@@ -8,4 +8,5 @@ export type AnnouncementsUpdateRequest = {
   content?: string;
   image_url?: string;
   title?: string;
+  is_show?: number;
 };

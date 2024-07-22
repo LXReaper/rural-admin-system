@@ -12,4 +12,5 @@ export type AnnouncementsVO = {
   update_date?: string;
   updated_user_name?: string;
   user_name?: string;
+  is_show?: number;
 };

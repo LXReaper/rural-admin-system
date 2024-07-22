@@ -9,4 +9,5 @@ export type ProductsAddRequest = {
   productName?: string;
   productType?: Array<string>;
   stockQuantity?: number;
+  shelf_status?: number;
 };

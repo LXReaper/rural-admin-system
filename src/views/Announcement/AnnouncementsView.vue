@@ -31,6 +31,31 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item label="是否显示" prop="is_show">
+        <el-select
+          v-model="queryParams.is_show"
+          placeholder="是否显示"
+          size="default"
+          style="width: 240px"
+          @change="handleQueryDebounce"
+        >
+          <el-option
+            v-for="item in [
+              {
+                value: 0,
+                label: '隐藏',
+              },
+              {
+                value: 1,
+                label: '显示',
+              },
+            ]"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="公告内容" prop="content">
         <el-input
           v-model="queryParams.content"
@@ -64,7 +89,13 @@
     </el-form>
 
     <!--    表格-->
-    <el-table v-loading="loading" stripe border :data="announcementsList">
+    <el-table
+      size="small"
+      v-loading="loading"
+      stripe
+      border
+      :data="announcementsList"
+    >
       <el-table-column label="公告编号" align="center" prop="announcement_id" />
       <el-table-column label="公告标题" align="center" prop="title" />
       <el-table-column label="公告位置" align="center" prop="announcement_type">
@@ -86,17 +117,13 @@
       </el-table-column>
       <el-table-column label="公告内容" align="center" prop="content">
         <template #default="scope">
-          <div
-            v-if="scope.row.announcement_type === ANNOUNCEMENT_TYPE[2].value"
-          >
-            {{ scope.row.content }}
-          </div>
-          <my-view
-            :value-html="scope.row.content"
-            :height="'15vh'"
-            :width="'10vw'"
-            v-else
-          />
+          <el-button
+            type="text"
+            @click="
+              openContentDialog(scope.row.content, scope.row.announcement_type)
+            "
+            >详情
+          </el-button>
         </template>
       </el-table-column>
       <el-table-column label="公告图片" align="center" prop="image_url">
@@ -108,6 +135,22 @@
         </template>
       </el-table-column>
       <el-table-column label="公告标题" align="center" prop="title" />
+      <el-table-column label="是否展示" align="center" prop="is_show">
+        <template #default="scope">
+          <el-switch
+            :model-value="scope.row.is_show === 1"
+            inline-prompt
+            active-text="显示"
+            inactive-text="隐藏"
+            @change="
+              (val: boolean) => {
+                announcementsList[scope.$index].is_show = val ? 1 : 0;
+                handleEdit(scope.$index, scope.row, 'one');
+              }
+            "
+          />
+        </template>
+      </el-table-column>
       <el-table-column label="发布用户" align="center" prop="user_name" />
       <el-table-column
         label="更新用户"
@@ -139,7 +182,7 @@
           <el-button
             size="small"
             type="primary"
-            @click="handleEdit(scope.$index, scope.row)"
+            @click="handleEdit(scope.$index, scope.row, 'all')"
           >
             编辑
           </el-button>
@@ -171,6 +214,23 @@
       @current-change="pageHandleChange"
       class="mt-4"
     />
+    <!--    公告内容对话框-->
+    <el-dialog
+      v-model="openContent"
+      style="height: 55vh"
+      append-to-body
+      destroy-on-close
+    >
+      <div v-if="curType === ANNOUNCEMENT_TYPE[2].value">
+        {{ curContent }}
+      </div>
+      <my-view
+        :value-html="curContent"
+        :height="'50vh'"
+        :width="'100vw'"
+        v-else
+      />
+    </el-dialog>
     <!--修改公告配置对话框 -->
     <el-dialog
       :title="`编辑${form.title}`"
@@ -266,6 +326,7 @@ const queryParams = ref({
   content: "",
   updated_user_name: "",
   user_name: "",
+  is_show: "",
 });
 //查询得到的数据
 const announcementsList = ref([]);
@@ -282,6 +343,7 @@ const handleQuery = async () => {
       content: queryParams.value.content,
       updated_user_name: queryParams.value.updated_user_name,
       user_name: queryParams.value.user_name,
+      is_show: queryParams.value.is_show as any,
     });
   loading.value = false;
   if (res.code === 0) {
@@ -303,6 +365,7 @@ const resetQuery = () => {
     content: "",
     updated_user_name: "",
     user_name: "",
+    is_show: "",
   };
   handleQueryDebounce();
 };
@@ -339,6 +402,7 @@ const form = ref({
   content: "",
   image_url: "",
   title: "",
+  is_show: 0,
 });
 const resetForm = () => {
   form.value = {
@@ -347,6 +411,7 @@ const resetForm = () => {
     content: "",
     image_url: "",
     title: "",
+    is_show: 0,
   };
 };
 //编辑公告类型
@@ -368,6 +433,7 @@ const updateEditor = async () => {
       content: form.value.content,
       image_url: form.value.image_url,
       title: form.value.title,
+      is_show: form.value.is_show,
     }
   );
   if (res.code === 0) {
@@ -375,18 +441,24 @@ const updateEditor = async () => {
     await handleQuery().then((r) => (open.value = false));
   } else ElMessage.error("修改失败，" + res.message);
 };
-//编辑
-const handleEdit = (i: number, announcementsVO: AnnouncementsVO) => {
+//编辑,type：all表示编辑所有，one表示编辑一个
+const handleEdit = (
+  i: number,
+  announcementsVO: AnnouncementsVO,
+  type: string
+) => {
   form.value.announcement_id = announcementsVO.announcement_id as any;
   form.value.title = announcementsVO.title as any;
   form.value.announcement_type = announcementsVO.announcement_type as any;
   form.value.content = announcementsVO.content as any;
   form.value.image_url = announcementsVO.image_url as any;
-  open.value = true;
+  form.value.is_show = announcementsVO.is_show as any;
+  if (type === "all") open.value = true;
+  if (type !== "all") updateEditor();
 };
 
 /**
- * 对话框
+ * 编辑对话框
  * @param i
  * @param announcementsVO
  */
@@ -419,6 +491,21 @@ const confirmEvent = async (i: number, announcementsVO: AnnouncementsVO) => {
   if (res.code === 0) {
     await handleQuery();
   } else ElMessage.error("删除公告失败，" + res.message);
+};
+/**
+ * 公告内容对话框
+ */
+//打开公告内容
+const openContent = ref(false);
+//当前显示的公告信息
+const curContent = ref();
+//当前的公告类型
+const curType = ref();
+//打开内容对话框
+const openContentDialog = (content: string, type: string) => {
+  openContent.value = true;
+  curContent.value = content;
+  curType.value = type;
 };
 </script>
 

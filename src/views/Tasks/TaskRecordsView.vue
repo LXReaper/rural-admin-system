@@ -40,7 +40,13 @@
     </el-form>
 
     <!--    表格-->
-    <el-table v-loading="loading" stripe border :data="taskSubmissionsList">
+    <el-table
+      size="small"
+      v-loading="loading"
+      stripe
+      border
+      :data="taskSubmissionsList"
+    >
       <el-table-column label="编号" align="center" prop="submission_id" />
       <el-table-column label="任务" align="center" prop="task_id" />
       <el-table-column label="用户" align="center" prop="user_name" />

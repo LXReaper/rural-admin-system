@@ -67,6 +67,7 @@
     </el-row>
     <!--      表格-->
     <el-table
+      size="small"
       :data="tableData"
       stripe
       border

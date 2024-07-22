@@ -12,6 +12,7 @@ export type ProductsVO = {
   product_type?: Array<string>;
   shelf_time?: string;
   stock_quantity?: number;
+  shelf_status?: number;
   update_time?: string;
   user_name?: string;
 };

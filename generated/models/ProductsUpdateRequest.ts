@@ -11,4 +11,5 @@ export type ProductsUpdateRequest = {
   product_name?: string;
   product_type?: Array<string>;
   stock_quantity?: number;
+  shelf_status?: number;
 };

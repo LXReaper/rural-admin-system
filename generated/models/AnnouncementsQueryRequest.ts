@@ -7,6 +7,7 @@ export type AnnouncementsQueryRequest = {
   announcement_type?: string;
   content?: string;
   current?: number;
+  is_show?: number;
   image_url?: string;
   pageSize?: number;
   sortField?: string;

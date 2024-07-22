@@ -8,6 +8,7 @@ export type Transactions = {
   transaction_quantity?: string;
   transaction_status?: boolean;
   transaction_time?: string;
+  update_time?: string;
   transactions_Id?: number;
   user_id?: number;
 };

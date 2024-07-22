@@ -11,6 +11,7 @@ export type TransactionsVO = {
   transaction_quantity?: Array<number>;
   transaction_status?: boolean;
   transaction_time?: string;
+  update_time?: string;
   transactions_Id?: number;
   user_id?: number;
   villager_name?: string;
