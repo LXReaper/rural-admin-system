@@ -72,7 +72,7 @@
   </div>
 
   <!--    单个消息对话框-->
-  <el-dialog v-model="openNotice" width="600px" append-to-body>
+  <el-dialog v-model="openNotice" width="800px" append-to-body>
     <template #title>
       <text style="color: #37b571">站内信息</text>
     </template>
@@ -81,7 +81,7 @@
         {{ curShowNotice?.title }}
       </h1>
       <el-space direction="horizontal">
-        <text>发布人：{{ curShowNotice?.user }}</text>
+        <text>发布者：{{ curShowNotice?.user }}</text>
         <text
           >&nbsp;&nbsp;{{
             moment(curShowNotice?.publish_date).format(
@@ -192,7 +192,7 @@
         </div>
       </div>
       <div
-        style="cursor: pointer"
+        style="cursor: pointer; text-align: center"
         @click="gainMoreNotifications"
         v-if="allNotificationsList.length < totalNotification"
       >
@@ -220,11 +220,11 @@ import {
   Message,
 } from "@element-plus/icons-vue";
 import moment from "moment/moment";
-import { NoticesControllerService } from "../../../generated/services/NoticesControllerService";
+import { NoticesControllerService } from "../../../../generated/services/NoticesControllerService";
 import { ElMessage, ElNotification } from "element-plus";
 import { onMounted, ref } from "vue";
 import store from "@/store";
-import { OpenAPI } from "../../../generated";
+import { OpenAPI } from "../../../../generated";
 
 /**
  * 连接websocket

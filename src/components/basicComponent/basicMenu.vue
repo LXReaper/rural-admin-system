@@ -5,8 +5,16 @@
       :collapse="props.isCollapse"
       :collapse-transition="false"
       :router="true"
+      :background-color="'#1e282c'"
+      :text-color="'#ffffffA6'"
       class="el-menu-vertical-demo"
     >
+      <el-menu-item v-if="isCollapse" @click="onCollapse(false)">
+        <el-icon>
+          <Menu />
+        </el-icon>
+        <template #title>展开</template>
+      </el-menu-item>
       <el-menu-item index="/home">
         <el-icon>
           <House />
@@ -149,11 +157,20 @@
         </el-icon>
         <template #title>评论信息</template>
       </el-menu-item>
+      <el-menu-item index="/setting">
+        <el-icon>
+          <Setting />
+        </el-icon>
+        <template #title>设置</template>
+      </el-menu-item>
     </el-menu>
   </div>
 </template>
 <script setup lang="ts">
 import {
+  Menu,
+  ArrowLeft,
+  ArrowRight,
   Checked,
   CircleCheck,
   CircleCheckFilled,
@@ -168,6 +185,7 @@ import {
   Monitor,
   Notebook,
   Reading,
+  Setting,
   ShoppingCart,
   Stamp,
   Star,
@@ -178,16 +196,34 @@ import { ref, withDefaults, defineProps } from "vue";
 
 interface Props {
   isCollapse: boolean; //是否收起侧边栏
+  onCollapse: (isCol: boolean) => void;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   isCollapse: () => false,
+  onCollapse: (isCol: boolean) => {
+    console.log();
+  },
 });
 </script>
 
 <style>
-.el-menu-vertical-demo {
-  width: 200px;
+.el-menu-item-group {
+  background-color: #2c3b41 !important;
+}
+
+/*折叠菜单*/
+.el-menu--collapse {
+  height: 95vh;
+  border-radius: 2vw;
+}
+
+/*子菜单样式*/
+.childMenu {
+}
+
+.el-menu--popup {
+  background-color: #42b983 !important;
 }
 
 #basicMenu {

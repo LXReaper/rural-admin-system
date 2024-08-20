@@ -32,10 +32,15 @@ export const websocketMessageData = {
         console.log("WebSocket 连接成功");
       };
       state.websocketMessage.noticeSocket.onerror = function (ev: any) {
-        console.log("WebSocket 连接失败," + ev);
+        console.log("WebSocket 连接失败," + ev.reason);
       };
       state.websocketMessage.noticeSocket.onclose = function (ev: any) {
-        console.log("WebSocket 连接关闭，" + ev);
+        console.log(
+          "WebSocket 连接" +
+            (ev.wasClean ? "正常" : "异常") +
+            "关闭，" +
+            ev.reason
+        );
       };
     },
   },

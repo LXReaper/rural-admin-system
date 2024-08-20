@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import HomeView from "../views/HomeView.vue";
-import userLayout from "@/layout/userLayout.vue";
 import VillagerInfoView from "@/views/Villager/VillagerInfoView.vue";
 import PointsRecordsView from "@/views/Points/PointsRecordsView.vue";
 import PointsRulesView from "@/views/Points/PointsRulesView.vue";
@@ -21,12 +20,14 @@ import TaskExamineView from "@/views/Tasks/TaskExamineView.vue";
 import OnlineVillagerInfoView from "@/views/Villager/OnlineVillagerInfoView.vue";
 import AnnouncementsView from "@/views/Announcement/AnnouncementsView.vue";
 import TaskCheckView from "@/views/Tasks/TaskCheckView.vue";
+import loginLayout from "@/layout/loginLayout.vue";
+import SettingView from "@/views/Setting/SettingView.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/user",
     name: "用户",
-    component: userLayout,
+    component: loginLayout,
   },
   {
     path: "/admin",
@@ -143,6 +144,11 @@ const routes: Array<RouteRecordRaw> = [
         path: "/comments",
         name: "评论信息",
         component: CommentInfoView,
+      },
+      {
+        path: "/setting",
+        name: "设置",
+        component: SettingView,
       },
     ],
   },

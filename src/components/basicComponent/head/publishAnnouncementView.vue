@@ -119,7 +119,7 @@ import {
 import { ElNotification } from "element-plus";
 import { ref } from "vue";
 import store from "@/store";
-import { AnnouncementsControllerService } from "../../../generated";
+import { AnnouncementsControllerService } from "../../../../generated";
 import { ANNOUNCEMENT_TYPE } from "@/defaultData/DefaultData";
 import MyEditor from "@/components/wangEditor/myEditor.vue";
 import html2canvas from "html2canvas";

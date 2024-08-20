@@ -12,6 +12,8 @@ import type { CancelablePromise } from "../core/CancelablePromise";
 import { OpenAPI } from "../core/OpenAPI";
 import { request as __request } from "../core/request";
 import { BaseResponse_boolean_ } from "../models/BaseResponse_boolean_";
+import { PointRecordTypeCountRequest } from "../models/PointRecordTypeCountRequest";
+import { BaseResponse_PointRecordTypeCount_ } from "../models/BaseResponse_PointRecordTypeCount_";
 
 export class PointsControllerService {
   /**
@@ -22,7 +24,7 @@ export class PointsControllerService {
   public static getMyPointsUsingGet(): CancelablePromise<BaseResponse_Points_> {
     return __request(OpenAPI, {
       method: "GET",
-      url: "/api/points/get",
+      url: "/api/point/points/get",
       errors: {
         401: `Unauthorized`,
         403: `Forbidden`,
@@ -42,7 +44,7 @@ export class PointsControllerService {
   ): CancelablePromise<BaseResponse_Points_> {
     return __request(OpenAPI, {
       method: "GET",
-      url: "/api/points/get/AllPoints",
+      url: "/api/point/points/get/AllPoints",
       query: {
         userId: userId,
       },
@@ -65,7 +67,7 @@ export class PointsControllerService {
   ): CancelablePromise<BaseResponse_double_> {
     return __request(OpenAPI, {
       method: "GET",
-      url: "/api/points/get/RemainingPoints",
+      url: "/api/point/points/get/RemainingPoints",
       query: {
         userId: userId,
       },
@@ -88,7 +90,7 @@ export class PointsControllerService {
   ): CancelablePromise<BaseResponse_PointsVO_> {
     return __request(OpenAPI, {
       method: "GET",
-      url: "/api/points/get/vo",
+      url: "/api/point/points/get/vo",
       query: {
         id: id,
       },
@@ -112,7 +114,7 @@ export class PointsControllerService {
   ): CancelablePromise<BaseResponse_Page_Points_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/points/list/page",
+      url: "/api/point/points/list/page",
       body: pointsQueryRequest,
       errors: {
         401: `Unauthorized`,
@@ -134,7 +136,7 @@ export class PointsControllerService {
   ): CancelablePromise<BaseResponse_Page_PointsVO_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/points/list/page/vo",
+      url: "/api/point/points/list/page/vo",
       body: pointsQueryRequest,
       errors: {
         401: `Unauthorized`,
@@ -152,7 +154,7 @@ export class PointsControllerService {
   public static settlePointsUsingGet(): CancelablePromise<BaseResponse_boolean_> {
     return __request(OpenAPI, {
       method: "GET",
-      url: "/api/points/settle",
+      url: "/api/point/points/settle",
       errors: {
         401: `Unauthorized`,
         403: `Forbidden`,

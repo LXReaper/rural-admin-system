@@ -27,7 +27,7 @@ export class TasksExamineControllerService {
   ): CancelablePromise<BaseResponse_long_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/tasksExamine/add",
+      url: "/api/task/tasksExamine/add",
       body: tasksExamineAddRequest,
       errors: {
         401: `Unauthorized`,
@@ -49,7 +49,7 @@ export class TasksExamineControllerService {
   ): CancelablePromise<BaseResponse_boolean_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/tasksExamine/delete",
+      url: "/api/task/tasksExamine/delete",
       body: deleteRequest,
       errors: {
         401: `Unauthorized`,
@@ -71,7 +71,7 @@ export class TasksExamineControllerService {
   ): CancelablePromise<BaseResponse_boolean_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/tasksExamine/handle",
+      url: "/api/task/tasksExamine/handle",
       body: taskExamineRequest,
       errors: {
         401: `Unauthorized`,
@@ -93,7 +93,7 @@ export class TasksExamineControllerService {
   ): CancelablePromise<BaseResponse_Page_TasksExamine_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/tasksExamine/list/page",
+      url: "/api/task/tasksExamine/list/page",
       body: tasksExamineQueryRequest,
       errors: {
         401: `Unauthorized`,
@@ -115,7 +115,7 @@ export class TasksExamineControllerService {
   ): CancelablePromise<BaseResponse_Page_TasksExamineVO_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/tasksExamine/list/page/vo",
+      url: "/api/task/tasksExamine/list/page/vo",
       body: tasksExamineQueryRequest,
       errors: {
         401: `Unauthorized`,

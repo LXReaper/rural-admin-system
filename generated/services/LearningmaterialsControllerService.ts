@@ -29,7 +29,7 @@ export class LearningMaterialsControllerService {
   ): CancelablePromise<BaseResponse_long_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/learningMaterials/add",
+      url: "/api/study/learningMaterials/add",
       body: learningMaterialsAddRequest,
       errors: {
         401: `Unauthorized`,
@@ -51,7 +51,7 @@ export class LearningMaterialsControllerService {
   ): CancelablePromise<BaseResponse_boolean_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/learningMaterials/delete",
+      url: "/api/study/learningMaterials/delete",
       body: deleteRequest,
       errors: {
         401: `Unauthorized`,
@@ -72,7 +72,7 @@ export class LearningMaterialsControllerService {
   ): CancelablePromise<BaseResponse_LearningMaterials_> {
     return __request(OpenAPI, {
       method: "GET",
-      url: "/api/learningMaterials/get",
+      url: "/api/study/learningMaterials/get",
       query: {
         learningMaterialsId: learningMaterialsId,
       },
@@ -95,7 +95,7 @@ export class LearningMaterialsControllerService {
   ): CancelablePromise<BaseResponse_LearningMaterialsVO_> {
     return __request(OpenAPI, {
       method: "GET",
-      url: "/api/learningMaterials/get/vo",
+      url: "/api/study/learningMaterials/get/vo",
       query: {
         learningMaterialsId: learningMaterialsId,
       },
@@ -119,7 +119,7 @@ export class LearningMaterialsControllerService {
   ): CancelablePromise<BaseResponse_Page_LearningMaterials_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/learningMaterials/list/page",
+      url: "/api/study/learningMaterials/list/page",
       body: learningmaterialsQueryRequest,
       errors: {
         401: `Unauthorized`,
@@ -141,7 +141,7 @@ export class LearningMaterialsControllerService {
   ): CancelablePromise<BaseResponse_Page_LearningMaterialsVO_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/learningMaterials/list/page/vo",
+      url: "/api/study/learningMaterials/list/page/vo",
       body: learningmaterialsQueryRequest,
       errors: {
         401: `Unauthorized`,
@@ -163,7 +163,7 @@ export class LearningMaterialsControllerService {
   ): CancelablePromise<BaseResponse_boolean_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/learningMaterials/update",
+      url: "/api/study/learningMaterials/update",
       body: learningMaterialsUpdateRequest,
       errors: {
         401: `Unauthorized`,

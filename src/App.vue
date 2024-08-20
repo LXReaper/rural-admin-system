@@ -1,10 +1,10 @@
 <template>
-  <div v-if="route.path.startsWith('/user')">
-    <user-layout />
-  </div>
-  <div v-else>
+  <template v-if="route.path.startsWith('/user')">
+    <login-layout />
+  </template>
+  <template v-else>
     <basic-layout />
-  </div>
+  </template>
 </template>
 
 <style>
@@ -17,13 +17,13 @@
 </style>
 <script setup lang="ts">
 import BasicLayout from "@/layout/basicLayout.vue";
-import UserLayout from "@/layout/userLayout.vue";
 import { useStore } from "vuex";
 import checkAuthority from "@/access/checkAuthority";
 import AuthorityCtrl from "@/access/authorityCtrl";
 import { useRoute } from "vue-router";
 import { onMounted, ref } from "vue";
 import { OpenAPI } from "../generated";
+import LoginLayout from "@/layout/loginLayout.vue";
 
 const route = useRoute();
 const store = useStore();
@@ -32,7 +32,7 @@ const userExample = store.state.user.loginUser;
 const initWebSocket = () => {
   store.dispatch(
     "websocketMessageData/setNoticeSocket",
-    new WebSocket(`ws://${OpenAPI.BASE.substring(7)}/api/sendNotices`)
+    new WebSocket(`ws://${OpenAPI.BASE.substring(7, 24)}1/api/user/sendNotices`)
   );
 };
 const diInit = () => {

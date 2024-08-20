@@ -96,7 +96,7 @@ onBeforeUnmount(() => {
  * @param editor
  */
 const handleCreated = (editor: any) => {
-  editorRef.value = editor; // 记录 editor 实例，重要！
+  editorRef.value = Object.seal(editor); // 记录 editor 实例，重要！
 };
 /**
  * 编辑器中的文字发生变化

@@ -10,7 +10,10 @@
         </el-space>
       </div>
       <div style="text-align: right; margin-top: -25px">
-        <el-space direction="horizontal" style="padding-left: 73%">
+        <el-space
+          direction="horizontal"
+          style="padding-left: 73%; margin-right: 0.8vw"
+        >
           <div
             style="margin-right: 5vw"
             v-if="store.state.user.loginUser.villager_id"
@@ -46,6 +49,7 @@
       <el-aside :style="{ width: leftMenu }">
         <basic-menu
           :is-collapse="isCollapse"
+          :on-collapse="(isCol) => (isCollapse = isCol)"
           style="
             overflow-x: hidden;
             scrollbar-width: thin;
@@ -55,12 +59,15 @@
       </el-aside>
       <el-container>
         <el-header>
-          <el-button @click="onCollapse" circle>
-            <el-icon v-if="!isCollapse">
+          <el-button
+            @click="onCollapse"
+            style="color: white"
+            class="collapseButton"
+            circle
+            v-if="!isCollapse"
+          >
+            <el-icon>
               <ArrowLeft />
-            </el-icon>
-            <el-icon v-else>
-              <ArrowRight />
             </el-icon>
           </el-button>
         </el-header>
@@ -79,15 +86,15 @@ import BasicMenu from "@/components/basicComponent/basicMenu.vue";
 import store from "@/store";
 import router from "@/router";
 import { OpenAPI, UserControllerService } from "../../generated";
-import NoticeListView from "@/components/basicComponent/noticeListView.vue";
-import PublishTaskView from "@/components/basicComponent/publishTaskView.vue";
-import PublishAnnouncementView from "@/components/basicComponent/publishAnnouncementView.vue";
-import TabBarView from "@/components/basicComponent/tabBarView.vue";
+import NoticeListView from "@/components/basicComponent/head/noticeListView.vue";
+import PublishTaskView from "@/components/basicComponent/head/publishTaskView.vue";
+import PublishAnnouncementView from "@/components/basicComponent/head/publishAnnouncementView.vue";
+import TabBarView from "@/components/basicComponent/head/tabBarView.vue";
 
 const loginUser = ref(store.state.user.loginUser);
 const userName = ref(store.state.user.loginUser.villager_name);
-const isCollapse = ref(false); //是否收起侧边栏
-const leftMenu = ref("200px");
+const isCollapse = ref(true); //是否收起侧边栏
+const leftMenu = ref("64px");
 watch(
   () => isCollapse.value,
   () => {
@@ -117,9 +124,18 @@ const logout = async () => {
 }
 
 #basicLayout {
-  min-height: 98vh;
-  height: 98vh;
-  max-height: 98vh;
+  min-height: 100vh;
+}
+
+/*展开或隐藏左边侧边栏按钮*/
+.collapseButton {
+  height: 4.5vh !important;
+  width: 2.2vw !important;
+  background-color: #1e282c !important;
+}
+
+.collapseButton:hover {
+  color: #409eff !important;
 }
 
 /*通知栏展示更多的样式*/

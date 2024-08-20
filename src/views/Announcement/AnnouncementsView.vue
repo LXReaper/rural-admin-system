@@ -216,8 +216,9 @@
     />
     <!--    公告内容对话框-->
     <el-dialog
+      :title="'公告内容'"
       v-model="openContent"
-      style="height: 55vh"
+      style="height: 60vh"
       append-to-body
       destroy-on-close
     >

@@ -15,6 +15,8 @@ import type { CancelablePromise } from "../core/CancelablePromise";
 import { OpenAPI } from "../core/OpenAPI";
 import { request as __request } from "../core/request";
 import { BaseResponse_Page_TasksVO_ } from "../models/BaseResponse_Page_TasksVO_";
+import { TaskCountInfoVO } from "../models/TaskCountInfoVO";
+import { BaseResponse_TaskCountInfoVO_ } from "../models/BaseResponse_TaskCountInfoVO_";
 
 export class TasksControllerService {
   /**
@@ -29,7 +31,7 @@ export class TasksControllerService {
   ): CancelablePromise<BaseResponse_long_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/tasks/add",
+      url: "/api/task/tasks/add",
       body: tasksAddRequest,
       errors: {
         401: `Unauthorized`,
@@ -50,7 +52,7 @@ export class TasksControllerService {
   ): CancelablePromise<BaseResponse_boolean_> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/tasks/confirm/complete/task",
+      url: "/api/task/tasks/confirm/complete/task",
       body: tasksConfirmRequest,
       errors: {
         401: `Unauthorized`,
@@ -72,7 +74,7 @@ export class TasksControllerService {
   ): CancelablePromise<BaseResponse_boolean_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/tasks/delete",
+      url: "/api/task/tasks/delete",
       body: deleteRequest,
       errors: {
         401: `Unauthorized`,
@@ -93,7 +95,7 @@ export class TasksControllerService {
   ): CancelablePromise<BaseResponse_Tasks_> {
     return __request(OpenAPI, {
       method: "GET",
-      url: "/api/tasks/get",
+      url: "/api/task/tasks/get",
       query: {
         TaskId: taskId,
       },
@@ -117,7 +119,7 @@ export class TasksControllerService {
   ): CancelablePromise<BaseResponse_Page_Tasks_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/tasks/list/page",
+      url: "/api/task/tasks/list/page",
       body: tasksQueryRequest,
       errors: {
         401: `Unauthorized`,
@@ -139,7 +141,7 @@ export class TasksControllerService {
   ): CancelablePromise<BaseResponse_Page_TasksVO_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/tasks/list/page/vo",
+      url: "/api/task/tasks/list/page/vo",
       body: tasksQueryRequest,
       errors: {
         401: `Unauthorized`,
@@ -161,8 +163,28 @@ export class TasksControllerService {
   ): CancelablePromise<BaseResponse_boolean_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/tasks/update",
+      url: "/api/task/tasks/update",
       body: tasksUpdateRequest,
+      errors: {
+        401: `Unauthorized`,
+        403: `Forbidden`,
+        404: `Not Found`,
+      },
+    });
+  }
+
+  /**
+   * getTaskCountInfo
+   * @returns BaseResponse_TaskCountInfoVO_ OK
+   * @returns any Created
+   * @throws ApiError
+   */
+  public static getTaskCountInfoUsingGet(): CancelablePromise<
+    BaseResponse_TaskCountInfoVO_ | any
+  > {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/task/tasks/get/count/info/vo",
       errors: {
         401: `Unauthorized`,
         403: `Forbidden`,

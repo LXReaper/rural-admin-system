@@ -78,16 +78,6 @@
             @click="openProductIdDetail(scope.row)"
             >显示商品
           </el-button>
-          <!--          <span v-for="(item, i) in scope.row.product_id" :key="i">-->
-          <!--            <el-tag-->
-          <!--              type="primary"-->
-          <!--              :hit="true"-->
-          <!--              style="cursor: pointer"-->
-          <!--              round-->
-          <!--              @click="openProductDetail(scope.row, i as number)"-->
-          <!--              >{{ item }}-->
-          <!--            </el-tag>-->
-          <!--          </span>-->
         </template>
       </el-table-column>
       <el-table-column

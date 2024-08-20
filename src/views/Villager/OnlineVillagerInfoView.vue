@@ -14,7 +14,7 @@
           placeholder="请输入村民姓名"
           size="default"
           clearable
-          @keydown.enter="handleQueryDebounce"
+          @keydown.enter.prevent="handleQueryDebounce"
         />
       </el-form-item>
       <el-form-item>

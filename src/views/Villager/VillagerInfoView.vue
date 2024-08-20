@@ -390,7 +390,7 @@ const cancel = () => {
 const filters = [
   { text: "管理员", value: "admin" },
   { text: "普通用户", value: "user" },
-  { text: "被封号", value: "ban" },
+  { text: "封号", value: "ban" },
 ];
 const filterTag = (value: string, row: any) => {
   return row.userRole === value;

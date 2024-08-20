@@ -257,12 +257,12 @@ import {
   LearningMaterialsVO,
   RulesControllerService,
   TasksControllerService,
-} from "../../../generated";
+} from "../../../../generated";
 import { ref } from "vue";
 import store from "@/store";
 import moment from "moment";
 import { ElMessage, ElNotification } from "element-plus";
-import { RulesVO } from "../../../generated/models/RulesVO";
+import { RulesVO } from "../../../../generated/models/RulesVO";
 
 interface HashTable {
   [key: number]: boolean;

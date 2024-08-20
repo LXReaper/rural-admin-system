@@ -16,7 +16,8 @@ import html2canvas from "html2canvas";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import vue3videoPlay from "vue3-video-play"; // 引入组件
-import "vue3-video-play/dist/style.css"; // 引入css
+import "vue3-video-play/dist/style.css";
+import { OpenAPI } from "../generated"; // 引入css
 
 createApp(App)
   .use(vue3videoPlay)

@@ -1,5 +1,5 @@
 <template>
-  <div id="userLayout">
+  <div id="loginLayout">
     <el-form v-model="loginForm" class="login-form" :rules="rules">
       <h3 class="title">乡村积分治理后台管理系统</h3>
       <el-form-item prop="userAccount">
@@ -88,11 +88,11 @@ const handleLogin = async () => {
 </script>
 
 <style>
-#userLayout {
+#loginLayout {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 98vh;
+  min-height: 100vh;
   background-image: url("../assets/login/login-background.jpg");
   background-size: cover;
 }

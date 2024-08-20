@@ -28,7 +28,7 @@ export class TaskSubmissionsControllerService {
   ): CancelablePromise<BaseResponse_long_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/tasksubmissions/add",
+      url: "/api/task/taskSubmissions/add",
       body: tasksubmissionsAddRequest,
       errors: {
         401: `Unauthorized`,
@@ -50,7 +50,7 @@ export class TaskSubmissionsControllerService {
   ): CancelablePromise<BaseResponse_boolean_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/tasksubmissions/delete",
+      url: "/api/task/taskSubmissions/delete",
       body: deleteRequest,
       errors: {
         401: `Unauthorized`,
@@ -71,7 +71,7 @@ export class TaskSubmissionsControllerService {
   ): CancelablePromise<BaseResponse_Tasksubmissions_> {
     return __request(OpenAPI, {
       method: "GET",
-      url: "/api/tasksubmissions/get",
+      url: "/api/task/taskSubmissions/get",
       query: {
         submissionId: submissionId,
       },
@@ -95,7 +95,7 @@ export class TaskSubmissionsControllerService {
   ): CancelablePromise<BaseResponse_Page_Tasksubmissions_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/tasksubmissions/list/page",
+      url: "/api/task/taskSubmissions/list/page",
       body: tasksubmissionsQueryRequest,
       errors: {
         401: `Unauthorized`,
@@ -117,7 +117,7 @@ export class TaskSubmissionsControllerService {
   ): CancelablePromise<BaseResponse_Page_TaskSubmissionsVO_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/tasksubmissions/list/page/vo",
+      url: "/api/task/taskSubmissions/list/page/vo",
       body: tasksubmissionsQueryRequest,
       errors: {
         401: `Unauthorized`,
@@ -139,7 +139,7 @@ export class TaskSubmissionsControllerService {
   ): CancelablePromise<BaseResponse_boolean_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/tasksubmissions/update",
+      url: "/api/task/taskSubmissions/update",
       body: tasksubmissionsUpdateRequest,
       errors: {
         401: `Unauthorized`,

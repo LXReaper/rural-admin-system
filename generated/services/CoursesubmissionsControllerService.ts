@@ -24,7 +24,7 @@ export class CoursesubmissionsControllerService {
   ): CancelablePromise<BaseResponse_long_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/coursesubmissions/add",
+      url: "/api/study/courseSubmissions/add",
       body: coursesubmissionsAddRequest,
       errors: {
         401: `Unauthorized`,
@@ -46,7 +46,7 @@ export class CoursesubmissionsControllerService {
   ): CancelablePromise<BaseResponse_boolean_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/coursesubmissions/delete",
+      url: "/api/study/courseSubmissions/delete",
       body: deleteRequest,
       errors: {
         401: `Unauthorized`,
@@ -67,7 +67,7 @@ export class CoursesubmissionsControllerService {
   ): CancelablePromise<BaseResponse_Coursesubmissions_> {
     return __request(OpenAPI, {
       method: "GET",
-      url: "/api/coursesubmissions/get",
+      url: "/api/study/courseSubmissions/get",
       query: {
         material_id: materialId,
       },
@@ -91,7 +91,7 @@ export class CoursesubmissionsControllerService {
   ): CancelablePromise<BaseResponse_Page_Coursesubmissions_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/coursesubmissions/list/page",
+      url: "/api/study/courseSubmissions/list/page",
       body: coursesubmissionsQueryRequest,
       errors: {
         401: `Unauthorized`,
@@ -113,7 +113,7 @@ export class CoursesubmissionsControllerService {
   ): CancelablePromise<BaseResponse_boolean_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/coursesubmissions/update",
+      url: "/api/study/courseSubmissions/update",
       body: coursesubmissionsUpdateRequest,
       errors: {
         401: `Unauthorized`,

@@ -441,8 +441,10 @@ const ruleDetail = ref({
 });
 //展示规则对话框
 const showRuleDetail = (id: number) => {
-  isOpenRuleDetail.value = true;
-  getRuleById(id);
+  setTimeout(() => {
+    isOpenRuleDetail.value = true;
+    getRuleById(id);
+  }, 200);
 };
 //获取规则信息
 const getRuleById = async (id: number) => {
@@ -468,8 +470,10 @@ const learningMaterialDetail = ref({
   video_url: "",
 });
 const showLearningMaterialDetail = (id: number) => {
-  getLearningMaterialById(id);
-  isOpenLearningMaterialDetail.value = true;
+  setTimeout(() => {
+    isOpenLearningMaterialDetail.value = true;
+    getLearningMaterialById(id);
+  }, 200);
 };
 //获取学习资料信息
 const getLearningMaterialById = async (id: number) => {

@@ -28,7 +28,7 @@ export class NoticesControllerService {
   ): CancelablePromise<BaseResponse_long_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/notices/add",
+      url: "/api/notice/notices/add",
       body: noticesAddRequest,
       errors: {
         401: `Unauthorized`,
@@ -50,7 +50,7 @@ export class NoticesControllerService {
   ): CancelablePromise<BaseResponse_boolean_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/notices/delete",
+      url: "/api/notice/notices/delete",
       body: deleteRequest,
       errors: {
         401: `Unauthorized`,
@@ -71,7 +71,7 @@ export class NoticesControllerService {
   ): CancelablePromise<BaseResponse_NoticesVO_> {
     return __request(OpenAPI, {
       method: "GET",
-      url: "/api/notices/get/vo",
+      url: "/api/notice/notices/get/vo",
       query: {
         id: id,
       },
@@ -95,7 +95,7 @@ export class NoticesControllerService {
   ): CancelablePromise<BaseResponse_boolean_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/notices/isRead/set",
+      url: "/api/notice/notices/isRead/set",
       query: {
         id: id,
       },
@@ -119,7 +119,7 @@ export class NoticesControllerService {
   ): CancelablePromise<BaseResponse_Page_Notices_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/notices/list/page",
+      url: "/api/notice/notices/list/page",
       body: noticesQueryRequest,
       errors: {
         401: `Unauthorized`,
@@ -141,7 +141,7 @@ export class NoticesControllerService {
   ): CancelablePromise<BaseResponse_Page_NoticesVO_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/notices/list/page/vo",
+      url: "/api/notice/notices/list/page/vo",
       body: noticesQueryRequest,
       errors: {
         401: `Unauthorized`,
@@ -163,7 +163,7 @@ export class NoticesControllerService {
   ): CancelablePromise<BaseResponse_boolean_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/notices/publish",
+      url: "/api/notice/notices/publish",
       body: noticesPublishRequest,
       errors: {
         401: `Unauthorized`,
