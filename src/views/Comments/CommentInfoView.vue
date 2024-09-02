@@ -1,111 +1,129 @@
 <template>
   <div id="CommentInfoView">
-    <el-form
-      :model="queryParams"
-      ref="queryForm"
-      :inline="true"
-      v-show="showSearch"
-      label-width="68px"
-    >
-      <el-form-item label="评论内容" prop="comment_content">
-        <el-input
-          v-model="queryParams.comment_content"
-          placeholder="请输入评论内容"
-          clearable
-          @keyup.enter="handleQueryDebounce"
-        />
-      </el-form-item>
-      <el-form-item label="评论者" prop="commenter_id">
-        <el-input
-          v-model="queryParams.commenter_id"
-          placeholder="请输入评论者ID"
-          clearable
-          @keyup.enter="handleQueryDebounce"
-        />
-      </el-form-item>
-      <el-form-item label="被评论者" prop="commented_user_id">
-        <el-input
-          v-model="queryParams.commented_user_id"
-          placeholder="请输入被评论者ID"
-          clearable
-          @keyup.enter="handleQueryDebounce"
-        />
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" size="default" @click="handleQueryDebounce"
-          >搜索
-        </el-button>
-        <el-button size="default" @click="resetQuery">重置</el-button>
-      </el-form-item>
-    </el-form>
-
-    <!--    表格-->
-    <el-table
-      size="small"
-      v-loading="loading"
-      stripe
-      border
-      :data="commentsList"
-    >
-      <el-table-column label="评论ID" align="center" prop="commentId" />
-      <el-table-column label="评论内容" align="center" prop="commentContent" />
-      <el-table-column label="评论者ID" align="center" prop="commenterId" />
-      <el-table-column
-        label="评论者头像"
-        align="center"
-        prop="commenterAvatar"
-      />
-      <el-table-column
-        label="被评论者ID"
-        align="center"
-        prop="commentedUserId"
-      />
-      <el-table-column
-        label="被评论者头像"
-        align="center"
-        prop="commentedUserAvatar"
-      />
-      <el-table-column
-        label="创建时间"
-        align="center"
-        prop="createTime"
-        width="180"
+    <div class="searchBar">
+      <el-form
+        :model="queryParams"
+        ref="queryForm"
+        :inline="true"
+        v-show="showSearch"
+        label-width="68px"
       >
-        <template #default="scope">
-          <span>{{ scope.row }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        label="更新时间"
-        align="center"
-        prop="updateTime"
-        width="180"
-      >
-        <template #default="scope">
-          <span>{{ scope.row }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="父评论ID" align="center" prop="parentCommentId" />
-    </el-table>
+        <el-form-item label="评论内容" prop="comment_content">
+          <el-input
+            v-model="queryParams.comment_content"
+            placeholder="请输入评论内容"
+            clearable
+            @keyup.enter="handleQueryDebounce"
+          />
+        </el-form-item>
+        <el-form-item label="评论者" prop="commenter_id">
+          <el-input
+            v-model="queryParams.commenter_id"
+            placeholder="请输入评论者ID"
+            clearable
+            @keyup.enter="handleQueryDebounce"
+          />
+        </el-form-item>
+        <el-form-item label="被评论者" prop="commented_user_id">
+          <el-input
+            v-model="queryParams.commented_user_id"
+            placeholder="请输入被评论者ID"
+            clearable
+            @keyup.enter="handleQueryDebounce"
+          />
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" size="default" @click="handleQueryDebounce"
+            >搜索
+          </el-button>
+          <el-button size="default" @click="resetQuery">重置</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
 
-    <!--    分页-->
-    <el-pagination
-      v-show="total > 0"
-      background
-      :currentPage="queryParams.current"
-      :page-size="total"
-      :page-count="Math.ceil(total / queryParams.pageSize)"
-      :total="Math.ceil(total / queryParams.pageSize)"
-      layout="total, size, prev, pager, next, jumper"
-      @current-change="pageHandleChange"
-      class="mt-4"
-    />
+    <div class="mainView">
+      <!--    表格-->
+      <el-table
+        size="small"
+        v-loading="loading"
+        :data="commentsList"
+        :header-cell-style="{
+          backgroundColor: '#E5EEFF',
+          color: '#333',
+          height: '5vh',
+        }"
+        stripe
+      >
+        <el-table-column label="评论ID" align="center" prop="commentId" />
+        <el-table-column
+          label="评论内容"
+          align="center"
+          prop="commentContent"
+        />
+        <el-table-column label="评论者ID" align="center" prop="commenterId" />
+        <el-table-column
+          label="评论者头像"
+          align="center"
+          prop="commenterAvatar"
+        />
+        <el-table-column
+          label="被评论者ID"
+          align="center"
+          prop="commentedUserId"
+        />
+        <el-table-column
+          label="被评论者头像"
+          align="center"
+          prop="commentedUserAvatar"
+        />
+        <el-table-column
+          label="创建时间"
+          align="center"
+          prop="createTime"
+          width="180"
+        >
+          <template #default="scope">
+            <span>{{ scope.row }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="更新时间"
+          align="center"
+          prop="updateTime"
+          width="180"
+        >
+          <template #default="scope">
+            <span>{{ scope.row }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="父评论ID"
+          align="center"
+          prop="parentCommentId"
+        />
+      </el-table>
+
+      <!--    分页-->
+      <el-pagination
+        v-show="total > 0"
+        background
+        :currentPage="queryParams.current"
+        :page-size="total"
+        :page-count="Math.ceil(total / queryParams.pageSize)"
+        :total="Math.ceil(total / queryParams.pageSize)"
+        layout="total, size, prev, pager, next, jumper"
+        @current-change="pageHandleChange"
+        class="mt-4"
+      />
+    </div>
   </div>
+  <footer-layout />
 </template>
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { debounce } from "../../../utils/debounce_Throttle";
 import { ElPagination } from "element-plus";
+import FooterLayout from "@/layout/footerLayout.vue";
 
 //总数
 const total = ref(0);
@@ -147,5 +165,21 @@ const pageHandleChange = (value: number) => {
 
 <style scoped>
 #CommentInfoView {
+  background-color: #f0f2f5;
+  padding: 1vh 1vw;
+}
+
+/*搜索栏*/
+.searchBar {
+  background-color: white;
+  padding: 2vh 0.5vw 0 0.5vw;
+  margin-bottom: 2vh;
+}
+
+/*主要内容窗口*/
+.mainView {
+  background-color: white;
+  padding: 2vh 1.5vw 0 1.5vw;
+  margin-bottom: 2vh;
 }
 </style>

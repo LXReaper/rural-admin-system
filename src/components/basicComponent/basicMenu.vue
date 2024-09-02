@@ -15,23 +15,31 @@
         </el-icon>
         <template #title>展开</template>
       </el-menu-item>
-      <el-menu-item index="/home">
-        <el-icon>
-          <House />
-        </el-icon>
-        <template #title>首页</template>
-      </el-menu-item>
+      <el-sub-menu index="1">
+        <template #title>
+          <el-icon>
+            <Monitor />
+          </el-icon>
+          <span>控制面板</span>
+        </template>
+        <el-menu-item-group>
+          <el-menu-item index="/home/workplace">
+            <el-icon><Cpu /></el-icon>
+            工作台
+          </el-menu-item>
+          <el-menu-item index="/home/analysis">
+            <el-icon>
+              <TrendCharts />
+            </el-icon>
+            分析页
+          </el-menu-item>
+        </el-menu-item-group>
+      </el-sub-menu>
       <el-menu-item index="/Info/user">
         <el-icon>
           <User />
         </el-icon>
         <template #title>居民信息</template>
-      </el-menu-item>
-      <el-menu-item index="/Info/onlineUser">
-        <el-icon>
-          <Monitor />
-        </el-icon>
-        <template #title>在线用户</template>
       </el-menu-item>
       <el-menu-item index="/announcements/admin">
         <el-icon>
@@ -191,6 +199,8 @@ import {
   Star,
   StarFilled,
   User,
+  TrendCharts,
+  Cpu,
 } from "@element-plus/icons-vue";
 import { ref, withDefaults, defineProps } from "vue";
 
@@ -207,7 +217,7 @@ const props = withDefaults(defineProps<Props>(), {
 });
 </script>
 
-<style>
+<style scoped>
 .el-menu-item-group {
   background-color: #2c3b41 !important;
 }
@@ -223,7 +233,7 @@ const props = withDefaults(defineProps<Props>(), {
 }
 
 .el-menu--popup {
-  background-color: #42b983 !important;
+  //background-color: #42b983 !important;
 }
 
 #basicMenu {

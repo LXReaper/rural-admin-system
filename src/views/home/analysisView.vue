@@ -1,6 +1,6 @@
 <template>
-  <div class="home">
-    <el-skeleton :rows="20" animated v-if="loading" />
+  <div id="analysisView">
+    <load-animation-charts :open="loading" style="margin-left: 36vw" />
     <div v-if="!loading">
       <info-stack-line-charts
         :day-point-record-list="pointRecordsDayInfoList"
@@ -28,17 +28,17 @@
     </div>
   </div>
 </template>
-
 <script setup lang="ts">
-import InfoCharts from "@/components/basicComponent/home/infoCharts.vue";
+import InfoCharts from "@/components/basicComponent/home/analysis/infoCharts.vue";
 import {
   PointHistoryRecordControllerService,
   TasksControllerService,
-} from "../../generated";
+} from "../../../generated";
 import { ElMessage } from "element-plus";
 import { onMounted, ref } from "vue";
 import moment from "moment";
-import InfoStackLineCharts from "@/components/basicComponent/home/InfoStackLineCharts.vue";
+import InfoStackLineCharts from "@/components/basicComponent/home/analysis/InfoStackLineCharts.vue";
+import LoadAnimationCharts from "@/components/basicComponent/home/analysis/loadAnimationCharts.vue";
 ///是否正在加载
 const loading = ref(true);
 //任务统计数据
@@ -161,4 +161,8 @@ onMounted(() => {
   onSearch();
 });
 </script>
-<style></style>
+
+<style scoped>
+#analysisView {
+}
+</style>

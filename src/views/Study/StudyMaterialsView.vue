@@ -1,170 +1,184 @@
 <template>
   <div id="StudyMaterialsView">
-    <el-form
-      :model="queryParams"
-      ref="queryForm"
-      :inline="true"
-      v-show="showSearch"
-      label-width="68px"
-    >
-      <el-form-item label="资料编号" prop="text_content">
-        <el-input
-          v-model="queryParams.text_content"
-          placeholder="请输入资料编号"
-          clearable
-          @keydown.enter="handleQueryDebounce"
-        />
-      </el-form-item>
-      <el-form-item label="发布用户" prop="user_name">
-        <el-input
-          v-model="queryParams.user_name"
-          placeholder="请输入发布用户姓名"
-          clearable
-          @keydown.enter="handleQueryDebounce"
-        />
-      </el-form-item>
-      <el-form-item label="更新用户" prop="updated_user_name">
-        <el-input
-          v-model="queryParams.updated_user_name"
-          placeholder="请输入更新用户姓名"
-          clearable
-          @keydown.enter="handleQueryDebounce"
-        />
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" size="default" @click="handleQueryDebounce"
-          >搜索
-        </el-button>
-        <el-button size="default" @click="resetQuery">重置</el-button>
-      </el-form-item>
-    </el-form>
-
-    <!--    增删改操作-->
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button type="primary" plain size="default" @click="handleAdd"
-          >新增
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button type="danger" plain size="default" :disabled="multiple"
-          >删除
-        </el-button>
-      </el-col>
-    </el-row>
-
-    <!--    表格-->
-    <el-table
-      size="small"
-      v-loading="loading"
-      :data="learningMaterialsList"
-      stripe
-      border
-      @selection-change="handleSelectionChange"
-    >
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="资料编号" align="center" prop="material_id" />
-      <el-table-column label="文字内容" align="center" prop="text_content" />
-      <el-table-column label="视频" align="center" prop="video_url" />
-      <el-table-column label="发布用户" align="center" prop="user_name" />
-      <el-table-column
-        label="发布日期"
-        align="center"
-        prop="publish_date"
-        show-overflow-tooltip
-        width="180"
+    <div class="searchBar">
+      <el-form
+        :model="queryParams"
+        ref="queryForm"
+        :inline="true"
+        v-show="showSearch"
+        label-width="68px"
       >
-        <template #default="scope">
-          <span style="white-space: nowrap">{{
-            moment(scope.row.publish_date).format("YYYY年MM月DD日HH时mm分ss秒")
-          }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        label="更新用户"
-        align="center"
-        prop="updated_user_name"
-      />
-      <el-table-column
-        label="更新日期"
-        align="center"
-        prop="update_date"
-        show-overflow-tooltip
-        width="180"
-      >
-        <template #default="scope">
-          <span style="white-space: nowrap">{{
-            moment(scope.row.update_date).format("YYYY年MM月DD日HH时mm分ss秒")
-          }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        label="操作"
-        align="center"
-        class-name="small-padding fixed-width"
-      >
-        <template #default="scope">
-          <el-button size="small" @click="handleEdit(scope.$index, scope.row)">
-            编辑
-          </el-button>
-          <el-popconfirm
-            confirm-button-text="确定"
-            cancel-button-text="取消"
-            :icon="InfoFilled"
-            icon-color="#626AEF"
-            title="确定删除这份学习资料"
-            @confirm="confirmEvent(scope.$index, scope.row)"
-          >
-            <template #reference>
-              <el-button size="small" type="danger">删除</el-button>
-            </template>
-          </el-popconfirm>
-        </template>
-      </el-table-column>
-    </el-table>
-
-    <!--    分页-->
-    <el-pagination
-      v-show="total > 0"
-      background
-      :currentPage="queryParams.current"
-      :page-size="total"
-      :page-count="Math.ceil(total / queryParams.pageSize)"
-      :total="Math.ceil(total / queryParams.pageSize)"
-      layout="total, size, prev, pager, next, jumper"
-      @current-change="pageHandleChange"
-      class="mt-4"
-    />
-
-    <!-- 添加或修改学习资料内容对话框 -->
-    <el-dialog :title="title" v-model="open" width="600px" append-to-body>
-      <el-form :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="学习内容" prop="text_content">
+        <el-form-item label="资料编号" prop="text_content">
           <el-input
-            type="textarea"
-            v-model="form.text_content"
-            placeholder="请输入学习内容"
-            maxlength="30"
+            v-model="queryParams.text_content"
+            placeholder="请输入资料编号"
+            clearable
+            @keydown.enter="handleQueryDebounce"
           />
         </el-form-item>
-        <el-form-item label="学习视频" prop="video_url">
+        <el-form-item label="发布用户" prop="user_name">
           <el-input
-            v-model="form.video_url"
-            placeholder="请输入学习视频网址"
-            maxlength="30"
+            v-model="queryParams.user_name"
+            placeholder="请输入发布用户姓名"
+            clearable
+            @keydown.enter="handleQueryDebounce"
           />
+        </el-form-item>
+        <el-form-item label="更新用户" prop="updated_user_name">
+          <el-input
+            v-model="queryParams.updated_user_name"
+            placeholder="请输入更新用户姓名"
+            clearable
+            @keydown.enter="handleQueryDebounce"
+          />
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" size="default" @click="handleQueryDebounce"
+            >搜索
+          </el-button>
+          <el-button size="default" @click="resetQuery">重置</el-button>
         </el-form-item>
       </el-form>
-      <template #footer>
-        <div class="dialog-footer">
-          <el-button type="primary" @click="submitFormDebounce"
-            >确 定
+    </div>
+
+    <div class="mainView">
+      <!--    增删改操作-->
+      <el-row :gutter="10" class="mb8">
+        <el-col :span="1.5">
+          <el-button type="primary" plain size="default" @click="handleAdd"
+            >新增
           </el-button>
-          <el-button @click="cancel">取 消</el-button>
-        </div>
-      </template>
-    </el-dialog>
+        </el-col>
+        <el-col :span="1.5">
+          <el-button type="danger" plain size="default" :disabled="multiple"
+            >删除
+          </el-button>
+        </el-col>
+      </el-row>
+
+      <!--    表格-->
+      <el-table
+        size="small"
+        v-loading="loading"
+        :data="learningMaterialsList"
+        :header-cell-style="{
+          backgroundColor: '#E5EEFF',
+          color: '#333',
+          height: '5vh',
+        }"
+        @selection-change="handleSelectionChange"
+        stripe
+      >
+        <el-table-column type="selection" width="55" align="center" />
+        <el-table-column label="资料编号" align="center" prop="material_id" />
+        <el-table-column label="文字内容" align="center" prop="text_content" />
+        <el-table-column label="视频" align="center" prop="video_url" />
+        <el-table-column label="发布用户" align="center" prop="user_name" />
+        <el-table-column
+          label="发布日期"
+          align="center"
+          prop="publish_date"
+          show-overflow-tooltip
+          width="180"
+        >
+          <template #default="scope">
+            <span style="white-space: nowrap">{{
+              moment(scope.row.publish_date).format(
+                "YYYY年MM月DD日HH时mm分ss秒"
+              )
+            }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="更新用户"
+          align="center"
+          prop="updated_user_name"
+        />
+        <el-table-column
+          label="更新日期"
+          align="center"
+          prop="update_date"
+          show-overflow-tooltip
+          width="180"
+        >
+          <template #default="scope">
+            <span style="white-space: nowrap">{{
+              moment(scope.row.update_date).format("YYYY年MM月DD日HH时mm分ss秒")
+            }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="操作"
+          align="center"
+          class-name="small-padding fixed-width"
+        >
+          <template #default="scope">
+            <el-button
+              size="small"
+              @click="handleEdit(scope.$index, scope.row)"
+            >
+              编辑
+            </el-button>
+            <el-popconfirm
+              confirm-button-text="确定"
+              cancel-button-text="取消"
+              :icon="InfoFilled"
+              icon-color="#626AEF"
+              title="确定删除这份学习资料"
+              @confirm="confirmEvent(scope.$index, scope.row)"
+            >
+              <template #reference>
+                <el-button size="small" type="danger">删除</el-button>
+              </template>
+            </el-popconfirm>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <!--    分页-->
+      <el-pagination
+        v-show="total > 0"
+        background
+        :currentPage="queryParams.current"
+        :page-size="total"
+        :page-count="Math.ceil(total / queryParams.pageSize)"
+        :total="Math.ceil(total / queryParams.pageSize)"
+        layout="total, size, prev, pager, next, jumper"
+        @current-change="pageHandleChange"
+        class="mt-4"
+      />
+
+      <!-- 添加或修改学习资料内容对话框 -->
+      <el-dialog :title="title" v-model="open" width="600px" append-to-body>
+        <el-form :model="form" :rules="rules" label-width="80px">
+          <el-form-item label="学习内容" prop="text_content">
+            <el-input
+              type="textarea"
+              v-model="form.text_content"
+              placeholder="请输入学习内容"
+              maxlength="30"
+            />
+          </el-form-item>
+          <el-form-item label="学习视频" prop="video_url">
+            <el-input
+              v-model="form.video_url"
+              placeholder="请输入学习视频网址"
+              maxlength="30"
+            />
+          </el-form-item>
+        </el-form>
+        <template #footer>
+          <div class="dialog-footer">
+            <el-button type="primary" @click="submitFormDebounce"
+              >确 定
+            </el-button>
+            <el-button @click="cancel">取 消</el-button>
+          </div>
+        </template>
+      </el-dialog>
+    </div>
   </div>
+  <footer-layout />
 </template>
 <script setup lang="ts">
 import { onMounted, ref, watch } from "vue";
@@ -176,6 +190,7 @@ import {
 } from "../../../generated";
 import { ElMessage, ElPagination } from "element-plus";
 import moment from "moment";
+import FooterLayout from "@/layout/footerLayout.vue";
 
 //总数
 const total = ref(0);
@@ -359,5 +374,20 @@ const handleSelectionChange = (selection: any) => {
 
 <style scoped>
 #StudyMaterialsView {
+  background-color: #f0f2f5;
+  padding: 1vh 1vw;
+}
+/*搜索栏*/
+.searchBar {
+  background-color: white;
+  padding: 2vh 0.5vw 0 0.5vw;
+  margin-bottom: 2vh;
+}
+
+/*主要内容窗口*/
+.mainView {
+  background-color: white;
+  padding: 2vh 1.5vw 0 1.5vw;
+  margin-bottom: 2vh;
 }
 </style>

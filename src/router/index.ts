@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
-import HomeView from "../views/HomeView.vue";
+import HomeView from "../views/home/HomeView.vue";
 import VillagerInfoView from "@/views/Villager/VillagerInfoView.vue";
 import PointsRecordsView from "@/views/Points/PointsRecordsView.vue";
 import PointsRulesView from "@/views/Points/PointsRulesView.vue";
@@ -17,13 +17,27 @@ import store from "@/store";
 import AuthorityCtrl from "@/access/authorityCtrl";
 import checkAuthority from "@/access/checkAuthority";
 import TaskExamineView from "@/views/Tasks/TaskExamineView.vue";
-import OnlineVillagerInfoView from "@/views/Villager/OnlineVillagerInfoView.vue";
 import AnnouncementsView from "@/views/Announcement/AnnouncementsView.vue";
 import TaskCheckView from "@/views/Tasks/TaskCheckView.vue";
 import loginLayout from "@/layout/loginLayout.vue";
 import SettingView from "@/views/Setting/SettingView.vue";
+import analysisView from "@/views/home/analysisView.vue";
+import workplaceView from "@/views/home/workplaceView.vue";
+import redirect from "@/views/redirect.vue";
 
-const routes: Array<RouteRecordRaw> = [
+export const routes: Array<RouteRecordRaw> = [
+  {
+    path: "/redirect",
+    meta: {
+      hidden: true,
+    },
+    children: [
+      {
+        path: "/redirect/:path(.*)",
+        component: redirect,
+      },
+    ],
+  },
   {
     path: "/user",
     name: "用户",
@@ -37,19 +51,30 @@ const routes: Array<RouteRecordRaw> = [
     },
     children: [
       {
-        path: "/home",
-        name: "主页",
-        component: HomeView,
+        path: "",
+        name: "控制面板",
+        children: [
+          {
+            path: "/home/workplace",
+            name: "工作台",
+            component: workplaceView,
+            meta: {
+              title: "工作台",
+              icon: "dashboard",
+              affix: true, //在上方导航栏中是否固定住
+            },
+          },
+          {
+            path: "/home/analysis",
+            name: "分析页",
+            component: analysisView,
+          },
+        ],
       },
       {
         path: "/Info/user",
         name: "居民信息",
         component: VillagerInfoView,
-      },
-      {
-        path: "/Info/onlineUser",
-        name: "在线用户",
-        component: OnlineVillagerInfoView,
       },
       {
         path: "/announcements/admin",
@@ -169,7 +194,7 @@ router.beforeEach(async (to, from, next) => {
     to.path.startsWith("/user") &&
     checkAuthority(loginUser, AuthorityCtrl.ADMIN)
   )
-    next(`/home`);
+    next(`/home/workplace`);
   //如果是管理员界面并且不是管理员就不给跳转
   if (to.meta.requireAuth && !checkAuthority(loginUser, AuthorityCtrl.ADMIN)) {
     next(`/user`);

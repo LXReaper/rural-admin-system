@@ -36,6 +36,8 @@ import {
   onMounted,
   withDefaults,
   defineProps,
+  watch,
+  watchEffect,
 } from "vue";
 import { Editor, Toolbar } from "@wangeditor/editor-for-vue";
 import { ElMessage } from "element-plus";
@@ -45,6 +47,7 @@ interface Props {
   placeholder: string;
   readOnly: boolean;
   maxLength: number;
+  showWordCount: boolean;
   height: string;
   width: string;
   handleChangeText: (v: string) => void;
@@ -56,6 +59,7 @@ const props = withDefaults(defineProps<Props>(), {
   placeholder: () => "请输入内容...", //提示内容
   readOnly: false, //是否只读
   maxLength: 2000, //文本内容最大数量
+  showWordCount: false, //是否显示字数提示
   height: "300px", //编辑器的高度
   width: "670px", //编辑器的宽度
   handleChangeText: (v: string) => {
@@ -74,7 +78,7 @@ const editorRef = shallowRef();
 const valueHtml = ref(props.valueHtml);
 
 //模式
-const mode = ref("default"); //simple
+const mode = ref("simple"); //simple
 //工具栏配置
 const toolbarConfig = {};
 //编辑器配置
@@ -82,7 +86,19 @@ const editorConfig = {
   placeholder: props.placeholder,
   readOnly: props.readOnly,
   maxLength: props.maxLength,
+  showWordCount: props.showWordCount,
+  focus: true,
 };
+
+/**
+ * 监听props.valueHtml变化
+ */
+watch(
+  () => props.valueHtml,
+  () => {
+    valueHtml.value = props.valueHtml;
+  }
+);
 
 // 组件销毁时，也及时销毁编辑器
 onBeforeUnmount(() => {
@@ -136,4 +152,14 @@ const customPaste = (editor: any, event: any, callback: any) => {
 };
 </script>
 
-<style scoped></style>
+<style>
+.w-e-full-screen-container {
+  background-color: white !important;
+}
+
+.w-e-bar-item {
+  .title {
+    margin: 3.1vh auto 30px 0.5vw !important;
+  }
+}
+</style>

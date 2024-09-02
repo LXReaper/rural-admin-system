@@ -29,7 +29,7 @@ export class RulesControllerService {
   ): CancelablePromise<BaseResponse_long_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/rules/add",
+      url: "/api/management/rules/add",
       body: rulesAddRequest,
       errors: {
         401: `Unauthorized`,
@@ -51,7 +51,7 @@ export class RulesControllerService {
   ): CancelablePromise<BaseResponse_boolean_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/rules/delete",
+      url: "/api/management/rules/delete",
       body: deleteRequest,
       errors: {
         401: `Unauthorized`,
@@ -73,7 +73,7 @@ export class RulesControllerService {
   ): CancelablePromise<BaseResponse_boolean_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/rules/delete/more",
+      url: "/api/management/rules/delete/more",
       body: deleteRequest,
       errors: {
         401: `Unauthorized`,
@@ -94,7 +94,7 @@ export class RulesControllerService {
   ): CancelablePromise<BaseResponse_Rules_> {
     return __request(OpenAPI, {
       method: "GET",
-      url: "/api/rules/get",
+      url: "/api/management/rules/get",
       query: {
         RuleId: ruleId,
       },
@@ -117,7 +117,7 @@ export class RulesControllerService {
   ): CancelablePromise<BaseResponse_RulesVO_> {
     return __request(OpenAPI, {
       method: "GET",
-      url: "/api/rules/get/vo",
+      url: "/api/management/rules/get/vo",
       query: {
         RuleId: ruleId,
       },
@@ -141,7 +141,7 @@ export class RulesControllerService {
   ): CancelablePromise<BaseResponse_Page_Rules_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/rules/list/page",
+      url: "/api/management/rules/list/page",
       body: rulesQueryRequest,
       errors: {
         401: `Unauthorized`,
@@ -163,7 +163,7 @@ export class RulesControllerService {
   ): CancelablePromise<BaseResponse_Page_RulesVO_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/rules/list/page/vo",
+      url: "/api/management/rules/list/page/vo",
       body: rulesQueryRequest,
       errors: {
         401: `Unauthorized`,
@@ -185,7 +185,7 @@ export class RulesControllerService {
   ): CancelablePromise<BaseResponse_boolean_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/rules/update",
+      url: "/api/management/rules/update",
       body: rulesUpdateRequest,
       errors: {
         401: `Unauthorized`,

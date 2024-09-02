@@ -58,23 +58,29 @@
         />
       </el-aside>
       <el-container>
-        <el-header>
-          <el-button
-            @click="onCollapse"
-            style="color: white"
-            class="collapseButton"
-            circle
-            v-if="!isCollapse"
-          >
-            <el-icon>
-              <ArrowLeft />
-            </el-icon>
-          </el-button>
+        <el-header style="padding: 0 0 !important">
+          <div style="display: inline-flex">
+            <el-button
+              @click="onCollapse"
+              style="color: white"
+              class="collapseButton"
+              circle
+              v-if="!isCollapse"
+            >
+              <el-icon>
+                <ArrowLeft />
+              </el-icon>
+            </el-button>
+            <div
+              v-if="isCollapse"
+              style="height: 4.5vh !important; width: 2.2vw !important"
+            />
+          </div>
+          <tags-view-container />
         </el-header>
         <el-main>
           <router-view />
         </el-main>
-        <el-footer>by JKTeam 2024</el-footer>
       </el-container>
     </el-container>
   </div>
@@ -90,6 +96,7 @@ import NoticeListView from "@/components/basicComponent/head/noticeListView.vue"
 import PublishTaskView from "@/components/basicComponent/head/publishTaskView.vue";
 import PublishAnnouncementView from "@/components/basicComponent/head/publishAnnouncementView.vue";
 import TabBarView from "@/components/basicComponent/head/tabBarView.vue";
+import TagsViewContainer from "@/layout/TagsView/tagsViewContainer.vue";
 
 const loginUser = ref(store.state.user.loginUser);
 const userName = ref(store.state.user.loginUser.villager_name);
@@ -125,6 +132,11 @@ const logout = async () => {
 
 #basicLayout {
   min-height: 100vh;
+}
+
+/*主要页面*/
+.el-main {
+  overflow-x: hidden !important;
 }
 
 /*展开或隐藏左边侧边栏按钮*/

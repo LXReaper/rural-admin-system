@@ -137,36 +137,34 @@
         }"
         :key="i"
       >
-        <div>
-          <div style="text-align: left">
-            <el-popover
-              placement="top-start"
-              :content="item?.rule_content"
-              :width="300"
-              trigger="hover"
-              :disabled="item?.rule_content.length <= 110"
-            >
-              <template #reference>
-                {{
-                  item?.rule_content.substring(0, 110) +
-                  (item?.rule_content.length > 110 ? "..." : "")
-                }}
-              </template>
-            </el-popover>
-            <div>
-              <text style="font-size: 13px"
-                >~~~每人最大可获取积分点数：{{ item?.rule_points }}
-              </text>
-            </div>
-          </div>
-          <div
-            style="text-align: right; white-space: nowrap"
-            v-if="rulesMap[item.rule_id]"
+        <div style="text-align: left">
+          <el-popover
+            placement="top-start"
+            :content="item?.rule_content"
+            :width="300"
+            trigger="hover"
+            :disabled="item?.rule_content.length <= 110"
           >
-            <el-icon>
-              <Check />
-            </el-icon>
+            <template #reference>
+              {{
+                item?.rule_content.substring(0, 110) +
+                (item?.rule_content.length > 110 ? "..." : "")
+              }}
+            </template>
+          </el-popover>
+          <div>
+            <text style="font-size: 13px"
+              >~~~每人最大可获取积分点数：{{ item?.rule_points }}
+            </text>
           </div>
+        </div>
+        <div
+          style="text-align: right; white-space: nowrap"
+          v-if="rulesMap[item.rule_id]"
+        >
+          <el-icon>
+            <Check />
+          </el-icon>
         </div>
       </div>
       <span
@@ -261,7 +259,7 @@ import {
 import { ref } from "vue";
 import store from "@/store";
 import moment from "moment";
-import { ElMessage, ElNotification } from "element-plus";
+import { ElLoading, ElMessage, ElNotification } from "element-plus";
 import { RulesVO } from "../../../../generated/models/RulesVO";
 
 interface HashTable {
@@ -286,6 +284,11 @@ const openSelectRules = () => {
   listRules();
 };
 const listRules = async () => {
+  const loading = ElLoading.service({
+    lock: true,
+    text: "玩命加载中...",
+    background: "rgba(0, 0, 0, 0.1)",
+  }); //创建加载动画
   const res = await RulesControllerService.listRulesVoByPageUsingPost(
     queryRules.value
   );
@@ -294,6 +297,7 @@ const listRules = async () => {
     rulesTotal.value = res.data.total;
     for (let i = 0; i < ruleList.value.length; ++i) isClickRule.value.push(-1);
   } else ElMessage.error("规则数据加载失败，" + res.message);
+  loading.close(); //关闭加载
 };
 const loadMoreRules = () => {
   queryRules.value.pageSize += addRulesQueryNum;
@@ -332,6 +336,11 @@ const openSelectMaterial = () => {
   listMaterial();
 };
 const listMaterial = async () => {
+  const loading = ElLoading.service({
+    lock: true,
+    text: "玩命加载中...",
+    background: "rgba(0, 0, 0, 0.1)",
+  }); //创建加载动画
   const res =
     await LearningMaterialsControllerService.listLearningMaterialsVoByPageUsingPost(
       queryMaterial.value
@@ -342,6 +351,7 @@ const listMaterial = async () => {
     for (let i = 0; i < materialList.value.length; ++i)
       isClickMaterial.value.push(-1);
   } else ElMessage.error("资料数据加载失败，" + res.message);
+  loading.close(); //关闭加载
 };
 const loadMoreMaterial = () => {
   queryMaterial.value.pageSize += addMaterialQueryNum;

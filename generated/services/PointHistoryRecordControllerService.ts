@@ -17,7 +17,7 @@ export class PointHistoryRecordControllerService {
   ): CancelablePromise<BaseResponse_PointRecordTypeCount_> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/point/history/record/get/pointRecord/type/count",
+      url: "/api/user/point/history/record/get/pointRecord/type/count",
       body: pointRecordTypeCountRequest,
       errors: {
         401: `Unauthorized`,
@@ -34,7 +34,7 @@ export class PointHistoryRecordControllerService {
   public static getPointDayRecordTypeCountList(): CancelablePromise<BaseResponse_List_PointRecordTypeCount_> {
     return __request(OpenAPI, {
       method: "GET",
-      url: "/api/point/history/record/get/pointRecord/dayCount/list",
+      url: "/api/user/point/history/record/get/pointRecord/dayCount/list",
       errors: {
         401: `Unauthorized`,
         403: `Forbidden`,
@@ -50,7 +50,7 @@ export class PointHistoryRecordControllerService {
   public static getPointWeekRecordTypeCountList(): CancelablePromise<BaseResponse_List_PointRecordTypeCount_> {
     return __request(OpenAPI, {
       method: "GET",
-      url: "/api/point/history/record/get/pointRecord/weekCount/list",
+      url: "/api/user/point/history/record/get/pointRecord/weekCount/list",
       errors: {
         401: `Unauthorized`,
         403: `Forbidden`,
@@ -66,7 +66,7 @@ export class PointHistoryRecordControllerService {
   public static getPointMonthRecordTypeCountList(): CancelablePromise<BaseResponse_List_PointRecordTypeCount_> {
     return __request(OpenAPI, {
       method: "GET",
-      url: "/api/point/history/record/get/pointRecord/monthCount/list",
+      url: "/api/user/point/history/record/get/pointRecord/monthCount/list",
       errors: {
         401: `Unauthorized`,
         403: `Forbidden`,
@@ -82,7 +82,7 @@ export class PointHistoryRecordControllerService {
   public static getPointYearRecordTypeCountList(): CancelablePromise<BaseResponse_List_PointRecordTypeCount_> {
     return __request(OpenAPI, {
       method: "GET",
-      url: "/api/point/history/record/get/pointRecord/yearCount/list",
+      url: "/api/user/point/history/record/get/pointRecord/yearCount/list",
       errors: {
         401: `Unauthorized`,
         403: `Forbidden`,

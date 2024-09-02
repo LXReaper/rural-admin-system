@@ -1,9 +1,15 @@
 <template>
-  <div id="infoCharts" ref="chartDom" style="width: 92vw; height: 700px"></div>
+  <div id="infoCharts" ref="chartDom" style="width: 92vw; height: 750px"></div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, withDefaults, defineProps } from "vue";
+import {
+  ref,
+  onMounted,
+  withDefaults,
+  defineProps,
+  onBeforeUnmount,
+} from "vue";
 import * as echarts from "echarts";
 
 interface Props {
@@ -55,8 +61,7 @@ interface myDefaultStringJson {
 const chartDom = ref();
 const weekPointInfo: {
   all: number;
-  income: { [item: string]: number };
-  expenditure: { [item: string]: number };
+  weekPointData: { [item: string]: number };
 } = {
   all:
     Math.max(
@@ -71,11 +76,11 @@ const weekPointInfo: {
       props.taskChargeWeekCount,
       props.productChargeWeekCount
     ),
-  income: {
+  weekPointData: {
+    /*收入积分*/
     签到积分: props.checkInWeekCount,
     任务完成获取积分: props.taskDoneWeekCount,
-  },
-  expenditure: {
+    /*支出积分*/
     任务发布消耗积分: props.taskChargeWeekCount,
     商品交易消耗积分: props.productChargeWeekCount,
   },
@@ -129,7 +134,7 @@ onMounted(() => {
         textAlign: "center",
       },
       {
-        text: "当天积分流动记录",
+        text: "今日积分流动记录",
         subtext:
           "总计 " +
           Object.values(PointHistoryRecordInfo).reduce(
@@ -147,31 +152,20 @@ onMounted(() => {
       {
         top: 50,
         width: "50%",
-        bottom: "45%",
-        left: 10,
-        containLabel: true,
-      },
-      {
-        top: "55%",
-        width: "50%",
         bottom: 0,
-        left: 10,
+        left: "3%",
         containLabel: true,
       },
     ],
     //横轴
     xAxis: [
       {
-        type: "value",
-        max: weekPointInfo.all,
-        splitLine: {
-          show: false,
+        type: "category",
+        data: Object.keys(weekPointInfo.weekPointData),
+        axisLabel: {
+          interval: 0,
+          rotate: 30,
         },
-      },
-      {
-        type: "value",
-        max: weekPointInfo.all,
-        gridIndex: 1,
         splitLine: {
           show: false,
         },
@@ -180,34 +174,16 @@ onMounted(() => {
     //纵轴
     yAxis: [
       {
-        type: "category",
-        data: Object.keys(weekPointInfo.income),
-        axisLabel: {
-          interval: 0,
-          rotate: 30,
-        },
-        splitLine: {
-          show: false,
-        },
-      },
-      {
-        gridIndex: 1,
-        type: "category",
-        data: Object.keys(weekPointInfo.expenditure),
-        axisLabel: {
-          interval: 0,
-          rotate: 30,
-        },
-        animationDuration: 300,
-        animationDurationUpdate: 300,
+        type: "value",
+        max: weekPointInfo.all,
         splitLine: {
           show: false,
         },
       },
     ],
-    //系列列表。每个系列通过type决定自己的图表类型
+    //系列列表,每个系列通过type决定自己的图表类型
     series: [
-      //存在的数据
+      //本周积分变动统计柱状图
       {
         type: "bar",
         stack: "chart",
@@ -216,64 +192,23 @@ onMounted(() => {
           position: "right",
           show: true,
         },
+        showBackground: true,
         itemStyle: {
           color: function (colors: any) {
-            let colorList: any[] = ["#f9c956", "#228B22"];
+            let colorList: any[] = ["#f9c956", "#228B22", "#5470c6", "#ef6567"];
             return colorList[colors.dataIndex];
           },
         },
-        data: Object.keys(weekPointInfo.income).map(
-          (key) => weekPointInfo.income[key]
+        data: Object.keys(weekPointInfo.weekPointData).map(
+          (key) => weekPointInfo.weekPointData[key]
         ),
       },
-      //空余的数据
-      {
-        type: "bar",
-        stack: "chart",
-        silent: true,
-        itemStyle: {
-          color: "#eee",
-        },
-        data: Object.keys(weekPointInfo.income).map(
-          (key) => weekPointInfo.all - weekPointInfo.income[key]
-        ),
-      },
-      //存在的数据
-      {
-        type: "bar",
-        stack: "component",
-        xAxisIndex: 1,
-        yAxisIndex: 1,
-        z: 3,
-        label: {
-          position: "right",
-          show: true,
-        },
-        itemStyle: {
-          color: "#5470c6",
-        },
-        data: Object.keys(weekPointInfo.expenditure).map(
-          (key) => weekPointInfo.expenditure[key]
-        ),
-      },
-      //空余的数据
-      {
-        type: "bar",
-        stack: "component",
-        silent: true,
-        xAxisIndex: 1,
-        yAxisIndex: 1,
-        itemStyle: {
-          color: "#eee",
-        },
-        data: Object.keys(weekPointInfo.expenditure).map(
-          (key) => weekPointInfo.all - weekPointInfo.expenditure[key]
-        ),
-      },
+      //任务信息统计圆饼图
       {
         type: "pie",
         radius: [0, "30%"],
         center: ["75%", "25%"],
+        selectedMode: "single",
         itemStyle: {
           color: function (colors: any) {
             let colorList: any[] = [
@@ -292,10 +227,12 @@ onMounted(() => {
           value: taskInfo[key],
         })),
       },
+      //今天积分变动统计圆饼图
       {
         type: "pie",
         radius: [0, "30%"],
         center: ["75%", "75%"],
+        selectedMode: "single",
         itemStyle: {
           color: function (colors: any) {
             let colorList: any[] = ["#f9c956", "#228B22", "#5470c6", "#ef6567"];
@@ -313,7 +250,21 @@ onMounted(() => {
   //初始化
   const myChart = echarts.init(chartDom.value);
   myChart.setOption(option as any);
+
+  // 增加监听事件 窗口变化，重新设置charts的大小。 重要代码
+  window.addEventListener("resize", () => resizeCharts());
 });
+
+onBeforeUnmount(() => {
+  // 组件销毁前 移除监听事件。 重要代码
+  window.addEventListener("resize", () => resizeCharts());
+});
+
+//重新设置charts的大小
+const resizeCharts = () => {
+  const myChart = echarts.init(chartDom.value);
+  myChart.resize();
+};
 </script>
 
 <style scoped>

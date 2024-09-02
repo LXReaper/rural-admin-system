@@ -78,7 +78,7 @@ const handleLogin = async () => {
     ElMessage.success("登录成功");
     await store.dispatch("user/getLoginUser");
     await router.push({
-      path: "/home",
+      path: "/home/workplace",
       replace: false,
     });
   } else {

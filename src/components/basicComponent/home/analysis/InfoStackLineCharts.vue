@@ -37,12 +37,19 @@
       </div>
     </div>
   </div>
-  <div ref="chartDom" style="width: 92vw; height: 650px" />
+  <div ref="chartDom" style="width: 92vw; height: 80vh" />
 </template>
 <script setup lang="ts">
-import { onMounted, ref, withDefaults, defineProps } from "vue";
+import {
+  onMounted,
+  ref,
+  withDefaults,
+  defineProps,
+  onBeforeMount,
+  onBeforeUnmount,
+} from "vue";
 import * as echarts from "echarts";
-import { PointRecordTypeCount } from "../../../../generated";
+import { PointRecordTypeCount } from "../../../../../generated";
 
 //图表的响应值
 const chartDom = ref();
@@ -74,7 +81,7 @@ const monthXData = ref(
         0
       ).getDate(),
     },
-    (_, i) => i + 1
+    (_, i) => new Date().getMonth() + 1 + "-" + (i + 1)
   )
 );
 const yearXData = ref([
@@ -122,7 +129,7 @@ const setOption = (curPointRecordList: Array<PointRecordTypeCount>) => {
     title: {
       text:
         (!dateState.value
-          ? "今天"
+          ? "今日"
           : dateState.value == 1
           ? "本周"
           : dateState.value === 2
@@ -247,13 +254,46 @@ const setOption = (curPointRecordList: Array<PointRecordTypeCount>) => {
       {
         type: "pie",
         id: "pie",
-        radius: ["0%", "40%"],
+        radius: ["25%", "40%"],
         center: ["50%", "25%"],
+        selectedMode: "single",
         emphasis: {
           focus: "self",
         },
         label: {
-          formatter: "{b}: {@pie} ({d}%)",
+          formatter: "{b}: {@pie} ({d}%)", //每个区域延伸到圆饼图外显示的内容格式
+          normal: {
+            show: true,
+            position: "center",
+            color: "#4c4a4a",
+            formatter:
+              "{label|支出}\n{number|" +
+              chargePointNum.value +
+              "}" +
+              "\n\n" +
+              "{label|收入}\n{number|" +
+              gainPointNum.value +
+              "}",
+            rich: {
+              //中间标签
+              label: {
+                fontSize: 20,
+                fontFamily: "微软雅黑",
+                color: "#6c7a89",
+              },
+              //中间数字
+              number: {
+                fontFamily: "微软雅黑",
+                fontSize: 25,
+                color: "#1e1e1e",
+                lineHeight: 30,
+              },
+            },
+          },
+          emphasis: {
+            //中间文字显示
+            show: true,
+          },
         },
         itemStyle: {
           color: function (colors: any) {
@@ -318,30 +358,26 @@ const setOption = (curPointRecordList: Array<PointRecordTypeCount>) => {
         ],
       });
     }
-    setTimeout(function () {
-      //设置鼠标移入的某个节点后，圆饼图中该节点表示的部分高亮
-      myChart.dispatchAction({
-        type: "highlight",
-        seriesIndex: 4,
-        dataIndex: params.seriesIndex,
-      });
-    }, 300);
-  });
-  /*鼠标移出事件*/
-  myChart.on("mouseout", function (params) {
-    //设置鼠标移出的某个节点后，圆饼图中该节点表示的部分变暗
-    myChart.dispatchAction({
-      type: "downplay",
-      seriesIndex: 4,
-      dataIndex: params.seriesIndex,
-    });
   });
   myChart.setOption(option as any);
 };
 onMounted(() => {
   curPointRecordsList.value = props.dayPointRecordList;
   setOption(props.dayPointRecordList);
+  // 增加监听事件 窗口变化，重新设置charts的大小。 重要代码
+  window.addEventListener("resize", () => resizeCharts());
 });
+
+onBeforeUnmount(() => {
+  // 组件销毁前 移除监听事件。 重要代码
+  window.addEventListener("resize", () => resizeCharts());
+});
+
+//重新设置charts的大小
+const resizeCharts = () => {
+  const myChart = echarts.init(chartDom.value);
+  myChart.resize();
+};
 </script>
 
 <style scoped></style>

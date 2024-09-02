@@ -16,7 +16,7 @@ export function debounce(func: FunctionType, duration = 500): FunctionType {
     timeId = setTimeout(() => {
       //将func函数传递的形参作为数组args
       func.apply(this, args);
-    }, duration);
+    }, duration) as any;
   };
 }
 

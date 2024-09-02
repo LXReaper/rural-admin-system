@@ -17,7 +17,7 @@ export class CheckInsControllerService {
   ): CancelablePromise<BaseResponse_long_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/point/checkIn/add",
+      url: "/api/user/checkIn/add",
       query: {
         useId: useId,
       },

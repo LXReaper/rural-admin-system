@@ -26,7 +26,7 @@ export class TransactionsControllerService {
   ): CancelablePromise<BaseResponse_long_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/transactions/add",
+      url: "/api/marketplace/transactions/add",
       body: transactionsAddRequest,
       errors: {
         401: `Unauthorized`,
@@ -48,7 +48,7 @@ export class TransactionsControllerService {
   ): CancelablePromise<BaseResponse_boolean_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/transactions/delete",
+      url: "/api/marketplace/transactions/delete",
       body: deleteRequest,
       errors: {
         401: `Unauthorized`,
@@ -69,7 +69,7 @@ export class TransactionsControllerService {
   ): CancelablePromise<BaseResponse_Transactions_> {
     return __request(OpenAPI, {
       method: "GET",
-      url: "/api/transactions/get",
+      url: "/api/marketplace/transactions/get",
       query: {
         TransactionId: transactionId,
       },
@@ -93,7 +93,7 @@ export class TransactionsControllerService {
   ): CancelablePromise<BaseResponse_Page_TransactionsVO_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/transactions/list/page",
+      url: "/api/marketplace/transactions/list/page",
       body: transactionsQueryRequest,
       errors: {
         401: `Unauthorized`,
@@ -115,7 +115,7 @@ export class TransactionsControllerService {
   ): CancelablePromise<BaseResponse_Page_TransactionsVO_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/transactions/list/page/my",
+      url: "/api/marketplace/transactions/list/page/my",
       body: transactionsQueryRequest,
       errors: {
         401: `Unauthorized`,
@@ -136,7 +136,7 @@ export class TransactionsControllerService {
   ): CancelablePromise<BaseResponse_boolean_> {
     return __request(OpenAPI, {
       method: "GET",
-      url: "/api/transactions/transaction/handle",
+      url: "/api/marketplace/transactions/transaction/handle",
       query: {
         transactions_Id: transactionsId,
       },

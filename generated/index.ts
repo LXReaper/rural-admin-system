@@ -2,24 +2,31 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import { CheckInConfigVO } from "./models/CheckInConfigVO";
+
 export { ApiError } from "./core/ApiError";
 export { CancelablePromise, CancelError } from "./core/CancelablePromise";
 export { OpenAPI } from "./core/OpenAPI";
 export type { OpenAPIConfig } from "./core/OpenAPI";
 
+export type { AIConfig } from "./models/AIConfig";
+export type { AIConfigUpdateRequest } from "./models/AIConfigUpdateRequest";
 export type { Announcements } from "./models/Announcements";
 export type { AnnouncementsAddRequest } from "./models/AnnouncementsAddRequest";
 export type { AnnouncementsQueryRequest } from "./models/AnnouncementsQueryRequest";
 export type { AnnouncementsUpdateRequest } from "./models/AnnouncementsUpdateRequest";
+export type { BaseResponse_AIConfig_ } from "./models/BaseResponse_AIConfig_";
 export type { BaseResponse_Announcements_ } from "./models/BaseResponse_Announcements_";
 export type { BaseResponse_AnnouncementsVO_ } from "./models/BaseResponse_AnnouncementsVO_";
 export type { BaseResponse_boolean_ } from "./models/BaseResponse_boolean_";
+export type { BaseResponse_CheckInConfigVO_ } from "./models/BaseResponse_CheckInConfigVO_";
 export type { BaseResponse_Coursesubmissions_ } from "./models/BaseResponse_Coursesubmissions_";
 export type { BaseResponse_double_ } from "./models/BaseResponse_double_";
 export type { BaseResponse_int_ } from "./models/BaseResponse_int_";
 export type { BaseResponse_LearningMaterials_ } from "./models/BaseResponse_Learningmaterials_";
 export type { BaseResponse_LearningMaterialsVO_ } from "./models/BaseResponse_LearningmaterialsVO_";
 export type { BaseResponse_LoginUserVO_ } from "./models/BaseResponse_LoginUserVO_";
+export type { BaseResponse_ProtocolVO_ } from "./models/BaseResponse_ProtocolVO_";
 export type { BaseResponse_TaskCountInfoVO_ } from "./models/BaseResponse_TaskCountInfoVO_";
 export type { BaseResponse_long_ } from "./models/BaseResponse_long_";
 export type { BaseResponse_Page_Announcements_ } from "./models/BaseResponse_Page_Announcements_";
@@ -58,6 +65,9 @@ export type { BaseResponse_Tasksubmissions_ } from "./models/BaseResponse_Tasksu
 export type { BaseResponse_Transactions_ } from "./models/BaseResponse_Transactions_";
 export type { BaseResponse_User_ } from "./models/BaseResponse_User_";
 export type { BaseResponse_UserVO_ } from "./models/BaseResponse_UserVO_";
+export type { CheckInReward } from "./models/CheckInReward";
+export type { CheckInConfigVO } from "./models/CheckInConfigVO";
+export type { CheckInConfigUpdateRequest } from "./models/CheckInConfigUpdateRequest";
 export type { Coursesubmissions } from "./models/Coursesubmissions";
 export type { CoursesubmissionsAddRequest } from "./models/CoursesubmissionsAddRequest";
 export type { CoursesubmissionsQueryRequest } from "./models/CoursesubmissionsQueryRequest";
@@ -95,6 +105,10 @@ export type { Page_TransactionsVO_ } from "./models/Page_TransactionsVO_";
 export type { Page_Transactions_ } from "./models/Page_Transactions_";
 export type { Page_User_ } from "./models/Page_User_";
 export type { Page_UserVO_ } from "./models/Page_UserVO_";
+export type { ProtocolVO } from "./models/ProtocolVO";
+export type { ProtocolAddRequest } from "./models/ProtocolAddRequest";
+export type { ProtocolUpdateRequest } from "./models/ProtocolUpdateRequest";
+export type { PointReward } from "./models/PointReward";
 export type { Points } from "./models/Points";
 export type { PointsQueryRequest } from "./models/PointsQueryRequest";
 export type { PointRecordTypeCount } from "./models/PointRecordTypeCount";

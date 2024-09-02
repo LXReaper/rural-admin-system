@@ -44,57 +44,46 @@
         </el-select>
       </el-form-item>
       <el-form-item label="公告图片：" prop="image_url">
-        <el-input
-          v-model="announcement.image_url"
-          style="width: 60vw"
-        ></el-input>
+        <el-input v-model="announcement.image_url" style="width: 60vw" />
       </el-form-item>
       <el-form-item label="公告内容：" prop="content">
-        <div
+        <el-row
           v-if="
             announcement.announcement_type &&
             announcement.announcement_type !== ANNOUNCEMENT_TYPE[2].value
           "
         >
-          <my-editor
-            :value-html="announcement.content"
-            :max-length="5000"
-            :width="'71vw'"
-            :placeholder="'请输入公告内容'"
-            :handle-change-text="(text) => (textContent = text)"
-            :handle-change-html="(html) => (announcement.content = html)"
-          />
-          <div style="margin: 2vh 0">
-            <el-button
-              type="primary"
-              @click="
-                () => {
-                  preview = true;
-                  transformContentToCanvas();
-                }
+          <el-col :span="15">
+            <my-editor
+              :value-html="announcement.content"
+              :max-length="15000"
+              :width="'50vw'"
+              :height="'57.5vh'"
+              :placeholder="'请输入公告内容'"
+              :handle-change-text="(text) => (textContent = text)"
+              :handle-change-html="(html) => (announcement.content = html)"
+            />
+          </el-col>
+          <el-col style="margin-left: 1vw" :span="3">
+            <div
+              style="
+                width: 20vw;
+                height: 64vh;
+                border: 1px solid #dadada;
+                padding: 1vh 1vw;
+                border-radius: 2vw;
               "
             >
-              <el-icon>
-                <View />
-              </el-icon>
-              &nbsp;预览
-            </el-button>
-          </div>
-          <!--  （用于临时存放公告内容的）-->
-          <el-scrollbar
-            v-if="preview"
-            style="
-              border: 1px solid #dad2d1;
-              width: 65vw;
-              height: 40vh;
-              overflow-y: visible;
-              overflow-x: visible;
-            "
-          >
-            <div id="hiddenDiv"></div>
-          </el-scrollbar>
-          <!--        <el-image :src="htmlContent"></el-image>-->
-        </div>
+              <h4 class="Title">预览</h4>
+              <el-scrollbar style="height: 62vh">
+                <div
+                  style="overflow-wrap: break-word"
+                  v-html="announcement.content"
+                />
+              </el-scrollbar>
+            </div>
+          </el-col>
+        </el-row>
         <el-input
           type="textarea"
           v-model="announcement.content"
@@ -185,43 +174,6 @@ const changeAnnouncementType = () => {
   if (announcement.value.announcement_type === ANNOUNCEMENT_TYPE[2].value)
     announcement.value.content = textContent.value;
 };
-
-//将公告内容转图片
-const transformContentToCanvas = () => {
-  let html = announcement.value.content as string;
-  //1、先查询到一个隐藏div中的元素
-  let hiddenDiv = document.querySelector("#hiddenDiv");
-  let myAnnouncement = document.querySelector("#myAnnouncement");
-  if (hiddenDiv) {
-    //2、接判断hiddenDiv中是否有myAnnouncement，有就删除myAnnouncement
-    if (myAnnouncement) hiddenDiv.removeChild(myAnnouncement);
-    //3、然后将富文本编辑器中获取的html文本内容加上<div id="myAnnouncement"></div>,然后合并到隐藏的div中
-    html = `<div id="myAnnouncement">${html}</div>`;
-    // console.log(html);
-    hiddenDiv.innerHTML = html.replace(/<p>/g, "<p>");
-    // 使用DOM解析器创建DOM结构
-    // console.log(hiddenDiv);
-
-    //画成图
-    // html2canvas(hiddenDiv as any, {
-    //   backgroundColor: null, // null 表示设置背景为透明色
-    //   allowTaint: true,
-    //   logging: false,
-    //   useCORS: true,
-    //   width: 400,
-    //   height: 400,
-    //   scale: 4, //按比例增加分辨率
-    // })
-    //   .then((canvas) => {
-    //     htmlContent.value = canvas.toDataURL("image/jpg", 1.0);
-    //     // console.log(htmlContent.value);
-    //     // announcement.value.content = htmlContent.value;
-    //   })
-    //   .catch((error) => {
-    //     console.log("html文本转换错误" + error);
-    //   });
-  }
-};
 </script>
 
 <style scoped>
@@ -229,5 +181,13 @@ const transformContentToCanvas = () => {
   text-align: justify;
   word-wrap: break-word;
   width: 400px;
+}
+
+.Title {
+  user-select: none;
+  height: 0;
+  margin: 1px auto 30px auto;
+  text-align: center;
+  color: #707070;
 }
 </style>

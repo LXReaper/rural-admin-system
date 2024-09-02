@@ -28,7 +28,7 @@ export class ProductsControllerService {
   ): CancelablePromise<BaseResponse_long_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/products/add",
+      url: "/api/marketplace/products/add",
       body: productsAddRequest,
       errors: {
         401: `Unauthorized`,
@@ -50,7 +50,7 @@ export class ProductsControllerService {
   ): CancelablePromise<BaseResponse_boolean_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/products/delete",
+      url: "/api/marketplace/products/delete",
       body: deleteRequest,
       errors: {
         401: `Unauthorized`,
@@ -72,7 +72,7 @@ export class ProductsControllerService {
   ): CancelablePromise<BaseResponse_boolean_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/products/delete/more",
+      url: "/api/marketplace/products/delete/more",
       body: deleteRequest,
       errors: {
         401: `Unauthorized`,
@@ -93,7 +93,7 @@ export class ProductsControllerService {
   ): CancelablePromise<BaseResponse_Products_> {
     return __request(OpenAPI, {
       method: "GET",
-      url: "/api/products/get",
+      url: "/api/marketplace/products/get",
       query: {
         ProductId: productId,
       },
@@ -117,7 +117,7 @@ export class ProductsControllerService {
   ): CancelablePromise<BaseResponse_Page_Products_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/products/list/page",
+      url: "/api/marketplace/products/list/page",
       body: productsQueryRequest,
       errors: {
         401: `Unauthorized`,
@@ -139,7 +139,7 @@ export class ProductsControllerService {
   ): CancelablePromise<BaseResponse_Page_ProductsVO_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/products/list/page/vo",
+      url: "/api/marketplace/products/list/page/vo",
       body: productsQueryRequest,
       errors: {
         401: `Unauthorized`,
@@ -161,7 +161,7 @@ export class ProductsControllerService {
   ): CancelablePromise<BaseResponse_boolean_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/products/update",
+      url: "/api/marketplace/products/update",
       body: productsUpdateRequest,
       errors: {
         401: `Unauthorized`,

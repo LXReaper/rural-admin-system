@@ -1,200 +1,43 @@
 <template>
-  <div id="TaskExamineView">
-    <el-form
-      :model="queryParams"
-      ref="queryForm"
-      :inline="true"
-      v-show="showSearch"
-      label-width="68px"
-    >
-      <el-form-item label="提交用户" prop="user_name">
-        <el-input
-          v-model="queryParams.user_name"
-          placeholder="请输入用户名"
-          clearable
-          @keydown.enter="handleQueryDebounce"
-        />
-      </el-form-item>
-      <el-form-item label="任务内容" prop="task_content">
-        <el-input
-          v-model="queryParams.task_content"
-          placeholder="请输入任务完成内容"
-          clearable
-          @keydown.enter="handleQueryDebounce"
-        />
-      </el-form-item>
-      <el-form-item label="是否通过" prop="is_accepted">
-        <el-select
-          v-model="queryParams.is_accepted"
-          placeholder="请选择审核状态"
-          @change="handleQueryDebounce"
-          size="default"
-          style="width: 240px"
-        >
-          <el-option
-            v-for="item in [
-              { value: '', label: '所有' },
-              { value: 0, label: '未审核' },
-              { value: 1, label: '审核通过' },
-              { value: 2, label: '审核不通过' },
-            ]"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
+  <div id="TaskCheckView">
+    <div class="searchBar">
+      <el-form
+        :model="queryParams"
+        ref="queryForm"
+        :inline="true"
+        v-show="showSearch"
+        label-width="68px"
+      >
+        <el-form-item label="提交用户" prop="user_name">
+          <el-input
+            v-model="queryParams.user_name"
+            placeholder="请输入用户名"
+            clearable
+            @keydown.enter="handleQueryDebounce"
           />
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" size="default" @click="handleQueryDebounce"
-          >搜索
-        </el-button>
-        <el-button size="default" @click="resetQuery">重置</el-button>
-      </el-form-item>
-    </el-form>
-
-    <!--    增删改操作-->
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          plain
-          size="default"
-          @click="handleDelete"
-          :disabled="multiple"
-          >删除
-        </el-button>
-      </el-col>
-    </el-row>
-
-    <!--    表格-->
-    <el-table
-      size="small"
-      v-loading="loading"
-      :data="taskCaseList"
-      stripe
-      border
-      @selection-change="handleSelectionChange"
-    >
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" prop="id" />
-      <el-table-column label="用户" align="center" prop="user_name" />
-      <el-table-column label="我发布的任务" align="center" prop="task_id" />
-      <el-table-column label="任务内容" align="center" prop="task_content" />
-      <el-table-column label="任务视频" align="center" prop="task_video_url">
-        <template #default="scope">
-          <el-button
-            type="text"
-            v-if="scope.row.task_video_url && scope.row.task_video_url.length"
-            @click="openDetailIdDialog('视频详情', scope.row)"
-            >展开视频
-          </el-button>
-          <el-tag type="warning" v-else>无视频</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column label="是否通过" align="center" prop="is_accepted">
-        <template #default="scope">
-          <el-tag
-            :type="
-              scope.row.is_accepted
-                ? scope.row.is_accepted === 1
-                  ? 'success'
-                  : 'danger'
-                : 'warning'
-            "
-          >
-            {{
-              scope.row.is_accepted
-                ? scope.row.is_accepted === 1
-                  ? "通过"
-                  : "打回"
-                : "待审核"
-            }}
-          </el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column
-        label="提交日期"
-        align="center"
-        prop="publish_date"
-        show-overflow-tooltip
-        width="180"
-      >
-        <template #default="scope">
-          <span style="white-space: nowrap"
-            >{{
-              moment(scope.row.publish_date).format(
-                "YYYY年MM月DD日 HH时mm分ss秒"
-              )
-            }}
-          </span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        label="修改日期"
-        align="center"
-        prop="update_date"
-        show-overflow-tooltip
-        width="180"
-      >
-        <template #default="scope">
-          <span v-if="scope.row.update_date" style="white-space: nowrap"
-            >{{
-              moment(scope.row.update_date).format(
-                "YYYY年MM月DD日 HH时mm分ss秒"
-              )
-            }}
-          </span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        label="操作"
-        align="center"
-        fixed="right"
-        class-name="small-padding fixed-width"
-      >
-        <template #default="scope">
-          <el-button
-            v-if="!scope.row.is_accepted"
-            size="small"
-            type="primary"
-            @click="handleEdit(scope.$index, scope.row)"
-          >
-            审核
-          </el-button>
-          <el-tag type="primary" v-else>无任何操作</el-tag>
-        </template>
-      </el-table-column>
-    </el-table>
-
-    <!--    分页-->
-    <el-pagination
-      v-show="total > 0"
-      background
-      :currentPage="queryParams.current"
-      :page-size="total"
-      :page-count="Math.ceil(total / queryParams.pageSize)"
-      :total="Math.ceil(total / queryParams.pageSize)"
-      layout="total, size, prev, pager, next, jumper"
-      @current-change="pageHandleChange"
-      class="mt-4"
-    />
-
-    <!-- 审核任务对话框 -->
-    <el-dialog :title="title" v-model="open" width="600px" append-to-body>
-      <el-form :model="curState" :rules="rules" label-width="80px">
-        <el-form-item label="审核状态" prop="is_accepted">
+        </el-form-item>
+        <el-form-item label="任务内容" prop="task_content">
+          <el-input
+            v-model="queryParams.task_content"
+            placeholder="请输入任务完成内容"
+            clearable
+            @keydown.enter="handleQueryDebounce"
+          />
+        </el-form-item>
+        <el-form-item label="是否通过" prop="is_accepted">
           <el-select
-            v-model="curState.is_accepted"
-            placeholder="请选择审核的状态"
-            size="large"
-            default-first-option
+            v-model="queryParams.is_accepted"
+            placeholder="请选择审核状态"
+            @change="handleQueryDebounce"
+            size="default"
             style="width: 240px"
           >
             <el-option
               v-for="item in [
-                { value: 0, label: '审核中' },
+                { value: '', label: '所有' },
+                { value: 0, label: '未审核' },
                 { value: 1, label: '审核通过' },
-                { value: 2, label: '审核打回' },
+                { value: 2, label: '审核不通过' },
               ]"
               :key="item.value"
               :label="item.label"
@@ -202,66 +45,232 @@
             />
           </el-select>
         </el-form-item>
-      </el-form>
-      <template #footer>
-        <div class="dialog-footer">
-          <el-button type="primary" @click="submitFormDebounce"
-            >确 定
+        <el-form-item>
+          <el-button type="primary" size="default" @click="handleQueryDebounce"
+            >搜索
           </el-button>
-          <el-button @click="cancel">取 消</el-button>
-        </div>
-      </template>
-    </el-dialog>
-    <!--    展示视频信息对话框-->
-    <el-dialog
-      v-model="isOpenVideoDetail"
-      :title="'视频'"
-      style="height: 55vh; width: 46vw"
-      destroy-on-close
-      draggable
-      append-to-body
-    >
-      <div style="margin-left: 1.3vw">
-        <my-video
-          :src="curVideoURL"
-          :type="curVideoURL.endsWith('.m3u8') ? 'm3u8' : 'video/mp4'"
-          :title="videoUser"
-          :is-destroy="!isOpenVideoDetail"
-        />
-      </div>
-    </el-dialog>
-    <!--    展示视频详情的对话框-->
-    <el-dialog
-      v-model="isOpenURLsDetail"
-      :title="`${videoUser}的视频`"
-      destroy-on-close
-      draggable
-      append-to-body
-    >
-      <el-scrollbar style="height: 50vh">
-        <div
-          style="
-            height: 6vh;
-            border: 1px solid #dad2d1;
-            background-color: #f6f6f6;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin-top: 1vh;
-            cursor: pointer;
-          "
-          :class="{ videoHoverTab: hoverVideoId == i }"
-          v-for="(item, i) in curVideoURLList"
-          @click="openDetailInfo(i)"
-          @mouseover="hoverVideoId = i"
-          @mouseout="hoverVideoId = -1"
-          :key="i"
+          <el-button size="default" @click="resetQuery">重置</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
+
+    <div class="mainView">
+      <!--    增删改操作-->
+      <el-row :gutter="10" class="mb8">
+        <el-col :span="1.5">
+          <el-button
+            type="danger"
+            plain
+            size="default"
+            @click="handleDelete"
+            :disabled="multiple"
+            >删除
+          </el-button>
+        </el-col>
+      </el-row>
+
+      <!--    表格-->
+      <el-table
+        size="small"
+        v-loading="loading"
+        :data="taskCaseList"
+        :header-cell-style="{
+          backgroundColor: '#E5EEFF',
+          color: '#333',
+          height: '5vh',
+        }"
+        @selection-change="handleSelectionChange"
+        stripe
+      >
+        <el-table-column type="selection" width="55" align="center" />
+        <el-table-column label="编号" align="center" prop="id" />
+        <el-table-column label="用户" align="center" prop="user_name" />
+        <el-table-column label="我发布的任务" align="center" prop="task_id" />
+        <el-table-column label="任务内容" align="center" prop="task_content" />
+        <el-table-column label="任务视频" align="center" prop="task_video_url">
+          <template #default="scope">
+            <el-button
+              type="text"
+              v-if="scope.row.task_video_url && scope.row.task_video_url.length"
+              @click="openDetailIdDialog('视频详情', scope.row)"
+              >展开视频
+            </el-button>
+            <el-tag type="warning" v-else>无视频</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="是否通过" align="center" prop="is_accepted">
+          <template #default="scope">
+            <el-tag
+              :type="
+                scope.row.is_accepted
+                  ? scope.row.is_accepted === 1
+                    ? 'success'
+                    : 'danger'
+                  : 'warning'
+              "
+            >
+              {{
+                scope.row.is_accepted
+                  ? scope.row.is_accepted === 1
+                    ? "通过"
+                    : "打回"
+                  : "待审核"
+              }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="提交日期"
+          align="center"
+          prop="publish_date"
+          show-overflow-tooltip
+          width="180"
         >
-          <div>
-            {{ item.split("/")[item.split("/").length - 1].split(".")[0] }}
+          <template #default="scope">
+            <span style="white-space: nowrap"
+              >{{
+                moment(scope.row.publish_date).format(
+                  "YYYY年MM月DD日 HH时mm分ss秒"
+                )
+              }}
+            </span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="修改日期"
+          align="center"
+          prop="update_date"
+          show-overflow-tooltip
+          width="180"
+        >
+          <template #default="scope">
+            <span v-if="scope.row.update_date" style="white-space: nowrap"
+              >{{
+                moment(scope.row.update_date).format(
+                  "YYYY年MM月DD日 HH时mm分ss秒"
+                )
+              }}
+            </span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="操作"
+          align="center"
+          fixed="right"
+          class-name="small-padding fixed-width"
+        >
+          <template #default="scope">
+            <el-button
+              v-if="!scope.row.is_accepted"
+              size="small"
+              type="primary"
+              @click="handleEdit(scope.$index, scope.row)"
+            >
+              审核
+            </el-button>
+            <el-tag type="primary" v-else>无任何操作</el-tag>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <!--    分页-->
+      <el-pagination
+        v-show="total > 0"
+        background
+        :currentPage="queryParams.current"
+        :page-size="total"
+        :page-count="Math.ceil(total / queryParams.pageSize)"
+        :total="Math.ceil(total / queryParams.pageSize)"
+        layout="total, size, prev, pager, next, jumper"
+        @current-change="pageHandleChange"
+        class="mt-4"
+      />
+
+      <!-- 审核任务对话框 -->
+      <el-dialog :title="title" v-model="open" width="600px" append-to-body>
+        <el-form :model="curState" :rules="rules" label-width="80px">
+          <el-form-item label="审核状态" prop="is_accepted">
+            <el-select
+              v-model="curState.is_accepted"
+              placeholder="请选择审核的状态"
+              size="large"
+              default-first-option
+              style="width: 240px"
+            >
+              <el-option
+                v-for="item in [
+                  { value: 0, label: '审核中' },
+                  { value: 1, label: '审核通过' },
+                  { value: 2, label: '审核打回' },
+                ]"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+          </el-form-item>
+        </el-form>
+        <template #footer>
+          <div class="dialog-footer">
+            <el-button type="primary" @click="submitFormDebounce"
+              >确 定
+            </el-button>
+            <el-button @click="cancel">取 消</el-button>
           </div>
+        </template>
+      </el-dialog>
+      <!--    展示视频信息对话框-->
+      <el-dialog
+        v-model="isOpenVideoDetail"
+        :title="'视频'"
+        style="height: 55vh; width: 46vw"
+        destroy-on-close
+        draggable
+        append-to-body
+      >
+        <div style="margin-left: 1.3vw">
+          <my-video
+            :src="curVideoURL"
+            :type="curVideoURL.endsWith('.m3u8') ? 'm3u8' : 'video/mp4'"
+            :title="videoUser"
+            :is-destroy="!isOpenVideoDetail"
+          />
         </div>
-      </el-scrollbar>
-    </el-dialog>
+      </el-dialog>
+      <!--    展示视频详情的对话框-->
+      <el-dialog
+        v-model="isOpenURLsDetail"
+        :title="`${videoUser}的视频`"
+        destroy-on-close
+        draggable
+        append-to-body
+      >
+        <el-scrollbar style="height: 50vh">
+          <div
+            style="
+              height: 6vh;
+              border: 1px solid #dad2d1;
+              background-color: #f6f6f6;
+              box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+              margin-top: 1vh;
+              cursor: pointer;
+            "
+            :class="{ videoHoverTab: hoverVideoId == i }"
+            v-for="(item, i) in curVideoURLList"
+            @click="openDetailInfo(i)"
+            @mouseover="hoverVideoId = i"
+            @mouseout="hoverVideoId = -1"
+            :key="i"
+          >
+            <div>
+              {{ item.split("/")[item.split("/").length - 1].split(".")[0] }}
+            </div>
+          </div>
+        </el-scrollbar>
+      </el-dialog>
+    </div>
   </div>
+  <footer-layout />
 </template>
 <script setup lang="ts">
 import { onMounted, ref, watch } from "vue";
@@ -280,6 +289,7 @@ import { TasksExamineControllerService } from "../../../generated/services/Tasks
 import moment from "moment/moment";
 import { TaskCaseControllerService } from "../../../generated/services/TaskCaseControllerService";
 import MyVideo from "@/components/video/MyVideo.vue";
+import FooterLayout from "@/layout/footerLayout.vue";
 
 //总数
 const total = ref(0);
@@ -475,12 +485,34 @@ const isOpenVideoDetail = ref(false);
 </script>
 
 <style scoped>
-#TaskExamineView {
+#TaskCheckView {
+  background-color: #f0f2f5;
+  padding: 1vh 1vw;
+}
+
+/*搜索栏*/
+.searchBar {
+  background-color: white;
+  padding: 2vh 0.5vw 0 0.5vw;
+  margin-bottom: 2vh;
+}
+
+/*主要内容窗口*/
+.mainView {
+  background-color: white;
+  padding: 2vh 1.5vw 0 1.5vw;
+  margin-bottom: 2vh;
 }
 
 .videoHoverTab {
   background-color: #c6f6f6 !important;
   margin-left: 1vw !important;
   box-shadow: 10px 7px 6px rgba(0, 0, 0, 0.1) !important;
+}
+
+.searchBar {
+  background-color: white;
+  padding: 2vh 1.5vw 0 1.5vw;
+  margin-bottom: 2vh;
 }
 </style>

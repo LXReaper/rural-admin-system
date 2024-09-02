@@ -1,5 +1,5 @@
 <template>
-  <div id="OnlineVillagerInfoView">
+  <div class="searchBar">
     <!--    搜索栏-->
     <el-form
       :model="searchParams"
@@ -24,14 +24,21 @@
         <el-button size="default" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
+  </div>
+  <!--  在线用户-->
+  <div id="onlineUser">
     <!--      表格-->
     <el-table
       size="small"
       :data="tableData"
-      stripe
-      border
+      :header-cell-style="{
+        backgroundColor: '#E5EEFF',
+        color: '#333',
+        height: '5vh',
+      }"
       @selection-change="handleSelectionChange"
       v-loading="loading"
+      stripe
     >
       <el-table-column type="selection" width="55" />
       <el-table-column label="会话编号" prop="sessionId" />
@@ -120,18 +127,16 @@
 </template>
 <script setup lang="ts">
 import { onMounted, ref, watch } from "vue";
+import { ElMessage, ElNotification, ElPagination } from "element-plus";
+import { Bell, InfoFilled } from "@element-plus/icons-vue";
+import moment from "moment";
+import store from "@/store";
 import {
   DeleteRequest,
   OnLineUserVO,
-  User,
   UserControllerService,
-  UserQueryRequest,
-} from "../../../generated";
-import { ElMessage, ElNotification, ElPagination } from "element-plus";
-import { Bell, InfoFilled } from "@element-plus/icons-vue";
-import { debounce } from "../../../utils/debounce_Throttle";
-import moment from "moment";
-import store from "@/store";
+} from "../../../../generated";
+import { debounce } from "../../../../utils/debounce_Throttle";
 
 //总数
 const total = ref(0);
@@ -254,6 +259,14 @@ const pageHandleChange = (value: number) => {
 </script>
 
 <style scoped>
-#OnlineVillagerInfoView {
+#onlineUser {
+  background-color: white;
+  padding: 1vh 1vw;
+}
+
+.searchBar {
+  background-color: white;
+  padding: 2vh 1.5vw 0 1.5vw;
+  margin-bottom: 2vh;
 }
 </style>

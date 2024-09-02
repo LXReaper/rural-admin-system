@@ -11,6 +11,9 @@ export default {
     loginUser: {
       villager_name: "登录 注册",
     },
+    userMenuData: {
+      curActive: "userCount",
+    },
   }),
   actions: {
     // actions,执行异步操作,并触发mutations的修改
@@ -37,12 +40,24 @@ export default {
         });
       }
     },
+    //设置用户页面中的菜单名称
+    setCurActive({ commit, state }, payload) {
+      if (!payload) {
+        commit("updateCurActive", "userCount");
+        return;
+      }
+      commit("updateCurActive", payload);
+    },
   },
   // mutations,修改状态变量
   mutations: {
     // 增删改查
     updateUser(state, payload) {
       state.loginUser = payload;
+    },
+    //更新用户页面中的当前菜单名称
+    updateCurActive(state, payload) {
+      state.userMenuData.curActive = payload;
     },
   },
 } as StoreOptions<any>;

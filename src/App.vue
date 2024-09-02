@@ -32,7 +32,12 @@ const userExample = store.state.user.loginUser;
 const initWebSocket = () => {
   store.dispatch(
     "websocketMessageData/setNoticeSocket",
-    new WebSocket(`ws://${OpenAPI.BASE.substring(7, 24)}1/api/user/sendNotices`)
+    new WebSocket(
+      `ws://${OpenAPI.BASE.substring(
+        7,
+        OpenAPI.BASE.lastIndexOf(":")
+      )}:8021/api/user/sendNotices`
+    )
   );
 };
 const diInit = () => {

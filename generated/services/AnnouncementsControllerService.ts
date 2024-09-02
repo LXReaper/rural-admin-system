@@ -29,7 +29,7 @@ export class AnnouncementsControllerService {
   ): CancelablePromise<BaseResponse_long_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/notice/announcements/add",
+      url: "/api/management/announcements/add",
       body: announcementsAddRequest,
       errors: {
         401: `Unauthorized`,
@@ -51,7 +51,7 @@ export class AnnouncementsControllerService {
   ): CancelablePromise<BaseResponse_boolean_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/notice/announcements/delete",
+      url: "/api/management/announcements/delete",
       body: deleteRequest,
       errors: {
         401: `Unauthorized`,
@@ -72,7 +72,7 @@ export class AnnouncementsControllerService {
   ): CancelablePromise<BaseResponse_Announcements_> {
     return __request(OpenAPI, {
       method: "GET",
-      url: "/api/notice/announcements/get",
+      url: "/api/management/announcements/get",
       query: {
         announcementsId: announcementsId,
       },
@@ -95,7 +95,7 @@ export class AnnouncementsControllerService {
   ): CancelablePromise<BaseResponse_AnnouncementsVO_> {
     return __request(OpenAPI, {
       method: "GET",
-      url: "/api/notice/announcements/get/vo",
+      url: "/api/management/announcements/get/vo",
       query: {
         announcementsId: announcementsId,
       },
@@ -119,7 +119,7 @@ export class AnnouncementsControllerService {
   ): CancelablePromise<BaseResponse_Page_Announcements_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/notice/announcements/list/page",
+      url: "/api/management/announcements/list/page",
       body: announcementsQueryRequest,
       errors: {
         401: `Unauthorized`,
@@ -141,7 +141,7 @@ export class AnnouncementsControllerService {
   ): CancelablePromise<BaseResponse_Page_AnnouncementsVO_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/notice/announcements/list/page/vo",
+      url: "/api/management/announcements/list/page/vo",
       body: announcementsQueryRequest,
       errors: {
         401: `Unauthorized`,
@@ -163,7 +163,7 @@ export class AnnouncementsControllerService {
   ): CancelablePromise<BaseResponse_boolean_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/notice/announcements/update",
+      url: "/api/management/announcements/update",
       body: announcementsUpdateRequest,
       errors: {
         401: `Unauthorized`,

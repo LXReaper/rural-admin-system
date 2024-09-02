@@ -24,7 +24,7 @@ export class PointsControllerService {
   public static getMyPointsUsingGet(): CancelablePromise<BaseResponse_Points_> {
     return __request(OpenAPI, {
       method: "GET",
-      url: "/api/point/points/get",
+      url: "/api/user/points/get",
       errors: {
         401: `Unauthorized`,
         403: `Forbidden`,
@@ -44,7 +44,7 @@ export class PointsControllerService {
   ): CancelablePromise<BaseResponse_Points_> {
     return __request(OpenAPI, {
       method: "GET",
-      url: "/api/point/points/get/AllPoints",
+      url: "/api/user/points/get/AllPoints",
       query: {
         userId: userId,
       },
@@ -67,7 +67,7 @@ export class PointsControllerService {
   ): CancelablePromise<BaseResponse_double_> {
     return __request(OpenAPI, {
       method: "GET",
-      url: "/api/point/points/get/RemainingPoints",
+      url: "/api/user/points/get/RemainingPoints",
       query: {
         userId: userId,
       },
@@ -90,7 +90,7 @@ export class PointsControllerService {
   ): CancelablePromise<BaseResponse_PointsVO_> {
     return __request(OpenAPI, {
       method: "GET",
-      url: "/api/point/points/get/vo",
+      url: "/api/user/points/get/vo",
       query: {
         id: id,
       },
@@ -114,7 +114,7 @@ export class PointsControllerService {
   ): CancelablePromise<BaseResponse_Page_Points_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/point/points/list/page",
+      url: "/api/user/points/list/page",
       body: pointsQueryRequest,
       errors: {
         401: `Unauthorized`,
@@ -136,7 +136,7 @@ export class PointsControllerService {
   ): CancelablePromise<BaseResponse_Page_PointsVO_ | any> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/point/points/list/page/vo",
+      url: "/api/user/points/list/page/vo",
       body: pointsQueryRequest,
       errors: {
         401: `Unauthorized`,
@@ -154,7 +154,7 @@ export class PointsControllerService {
   public static settlePointsUsingGet(): CancelablePromise<BaseResponse_boolean_> {
     return __request(OpenAPI, {
       method: "GET",
-      url: "/api/point/points/settle",
+      url: "/api/user/points/settle",
       errors: {
         401: `Unauthorized`,
         403: `Forbidden`,
