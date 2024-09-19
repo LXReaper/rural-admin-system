@@ -225,6 +225,7 @@ import { ElMessage, ElNotification } from "element-plus";
 import { onMounted, ref } from "vue";
 import store from "@/store";
 import { OpenAPI } from "../../../../generated";
+import throttle from "lodash/throttle";
 
 /**
  * 连接websocket
@@ -341,6 +342,21 @@ const gainMoreNotifications = () => {
   queryMoreNotifications.value.pageSize += addSizeNum;
   listAllNotifications();
 };
+//滚轮滚动事件
+const onScroll = throttle((eventData) => {
+  const { offset, clientSize, scrollSize } = eventData;
+
+  if (!offset || !clientSize || !scrollSize) return;
+
+  // 是否已滚动到底部最后一个可视范围内
+  const isScrollEnd = offset + clientSize >= scrollSize - clientSize;
+  console.log(isScrollEnd);
+  if (isScrollEnd) {
+    console.log("到底了");
+  } else {
+    console.log();
+  }
+}, 100);
 //删除通知信息
 const deleteNotification = async (i: number) => {
   const res = await NoticesControllerService.deleteNoticeUsingPost({

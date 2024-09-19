@@ -195,7 +195,24 @@ const setOption = (curPointRecordList: Array<PointRecordTypeCount>) => {
           focus: "series", //高亮时聚焦整个系列
         },
         itemStyle: {
-          color: "#f9c956",
+          color: {
+            type: "linear",
+            x: 0,
+            y: 0,
+            x2: 0,
+            y2: 0.95,
+            colorStops: [
+              {
+                offset: 0,
+                color: "#f9c956", // 0% 处的颜色
+              },
+              {
+                offset: 1,
+                color: "#c9a9a6", // 100% 处的颜色
+              },
+            ],
+            global: false, // 缺省为 false
+          },
         },
         data: Array.from(
           { length: curPointRecordsList.value.length },
@@ -211,7 +228,24 @@ const setOption = (curPointRecordList: Array<PointRecordTypeCount>) => {
           focus: "series", //高亮时聚焦整个系列
         },
         itemStyle: {
-          color: "#228B22",
+          color: {
+            type: "linear",
+            x: 0,
+            y: 0,
+            x2: 0,
+            y2: 0.95,
+            colorStops: [
+              {
+                offset: 0,
+                color: "#228B22", // 0% 处的颜色
+              },
+              {
+                offset: 1,
+                color: "#5a7a2a", // 100% 处的颜色
+              },
+            ],
+            global: false, // 缺省为 false
+          },
         },
         data: Array.from(
           { length: curPointRecordsList.value.length },
@@ -227,7 +261,24 @@ const setOption = (curPointRecordList: Array<PointRecordTypeCount>) => {
           focus: "series", //高亮时聚焦整个系列
         },
         itemStyle: {
-          color: "#5470c6",
+          color: {
+            type: "linear",
+            x: 0,
+            y: 0,
+            x2: 0,
+            y2: 0.95,
+            colorStops: [
+              {
+                offset: 0,
+                color: "#5470c6", // 0% 处的颜色
+              },
+              {
+                offset: 1,
+                color: "#74a1c6", // 100% 处的颜色
+              },
+            ],
+            global: false, // 缺省为 false
+          },
         },
         data: Array.from(
           { length: curPointRecordsList.value.length },
@@ -243,7 +294,24 @@ const setOption = (curPointRecordList: Array<PointRecordTypeCount>) => {
           focus: "series", //高亮时聚焦整个系列
         },
         itemStyle: {
-          color: "#ef6567",
+          color: {
+            type: "linear",
+            x: 0,
+            y: 0,
+            x2: 0,
+            y2: 0.95,
+            colorStops: [
+              {
+                offset: 0,
+                color: "#ef6567", // 0% 处的颜色
+              },
+              {
+                offset: 1,
+                color: "#ea65a7", // 100% 处的颜色
+              },
+            ],
+            global: false, // 缺省为 false
+          },
         },
         data: Array.from(
           { length: curPointRecordsList.value.length },

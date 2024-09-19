@@ -1,7 +1,7 @@
 <template>
   <div id="analysisView">
     <load-animation-charts :open="loading" style="margin-left: 36vw" />
-    <div v-if="!loading">
+    <div v-if="!loading" style="margin-top: 2vh">
       <info-stack-line-charts
         :day-point-record-list="pointRecordsDayInfoList"
         :week-point-record-list="pointRecordsWeekInfoList"
