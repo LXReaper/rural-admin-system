@@ -29,7 +29,7 @@ export class LearningCoursesControllerService {
   ): CancelablePromise<BaseResponse_long_ | any> {
     return __request(OpenAPI, {
       method: "GET",
-      url: "/api/study/learningCourses/get",
+      url: "/api/task/study/learningCourses/get",
       query: {
         userId: userId,
       },
