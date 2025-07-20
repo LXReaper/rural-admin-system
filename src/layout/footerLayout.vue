@@ -1,7 +1,7 @@
 <template>
   <el-footer>
     <div style="margin-bottom: 5px">
-      by JKTeam {{ new Date().getFullYear() }}
+      by 仲恺农业工程学院 {{ new Date().getFullYear() }}
     </div>
     <div>Copyright © 2024-2024 JKTeam v1.0.0</div>
   </el-footer>

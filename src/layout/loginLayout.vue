@@ -21,10 +21,10 @@
           <span>密码</span>
           <i></i>
         </div>
-        <div class="links">
-          <a href="#">忘记密码 ?</a>
-          <a href="#">注册</a>
-        </div>
+        <!--        <div class="links">-->
+        <!--          <a href="#">忘记密码 ?</a>-->
+        <!--          <a href="#">注册</a>-->
+        <!--        </div>-->
         <input @click="handleLogin" type="button" value="登录" />
       </form>
     </div>
